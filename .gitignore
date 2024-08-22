@@ -1,0 +1,8 @@
+.env
+
+internal/public
+public
+
+server/server.crt
+server/server.csr
+server/server.key

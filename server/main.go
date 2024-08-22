@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/sen1or/lets-learn/server/api"
-	"github.com/sen1or/lets-learn/server/hack"
+	"github.com/sen1or/lets-learn/api"
+	"github.com/sen1or/lets-learn/hack"
 
 	_ "github.com/joho/godotenv/autoload"
 	"gorm.io/driver/postgres"

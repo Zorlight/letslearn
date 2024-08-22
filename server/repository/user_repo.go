@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/sen1or/lets-learn/server/domain"
+	"github.com/sen1or/lets-learn/domain"
 
 	"github.com/gofrs/uuid/v5"
 	"gorm.io/gorm"

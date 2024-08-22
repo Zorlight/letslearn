@@ -1,7 +1,5 @@
-.env
-
-internal/public
-public
+server/.env
+ui/.env
 
 server/server.crt
 server/server.csr

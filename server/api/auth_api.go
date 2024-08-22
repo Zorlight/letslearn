@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/sen1or/lets-learn/server/domain"
+	"github.com/sen1or/lets-learn/domain"
 	"log"
 	"net/http"
 	"net/smtp"

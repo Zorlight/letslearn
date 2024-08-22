@@ -1,7 +1,7 @@
 package hack
 
 import (
-	"github.com/sen1or/lets-learn/server/domain"
+	"github.com/sen1or/lets-learn/domain"
 
 	"gorm.io/gorm"
 )

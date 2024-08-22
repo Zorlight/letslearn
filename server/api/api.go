@@ -2,9 +2,9 @@ package api
 
 import (
 	"fmt"
-	"github.com/sen1or/lets-learn/server/config"
-	"github.com/sen1or/lets-learn/server/domain"
-	"github.com/sen1or/lets-learn/server/repository"
+	"github.com/sen1or/lets-learn/config"
+	"github.com/sen1or/lets-learn/domain"
+	"github.com/sen1or/lets-learn/repository"
 	"log"
 	"net"
 	"net/http"

@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"github.com/sen1or/lets-learn/domain"
 	"log"
-	"github.com/sen1or/lets-learn/server/domain"
 	"time"
 
 	"github.com/gofrs/uuid/v5"

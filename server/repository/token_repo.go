@@ -1,9 +1,9 @@
 package repository
 
 import (
+	"github.com/sen1or/lets-learn/config"
+	"github.com/sen1or/lets-learn/domain"
 	"os"
-	"github.com/sen1or/lets-learn/server/config"
-	"github.com/sen1or/lets-learn/server/domain"
 	"time"
 
 	"github.com/gofrs/uuid/v5"

@@ -1,9 +1,6 @@
 package domain
 
 import (
-	"github.com/sen1or/lets-learn/server/util"
-
-	"github.com/go-playground/validator/v10"
 	"github.com/gofrs/uuid/v5"
 	"gorm.io/gorm"
 )
@@ -18,18 +15,6 @@ type User struct {
 
 	RefreshTokens []RefreshToken `json:"-"`
 	VerifyToken   []VerifyToken  `json:"-"`
-}
-
-func (u *User) Validate() error {
-	validate := validator.New(validator.WithRequiredStructEnabled())
-	err := validate.Struct(&u)
-
-	if err != nil {
-		util.LogValidationErrors(err)
-		return err
-	}
-
-	return nil
 }
 
 type UserRepository interface {

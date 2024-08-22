@@ -9,6 +9,6 @@ const (
 	REFRESH_TOKEN_MAX_AGE = 7 * 24 * 3600
 	ACCESS_TOKEN_MAX_AGE  = 5 * 60
 
-	SERVER_CRT_FILE = "server/server.crt"
-	SERVER_KEY_FILE = "server/server.key"
+	SERVER_CRT_FILE = "./server.crt"
+	SERVER_KEY_FILE = "./server.key"
 )

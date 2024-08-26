@@ -1,15 +1,17 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/sen1or/lets-learn/config"
-	"github.com/sen1or/lets-learn/domain"
-	"github.com/sen1or/lets-learn/repository"
 	"log"
 	"net"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/sen1or/lets-learn/config"
+	"github.com/sen1or/lets-learn/domain"
+	"github.com/sen1or/lets-learn/repository"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -72,6 +74,10 @@ func (a *api) Routes() *mux.Router {
 	router.HandleFunc("/v1/auth/google/callback", a.OAuthGoogleCallBack).Methods("GET")
 	router.HandleFunc("/v1/auth/verify", a.verifyEmailHandler).Methods("GET")
 
+	router.HandleFunc("/v1/meeting", a.LiveKitCreateRoom).Methods("POST")
+	router.HandleFunc("/v1/meeting/{roomName}", a.LiveKitDeleteRoom).Methods("DELETE")
+	router.HandleFunc("/v1/meeting/{roomName}", a.LiveKitGetJoinToken).Methods("POST")
+
 	router.PathPrefix("/").HandlerFunc(a.RouteNotFound)
 
 	router.Use(a.loggingMiddleware)
@@ -84,7 +90,7 @@ func (a *api) RouteNotFound(w http.ResponseWriter, r *http.Request) {
 	a.errorResponse(w, http.StatusNotFound, fmt.Errorf("route not found"))
 }
 
-// Set the error to the custom "X-LetsLive-Error" header
+// Set the error message to the custom "X-LetsLive-Error" header
 // The function doesn't end the request, if so call errorResponse
 func (a *api) setError(w http.ResponseWriter, err error) {
 	w.Header().Add("X-LetsLive-Error", err.Error())
@@ -93,8 +99,16 @@ func (a *api) setError(w http.ResponseWriter, err error) {
 // Set error to the custom header and write the error to the request
 // After calling, the request will end and no other write should be done
 func (a *api) errorResponse(w http.ResponseWriter, status int, err error) {
-	w.Header().Add("X-LetsLive-Error", err.Error())
-	http.Error(w, err.Error(), status)
+	w.Header().Add("X-LetsLearn-Error", err.Error())
+	type errorRes struct {
+		message string
+	}
+	response := &errorRes{message: err.Error()}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(response)
 }
 
 func (a *api) setTokens(w http.ResponseWriter, refreshToken string, accessToken string) {
@@ -185,7 +199,7 @@ func (a *api) loggingMiddleware(next http.Handler) http.Handler {
 		if lrw.statusCode == 200 {
 			a.logger.Info("Server: ", fields...)
 		} else {
-			err := lrw.w.Header().Get("X-LetsLive-Error")
+			err := lrw.w.Header().Get("X-LetsLearn-Error")
 			if len(err) == 0 {
 				a.logger.Info("Server: ", fields...)
 			} else {

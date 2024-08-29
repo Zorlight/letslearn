@@ -1,13 +1,10 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import React from "react";
+import CourseTable from "./_components/course-table";
+import { coursesData } from "./_components/fake.data";
 
 const CoursePage = () => {
   return (
-    <div>
-      <Link href="/teacher/create">
-        <Button variant="default">New Course</Button>
-      </Link>
+    <div className="p-6 flex flex-col gap-2">
+      <CourseTable courses={coursesData} />
     </div>
   );
 };

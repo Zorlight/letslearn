@@ -5,7 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/lib/shadcn/sheet";
 import { Menu } from "lucide-react";
 import Sidebar from "./sidebar";
 

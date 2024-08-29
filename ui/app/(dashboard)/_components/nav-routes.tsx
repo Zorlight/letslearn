@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
-import UserButton from "./user-button";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/lib/shadcn/button";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 
@@ -24,7 +23,7 @@ const NavRoutes = () => {
           <Button variant="indigo">Teacher mode</Button>
         </Link>
       )}
-      <UserButton />
+      {/* <UserButton /> */}
     </div>
   );
 };

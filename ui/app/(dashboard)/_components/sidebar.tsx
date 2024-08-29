@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
   return (
-    <div className={cn("h-full flex flex-col overflow-y-auto bg-white")}>
+    <div className={cn("h-full flex flex-col overflow-y-auto")}>
       <div className="h-[80px] p-6">
         <Logo />
       </div>

@@ -1,11 +1,9 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/lib/shadcn/button";
+import { Input } from "@/lib/shadcn/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spinner } from "@nextui-org/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
@@ -14,7 +12,7 @@ type CourseForm = {
   title: string;
 };
 const schema: ZodType<CourseForm> = z.object({
-  title: z.string().min(2, { message: "Title is required" }),
+  title: z.string().min(1, { message: "Title is required" }),
 });
 
 const CreateCoursePage = () => {
@@ -49,7 +47,7 @@ const CreateCoursePage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4 px-6 pt-20">
+    <div className="max-w-xl mx-auto h-full flex flex-col gap-4 p-6">
       <div>
         <h1 className="text-3xl">Name your course</h1>
         <p className="text-slate-600">

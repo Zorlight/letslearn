@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:select-none dark:ring-offset-indigo-950 dark:focus-visible:ring-indigo-300",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors cursor-pointer ease-linear duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:select-none dark:ring-offset-indigo-950 dark:focus-visible:ring-indigo-300",
   {
     variants: {
       variant: {
@@ -14,7 +14,7 @@ const buttonVariants = cva(
         destructive:
           "bg-red-500 text-indigo-50 hover:bg-red-500/90 dark:bg-red-950 dark:text-indigo-50 dark:hover:bg-red-950/90",
         outline:
-          "border border-indigo-200 bg-white hover:bg-indigo-100 hover:text-indigo-950 dark:border-indigo-800 dark:bg-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50",
+          "border border-indigo-500 bg-white hover:bg-indigo-100 text-indigo-800 dark:border-indigo-800 dark:bg-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50",
         secondary:
           "bg-indigo-100 text-indigo-950 hover:bg-indigo-200 dark:bg-indigo-800 dark:text-indigo-50 dark:hover:bg-indigo-800/80",
         ghost:

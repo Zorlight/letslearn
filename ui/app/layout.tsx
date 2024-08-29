@@ -1,9 +1,13 @@
+import ToastProvider from "@/lib/react-toastify/toast-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Nunito } from "next/font/google";
+import ReduxProvider from "../redux/provider";
 import "./globals.css";
-import ToastProvider from "@/lib/toast-provider";
+import ConfettiProvider from "@/lib/react-confetti/confetti-provider";
 
 const inter = Inter({ subsets: ["latin"] });
+const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
 
 export const metadata: Metadata = {
   title: "Let's Learn",
@@ -16,11 +20,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {children}
-        <ToastProvider />
-      </body>
-    </html>
+    <ReduxProvider>
+      <html lang="en">
+        <ConfettiProvider />
+        <body className={nunito.className}>
+          <ToastProvider />
+          {children}
+        </body>
+      </html>
+    </ReduxProvider>
   );
 }

@@ -32,12 +32,12 @@ const formatDate = (date: Date, type: DateType = "date") => {
 };
 
 const displayNumber = (
-  number: number,
+  number: number | null | undefined,
   unit: "%" | "$" | string = "",
   spaceBetweenNumAndUnit: boolean = false,
   maximumFractionDigits: number = 2
 ) => {
-  if (isNaN(number)) return "$0.00";
+  if (!number || isNaN(number)) return "$0.00";
 
   const formattedNumber = (minDigits: number, maxDigits: number) =>
     number.toLocaleString("en-US", {

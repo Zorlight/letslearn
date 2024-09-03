@@ -24,7 +24,7 @@ const useProgress = () => {
   };
 
   const finish = async () => {
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
       setProgress(100);
       setIsLoading(false);
       clearInterval(intervalId);
@@ -33,11 +33,11 @@ const useProgress = () => {
   };
 
   const error = async () => {
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
       clearInterval(intervalId);
       setProgress((prev) => -prev);
       setIsLoading(false);
-      if (progress === 100) resolve;
+      resolve(true);
     });
   };
 

@@ -1,3 +1,5 @@
+import { UserProgress } from "./user-progress";
+
 export type Chapter = {
   id: string;
   title: string;
@@ -6,4 +8,5 @@ export type Chapter = {
   position: number;
   isPublished: boolean;
   isFree: boolean;
+  userProgress: UserProgress[];
 };

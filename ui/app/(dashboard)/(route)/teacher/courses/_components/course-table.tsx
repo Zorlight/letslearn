@@ -77,6 +77,7 @@ const CourseTable = ({ courses, error, pagination }: Props) => {
         columnTitles={courseColumnTitles}
         buttons={[
           <Button
+            key={1}
             variant="default"
             onClick={() => router.push("/teacher/courses/create")}
             className="flex items-center gap-2"

@@ -5,7 +5,7 @@ import { Nunito } from "next/font/google";
 import ReduxProvider from "../redux/provider";
 import "./globals.css";
 import ConfettiProvider from "@/lib/react-confetti/confetti-provider";
-import 'dotenv/config'
+import "dotenv/config";
 
 const inter = Inter({ subsets: ["latin"] });
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });

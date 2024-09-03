@@ -10,8 +10,9 @@ import { useEffect, useRef, useState } from "react";
 interface Props {
   videoUrl: string | null | undefined;
   className?: ClassValue;
+  tooltip?: string;
 }
-const VideoDisplay = ({ videoUrl, className }: Props) => {
+const VideoPlayer = ({ videoUrl, className, tooltip }: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [firstPlay, setFirstPlay] = useState(true);
   const videoPublicId = videoUrl
@@ -19,7 +20,7 @@ const VideoDisplay = ({ videoUrl, className }: Props) => {
     : undefined;
 
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn("w-full h-full", className)}>
       {videoPublicId ? (
         <>
           <div
@@ -37,7 +38,7 @@ const VideoDisplay = ({ videoUrl, className }: Props) => {
           <div className={cn(!loaded && "hidden")}>
             {/* src is the public id of the video */}
             <CldVideoPlayer
-              onDataLoad={({ player }: any) => {
+              onMetadataLoad={() => {
                 setLoaded(true);
               }}
               onEnded={() => setFirstPlay(false)}
@@ -72,4 +73,4 @@ const VideoDisplay = ({ videoUrl, className }: Props) => {
   );
 };
 
-export default VideoDisplay;
+export default VideoPlayer;

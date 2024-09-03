@@ -1,0 +1,64 @@
+"use client";
+import ImageDisplay from "@/lib/cloudinary/image-display";
+import { BookOpen } from "lucide-react";
+import Link from "next/link";
+import IconBadge from "../buttons/icon-badge";
+import { CourseWithProgress } from "./course-list";
+import { cn, displayNumber } from "@/lib/utils";
+import { Progress } from "@/lib/shadcn/progress";
+interface Props {
+  item: CourseWithProgress;
+}
+const CourseCard = ({ item }: Props) => {
+  const url = `/courses/${item.id}`;
+  const {
+    imageUrl,
+    title,
+    chapters: { length },
+    progress,
+    price,
+    category,
+  } = item;
+  return (
+    <Link href={url}>
+      <div className="h-full border rounded-lg p-3 hover:shadow-md transition-all overflow-hidden group">
+        <div className="w-full aspect-video rounded-md overflow-hidden">
+          <ImageDisplay imageUrl={imageUrl} />
+        </div>
+        <div className="flex flex-col pt-2">
+          <h3 className="font-bold line-clamp-2 transition-all group-hover:text-indigo-600">
+            {title}
+          </h3>
+          <p className="text-sm text-slate-600">
+            {category ? category.name : "No category"}
+          </p>
+          <div className="my-3 flex flex-row items-center gap-2">
+            <IconBadge icon={<BookOpen size={16} />} />
+            <span className="text-sm text-slate-600">{`${length} ${
+              length <= 1 ? "Chapter" : "Chapters"
+            }`}</span>
+          </div>
+          {progress != null ? (
+            <>
+              <Progress value={progress} />
+              <span
+                className={cn(
+                  "text-sm text-indigo-700 mt-1",
+                  progress >= 100 && "text-green-500"
+                )}
+              >
+                {Math.round(progress)}% Complete{" "}
+              </span>
+            </>
+          ) : (
+            <p className="text-sm text-indigo-950">
+              {displayNumber(price, "$")}
+            </p>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default CourseCard;

@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/lib/shadcn/button";
 import FileUpload from "@/lib/cloudinary/file-upload";
-import VideoDisplay from "@/lib/cloudinary/video-display";
+import VideoDisplay from "@/lib/cloudinary/video-player";
 import { cn } from "@/lib/utils";
 import { Chapter } from "@/models/chapter";
 import { AttachedFile } from "@/models/course";

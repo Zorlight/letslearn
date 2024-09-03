@@ -1,4 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
+
+.default-scrollbar {
+  overflow-y: auto;
+}
+.default-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  scroll-behavior: smooth;
+}
+
+.default-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.default-scrollbar::-webkit-scrollbar-thumb {
+  background: #707070;
+  border-radius: 5px;
+}
+
+.default-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5e5e5e;
+}

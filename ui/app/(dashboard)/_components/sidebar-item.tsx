@@ -11,7 +11,8 @@ const SidebarItem = ({ data }: Props) => {
   const { href, label, icon: Icon } = data;
   const path = usePathname();
 
-  const isActive = path === "/" ? path === href : path.startsWith(href);
+  const isActive = href === "/" ? path == href : path.startsWith(href);
+
   return (
     <Link
       href={href}

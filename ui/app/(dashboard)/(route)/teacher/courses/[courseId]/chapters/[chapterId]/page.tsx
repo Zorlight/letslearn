@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import ChapterAccessForm from "./_components/chapter-access-form";
 import ChapterDescriptionForm from "./_components/chapter-description-form";
 import ChapterTitleForm from "./_components/chapter-title-form";
-import ChapterItemLayout from "./_components/course-item-layout";
+import ChapterItemLayout from "./_components/chapter-item-layout";
 import ChapterVideoForm from "./_components/chapter-video-form";
 import Banner from "@/components/ui/banner";
 import ChapterAction from "./_components/chapter-action";
@@ -26,6 +26,7 @@ const chapterData: Chapter = {
   position: 0,
   isPublished: true,
   isFree: false,
+  userProgress: [],
 };
 
 const ChapterEditPage = ({ params }: Props) => {

@@ -14,20 +14,21 @@ import (
 	lksdk "github.com/livekit/server-sdk-go"
 )
 
-var host = os.Getenv("LIVEKIT_HOST")
-var roomClient = lksdk.NewRoomServiceClient(host, os.Getenv("LIVEKIT_API_KEY"), os.Getenv("LIVEKIT_API_SECRET"))
+var livekitHost = os.Getenv("LIVEKIT_HOST")
+var livekitServerUrl = os.Getenv("LIVEKIT_URL")
+var roomClient = lksdk.NewRoomServiceClient(livekitHost, os.Getenv("LIVEKIT_API_KEY"), os.Getenv("LIVEKIT_API_SECRET"))
 
 func (a *api) LiveKitCreateRoom(w http.ResponseWriter, r *http.Request) {
-	newRoomName, err := uuid.NewGen().NewV4()
+	newRoomID, err := uuid.NewGen().NewV4()
 	if err != nil {
 		a.errorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	_, err = roomClient.CreateRoom(context.Background(), &livekit.CreateRoomRequest{
-		Name:            newRoomName.String(),
+		Name:            newRoomID.String(),
 		EmptyTimeout:    1 * 60,
-		MaxParticipants: 2,
+		MaxParticipants: 100,
 	})
 
 	if err != nil {
@@ -37,7 +38,7 @@ func (a *api) LiveKitCreateRoom(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "plain/text")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(newRoomName.String()))
+	w.Write([]byte(newRoomID.String()))
 }
 
 func (a *api) LiveKitDeleteRoom(w http.ResponseWriter, r *http.Request) {
@@ -54,12 +55,25 @@ func (a *api) LiveKitDeleteRoom(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (a *api) LiveKitGetJoinToken(w http.ResponseWriter, r *http.Request) {
-	roomName := r.PathValue("roomName")
-	username, iOk := r.URL.Query()["username"]
+func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Request) {
+	roomName, rOk := r.URL.Query()["roomName"]
+	username, uOk := r.URL.Query()["participantName"]
 
-	if !iOk {
-		a.errorResponse(w, http.StatusBadRequest, errors.New("missing username query"))
+	if !uOk || !rOk {
+		a.errorResponse(w, http.StatusBadRequest, errors.New("missing information"))
+		return
+	}
+
+	var existRoom = false
+	listRoomsResponse, err := roomClient.ListRooms(context.Background(), &livekit.ListRoomsRequest{})
+	for _, room := range listRoomsResponse.Rooms {
+		if room.Name == roomName[0] {
+			existRoom = true
+		}
+	}
+
+	if !existRoom {
+		a.errorResponse(w, http.StatusNotFound, errors.New("room not found"))
 		return
 	}
 
@@ -69,13 +83,13 @@ func (a *api) LiveKitGetJoinToken(w http.ResponseWriter, r *http.Request) {
 	at := auth.NewAccessToken(apiKey, apiSecret)
 
 	grant := &auth.VideoGrant{
+		Room:     roomName[0],
 		RoomJoin: true,
-		Room:     roomName,
 	}
 
 	at.AddGrant(grant).
 		SetIdentity(username[0]).
-		SetValidFor(time.Hour)
+		SetValidFor(24 * time.Hour)
 
 	token, err := at.ToJWT()
 	if err != nil {
@@ -84,9 +98,15 @@ func (a *api) LiveKitGetJoinToken(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := &struct {
-		Token string `json:"token"`
+		ParticipantToken string `json:"participantToken"`
+		ParticipantName  string `json:"participantName"`
+		ServerUrl        string `json:"serverUrl"`
+		RoomName         string `json:"roomName"`
 	}{
-		Token: token,
+		ParticipantToken: token,
+		ParticipantName:  username[0],
+		ServerUrl:        livekitServerUrl,
+		RoomName:         roomName[0],
 	}
 
 	//jRes, err := json.Marshal(response)

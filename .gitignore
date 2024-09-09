@@ -1,6 +1,2 @@
 server/.env
 ui/.env
-
-server/server.crt
-server/server.csr
-server/server.key

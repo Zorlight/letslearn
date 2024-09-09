@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@livekit/components-react": "^2.4.3",
     "@livekit/components-styles": "^1.0.12",
+    "@livekit/krisp-noise-filter": "^0.2.7",
     "@nextui-org/spinner": "^2.0.33",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",

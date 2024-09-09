@@ -74,9 +74,9 @@ func (a *api) Routes() *mux.Router {
 	router.HandleFunc("/v1/auth/google/callback", a.OAuthGoogleCallBack).Methods("GET")
 	router.HandleFunc("/v1/auth/verify", a.verifyEmailHandler).Methods("GET")
 
+	router.HandleFunc("/v1/meeting", a.LiveKitGetJoinConnectionDetails).Methods("GET")
 	router.HandleFunc("/v1/meeting", a.LiveKitCreateRoom).Methods("POST")
 	router.HandleFunc("/v1/meeting/{roomName}", a.LiveKitDeleteRoom).Methods("DELETE")
-	router.HandleFunc("/v1/meeting/{roomName}", a.LiveKitGetJoinToken).Methods("POST")
 
 	router.PathPrefix("/").HandlerFunc(a.RouteNotFound)
 
@@ -101,9 +101,9 @@ func (a *api) setError(w http.ResponseWriter, err error) {
 func (a *api) errorResponse(w http.ResponseWriter, status int, err error) {
 	w.Header().Add("X-LetsLearn-Error", err.Error())
 	type errorRes struct {
-		message string
+		Message string `json:"message"`
 	}
-	response := &errorRes{message: err.Error()}
+	response := &errorRes{Message: err.Error()}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("X-Content-Type-Options", "nosniff")

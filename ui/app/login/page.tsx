@@ -20,7 +20,7 @@ export default function LogInPage() {
                     <OAuthLoginBtn url={GLOBAL.API_URL + "/v1/auth/google"}>
                         <IconGoogle/> Google
                     </OAuthLoginBtn>
-                    <OAuthLoginBtn url={GLOBAL.API_URL + "/v1/auth/google"}>
+                    <OAuthLoginBtn url={GLOBAL.API_URL + "/v1/auth/facebook"}>
                         <IconFacebook/> Facebook
                     </OAuthLoginBtn>
                 </div>

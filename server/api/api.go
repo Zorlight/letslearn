@@ -72,6 +72,8 @@ func (a *api) Routes() *mux.Router {
 	router.HandleFunc("/v1/auth/login", a.LogInHandler).Methods("POST")
 	router.HandleFunc("/v1/auth/google", a.OAuthGoogleLogin).Methods("GET")
 	router.HandleFunc("/v1/auth/google/callback", a.OAuthGoogleCallBack).Methods("GET")
+	router.HandleFunc("/v1/auth/facebook", a.OAuthFacebookLogin).Methods("GET")
+	router.HandleFunc("/v1/auth/facebook/callback", a.OAuthFacebookCallBack).Methods("GET")
 	router.HandleFunc("/v1/auth/verify", a.verifyEmailHandler).Methods("GET")
 
 	router.HandleFunc("/v1/meeting", a.LiveKitGetJoinConnectionDetails).Methods("GET")

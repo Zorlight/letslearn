@@ -6,17 +6,17 @@ import { Course } from "@/models/course";
 interface Props {
   course: Course;
 }
-const CourseMobileSidebar = ({ course }: Props) => {
+const CourseSidebarToggle = ({ course }: Props) => {
   return (
     <Sheet>
-      <SheetTrigger className="w-auto md:hidden pr-4 hover:opacity-75 transition-all">
-        <Menu />
+      <SheetTrigger className="fixed left-0 top-24 w-auto p-4 bg-slate-100 rounded-r-full hover:pl-8 hover:bg-slate-200 transition-all">
+        <Menu className="text-indigo-950" />
       </SheetTrigger>
-      <SheetContent side="left" className="w-2/3 p-0 border-0 bg-white">
+      <SheetContent side="left" className="w-80 p-0 border-0 bg-white pt-14">
         <CourseSidebar course={course} />
       </SheetContent>
     </Sheet>
   );
 };
 
-export default CourseMobileSidebar;
+export default CourseSidebarToggle;

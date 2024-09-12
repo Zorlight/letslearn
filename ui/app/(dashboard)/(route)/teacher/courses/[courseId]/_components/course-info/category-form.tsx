@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { ChevronsUpDown, Pen } from "lucide-react";
 import { useState } from "react";
 import { categories } from "./categories";
-import { Combobox } from "../_ui/combobox";
 import { Course } from "@/models/course";
+import { Combobox } from "@/components/ui/combobox";
 
 interface Props {
   data: Course;
@@ -15,7 +15,9 @@ interface Props {
 
 const CategoryForm = ({ data, courseId, onChange }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [category, setCategory] = useState<string | null>(data.category);
+  const [category, setCategory] = useState<string | null>(
+    data.category?.name || null
+  );
   const handleOptionChange = (value: string) => {
     setCategory(value);
   };

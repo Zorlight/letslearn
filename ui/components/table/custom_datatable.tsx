@@ -13,7 +13,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { FileDown, FileUp, Filter } from "lucide-react";
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 
 import CustomDataTableContent from "./custom_datatable_content";
 import { TabProps } from "./custom_datatable_row";
@@ -77,7 +77,7 @@ export type CustomDatatableProps<TData> = {
     [key: string]: string;
   };
   infoTabs?: TabProps<TData>[];
-  buttons?: JSX.Element[];
+  buttons?: JSX.Element[] | ReactNode[];
   config?: DatatableConfig<TData>;
   meta?: TableMeta<TData>;
 };

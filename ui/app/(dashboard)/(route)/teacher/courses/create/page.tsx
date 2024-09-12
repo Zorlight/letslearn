@@ -2,6 +2,7 @@
 import { Button } from "@/lib/shadcn/button";
 import { Input } from "@/lib/shadcn/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { nanoid } from "@reduxjs/toolkit";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -46,6 +47,8 @@ const CreateCoursePage = () => {
       });
   };
 
+  const courseTitleHtmlFor = nanoid();
+
   return (
     <div className="max-w-xl mx-auto h-full flex flex-col gap-4 p-6">
       <div>
@@ -57,13 +60,13 @@ const CreateCoursePage = () => {
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="flex flex-col gap-2">
-          <label htmlFor="title" className="font-semibold">
+          <label htmlFor={courseTitleHtmlFor} className="font-semibold">
             Course Title
           </label>
           <Input
-            id="title"
+            id={courseTitleHtmlFor}
             aria-label="title"
-            className="flex-1focus:outline-none"
+            className="flex-1 focus:outline-none"
             placeholder=".e.g Introduction to Programming"
             {...register("title")}
           />

@@ -17,20 +17,8 @@ import TitleForm from "./_components/course-info/title-form";
 import PriceForm from "./_components/course-price/price-form";
 import AttachmentForm from "./_components/course-resource/attachment-form";
 import CourseAction from "./_components/_ui/course-action";
-
-const courseData: Course = {
-  id: nanoid(),
-  title: "Introduction to Computer Science",
-  description: null,
-  imageUrl: null,
-  price: null,
-  category: null,
-  level: null,
-  students: null,
-  chapters: [],
-  resources: [],
-  isPublished: false,
-};
+import { coursesData } from "../_components/fake.data";
+import { chapters } from "@/app/courses/[courseId]/_components/fake-data";
 
 interface Props {
   params: {
@@ -39,7 +27,7 @@ interface Props {
 }
 const CourseEditPage = ({ params }: Props) => {
   const { courseId } = params;
-  const [course, setCourse] = useState(courseData);
+  const [course, setCourse] = useState(coursesData[0]);
   const { title, description, imageUrl, price, category } = course;
   const requireFields = [title, description, imageUrl, price, category];
   const currentFields = useMemo(
@@ -96,7 +84,7 @@ const CourseEditPage = ({ params }: Props) => {
         </CourseItemLayout>
 
         <CourseItemLayout icon={<ListChecks />} title="Course chapter">
-          <ChapterForm data={course.chapters} courseId={courseId} />
+          <ChapterForm data={chapters} courseId={courseId} />
         </CourseItemLayout>
         <CourseItemLayout icon={<CircleDollarSign />} title="Course price">
           <PriceForm

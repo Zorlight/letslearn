@@ -9,8 +9,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/lib/shadcn/dropdown-menu";
-import { Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Settings2 } from "lucide-react";
 
 interface DataTableViewOptionsProps<TData> {
   title: string;
@@ -82,7 +82,8 @@ function DataTableViewOptions<TData>({
                               column.toggleVisibility(!!value)
                             }
                           />
-                          <div className="cursor-pointer">{headerContent}</div>
+
+                          <p className="cursor-pointer">{headerContent}</p>
                         </div>
                       );
                     } else {

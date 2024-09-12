@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors cursor-pointer ease-linear duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:select-none dark:ring-offset-indigo-950 dark:focus-visible:ring-indigo-300",
+  "inline-flex items-center gap-2 justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-all cursor-pointer ease-linear duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:select-none dark:ring-offset-indigo-950 dark:focus-visible:ring-indigo-300",
   {
     variants: {
       variant: {
@@ -21,13 +21,13 @@ const buttonVariants = cva(
           "hover:bg-indigo-100 hover:text-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50",
         link: "text-indigo-950 underline-offset-4 hover:underline dark:text-indigo-50",
         indigo:
-          "bg-indigo-50 text-indigo-950 hover:bg-indigo-950 hover:text-white ease-linear duration-200 dark:hover:bg-indigo-800 dark:hover:text-white",
+          "bg-indigo-50 text-indigo-950 hover:bg-indigo-950 hover:text-white dark:hover:bg-indigo-800 dark:hover:text-white",
         success: "bg-green-500 text-white hover:bg-green-600",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        sm: "h-9 px-3",
+        lg: "h-11 px-8",
         icon: "p-2",
       },
     },

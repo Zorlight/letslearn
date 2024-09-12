@@ -11,6 +11,7 @@ import ChapterList from "./chapter-list";
 import { DropResult } from "@hello-pangea/dnd";
 import { nanoid } from "@reduxjs/toolkit";
 import { useRouter } from "next/navigation";
+import { UserProgress } from "@/models/user-progress";
 
 interface Props {
   data: Chapter[];
@@ -59,6 +60,7 @@ const ChapterForm = ({ data, courseId }: Props) => {
       isFree: false,
       isPublished: true,
       position: chapters.length + 1,
+      userProgress: [],
     };
 
     const updatedChapters = [...chapters, newChapter];

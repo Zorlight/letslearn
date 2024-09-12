@@ -1,6 +1,3 @@
-import { Chapter } from "./chapter";
-import { UserProgress } from "./user-progress";
-
 export type AttachedFile = {
   data: File;
   cloudUrl: string;
@@ -20,7 +17,36 @@ export type Course = {
   category: Category | null;
   level: number | string | null;
   students: number | null;
-  chapters: Chapter[];
+  sections: Section[];
   resources: AttachedFile[];
   isPublished: boolean;
+};
+
+export type Section = {
+  id: string;
+  courseId: string;
+  title: string;
+  topics: Topic[];
+};
+
+export type Topic = {
+  id: string;
+  sectionId: string;
+  type: keyof TopicMap;
+  title: string;
+  url?: string;
+};
+
+export type TopicMap = {
+  link: any;
+  meeting: any;
+  learning: any;
+  assignment: any;
+  choice: any;
+  file: {
+    document: any;
+    audio: any;
+    video: any;
+  };
+  quiz: any;
 };

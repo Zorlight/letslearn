@@ -9,6 +9,7 @@ import { Separator } from "@/lib/shadcn/separator";
 import Preview from "@/lib/react-quill/preview";
 import Link from "next/link";
 import { CheckCircle, File, XCircle } from "lucide-react";
+import { chapters } from "../../_components/fake-data";
 
 interface Props {
   params: {
@@ -18,7 +19,7 @@ interface Props {
 }
 const ChapterIdPage = ({ params }: Props) => {
   const { courseId, chapterId } = params;
-  const { chapters, resources } = course;
+  const { resources } = course;
 
   //check if user has purchased course
   const purchase = purchases.find(

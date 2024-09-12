@@ -1,0 +1,221 @@
+"use client";
+import { DataTableColumnHeader } from "@/components/table/my_table_column_header";
+import {
+  defaultColumn,
+  defaultIndexColumn,
+  defaultSelectColumn,
+} from "@/components/table/my_table_default_column";
+import { Combobox } from "@/components/ui/combobox";
+import { Button } from "@/lib/shadcn/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/lib/shadcn/dropdown-menu";
+import { Input } from "@/lib/shadcn/input";
+import { Question } from "@/models/question";
+import { ColumnDef } from "@tanstack/react-table";
+import { ChevronsUpDown, MoreHorizontal, Pen, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { questionIconMap, QuestionStatus } from "../static-data";
+
+const questionColumnTitles = {
+  id: "ID",
+  type: "Type",
+  questionName: "Question name",
+  status: "Status",
+  createdAt: "Created at",
+  usage: "Usage",
+  createdBy: "Created by",
+  modifiedBy: "Modified by",
+};
+
+const questionColumnVisibility = {
+  id: false,
+  type: true,
+  questionName: true,
+  status: true,
+  createdAt: true,
+  createdBy: true,
+  modifiedBy: true,
+  usage: true,
+};
+
+const questionTypeColumn = (
+  accessorKey: string,
+  title: string
+): ColumnDef<Question> => {
+  const col: ColumnDef<Question> = {
+    accessorKey: accessorKey,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={title} />
+    ),
+    cell: ({ row }) => {
+      let questionType: string = row.getValue(accessorKey);
+
+      return (
+        <div className="px-2">
+          {questionIconMap[questionType as keyof typeof questionIconMap]}
+        </div>
+      );
+    },
+    enableSorting: true,
+  };
+  return col;
+};
+
+const questionNameColumn = (
+  accessorKey: string,
+  title: string,
+  onQuestionNameChange?: (questionId: string, questionName: string) => void
+): ColumnDef<Question> => {
+  const col: ColumnDef<Question> = {
+    accessorKey: accessorKey,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={title} />
+    ),
+    cell: ({ row }) => {
+      let questionName: string = row.getValue(accessorKey);
+      const [isEditing, setIsEditing] = useState<boolean>(false);
+      const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+          setIsEditing(false);
+          if (onQuestionNameChange)
+            onQuestionNameChange(row.getValue("id"), e.currentTarget.value);
+          console.log("onQuestionNameChange", e.currentTarget.value);
+        }
+      };
+      const toggleEdit = () => setIsEditing(!isEditing);
+
+      return (
+        <div className="h-10 w-[300px] flex flex-row items-center gap-2 px-2">
+          {isEditing ? (
+            <Input
+              type="text"
+              defaultValue={questionName}
+              onKeyDown={handleKeyDown}
+              className="w-[280px]"
+            />
+          ) : (
+            <span>{questionName}</span>
+          )}
+          {isEditing ? (
+            <X
+              size={14}
+              onClick={toggleEdit}
+              className="hover:text-red-600 transition-all duration-200"
+            />
+          ) : (
+            <Pen
+              size={14}
+              onClick={toggleEdit}
+              className="hover:opacity-75 transition-all duration-200"
+            />
+          )}
+        </div>
+      );
+    },
+    enableSorting: true,
+  };
+  return col;
+};
+
+const questionStatusColumn = (
+  accessorKey: string,
+  title: string,
+  onQuestionNameChange?: (questionId: string, questionName: string) => void
+): ColumnDef<Question> => {
+  const col: ColumnDef<Question> = {
+    accessorKey: accessorKey,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={title} />
+    ),
+    cell: ({ row }) => {
+      let questionStatus: string = row.getValue(accessorKey);
+
+      const handleComboboxChange = (value: string) => {
+        console.log("handleComboboxChange", value);
+      };
+
+      const questionStatusOptions = Object.values(QuestionStatus);
+      return (
+        <Combobox
+          showSearch={false}
+          initialValue={questionStatus}
+          options={questionStatusOptions}
+          onChange={handleComboboxChange}
+          className="w-40 px-2"
+          popoverClassName="w-40"
+        >
+          <Button variant="outline" className="w-full justify-between">
+            {questionStatus}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </Combobox>
+      );
+    },
+    enableSorting: true,
+  };
+  return col;
+};
+
+const actionColumn = (): ColumnDef<Question> => {
+  const col: ColumnDef<Question> = {
+    id: "Action",
+    cell: ({ row }) => {
+      const router = useRouter();
+      let id: string = row.getValue("id");
+      const handleEdit = () => {};
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="w-6 h-6 p-0 bg-transparent hover:bg-gray-200 dark:hover:bg-white/10 hover:opacity-100 text-black">
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="bg-white text-primary-word dark:bg-dark-secondary-bg dark:text-dark-primary-word font-sans z-50"
+          >
+            <DropdownMenuItem
+              className="flex gap-1 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer ease-linear duration-100"
+              onClick={handleEdit}
+            >
+              <Pen size={14} />
+              Edit
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+    enableSorting: true,
+  };
+  return col;
+};
+
+const questionTableColumns = (): ColumnDef<Question>[] => {
+  const columns: ColumnDef<Question>[] = [
+    defaultSelectColumn<Question>(),
+    defaultIndexColumn<Question>(),
+  ];
+
+  for (let key in questionColumnTitles) {
+    let col: ColumnDef<Question>;
+    if (key === "type")
+      col = questionTypeColumn(key, questionColumnTitles[key]);
+    else if (key === "questionName")
+      col = questionNameColumn(key, questionColumnTitles[key]);
+    else if (key === "status")
+      col = questionStatusColumn(key, questionColumnTitles[key]);
+    else col = defaultColumn<Question>(key, questionColumnTitles);
+    columns.push(col);
+  }
+  columns.push(actionColumn());
+
+  return columns;
+};
+
+export { questionColumnTitles, questionColumnVisibility, questionTableColumns };

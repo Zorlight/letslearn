@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { format } from "date-fns";
+import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -20,6 +20,13 @@ const getFileSize = (bytes: number) => {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+};
+const getByteFromSize = (size: string) => {
+  const [value, unit] = size.split(" ");
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  const index = sizes.indexOf(unit);
+  return parseFloat(value) * Math.pow(k, index);
 };
 
 type DateType = "date" | "datetime" | "time";
@@ -81,9 +88,10 @@ function handleFilterColumn<T>(
 
 export {
   cn,
-  getPublicIdFromCloudinaryUrl,
-  getFileSize,
-  formatDate,
   displayNumber,
+  formatDate,
+  getFileSize,
+  getByteFromSize,
+  getPublicIdFromCloudinaryUrl,
   handleFilterColumn,
 };

@@ -9,15 +9,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/sen1or/lets-learn/config"
-	"github.com/sen1or/lets-learn/domain"
-	"github.com/sen1or/lets-learn/repository"
-
-	"github.com/sen1or/lets-learn/config"
-	"github.com/sen1or/lets-learn/domain"
-	"github.com/sen1or/lets-learn/repository"
-
 	"github.com/gorilla/mux"
+	"github.com/sen1or/lets-learn/config"
+	"github.com/sen1or/lets-learn/domain"
+	"github.com/sen1or/lets-learn/repository"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -105,16 +100,6 @@ func (a *api) setError(w http.ResponseWriter, err error) {
 // Set error to the custom header and write the error to the request
 // After calling, the request will end and no other write should be done
 func (a *api) errorResponse(w http.ResponseWriter, status int, err error) {
-	w.Header().Add("X-LetsLearn-Error", err.Error())
-	type errorRes struct {
-		Message string `json:"message"`
-	}
-	response := &errorRes{Message: err.Error()}
-
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Header().Set("X-Content-Type-Options", "nosniff")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(response)
 	w.Header().Add("X-LetsLearn-Error", err.Error())
 	type errorRes struct {
 		message string
@@ -215,7 +200,6 @@ func (a *api) loggingMiddleware(next http.Handler) http.Handler {
 		if lrw.statusCode == 200 {
 			a.logger.Info("Server: ", fields...)
 		} else {
-			err := lrw.w.Header().Get("X-LetsLearn-Error")
 			err := lrw.w.Header().Get("X-LetsLearn-Error")
 			if len(err) == 0 {
 				a.logger.Info("Server: ", fields...)

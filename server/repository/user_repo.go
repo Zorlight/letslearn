@@ -27,6 +27,16 @@ func (r *postgresUserRepo) GetByID(userId uuid.UUID) (*domain.User, error) {
 	return &user, nil
 }
 
+func (r *postgresUserRepo) GetByFacebookID(facebookId string) (*domain.User, error) {
+	var user domain.User
+	result := r.db.First(&user, "facebook_id = ?", facebookId)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
+}
+
 func (r *postgresUserRepo) GetByName(username string) (*domain.User, error) {
 	var user domain.User
 	result := r.db.Where("username = ?", username).First(&user)

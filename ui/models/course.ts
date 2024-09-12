@@ -8,12 +8,18 @@ export type Category = {
   name: string;
 };
 
+export type Category = {
+  id: string;
+  name: string;
+};
+
 export type Course = {
   id: string;
   title: string;
   description: string | null;
   imageUrl: string | null;
   price: number | null;
+  category: Category | null;
   category: Category | null;
   level: number | string | null;
   students: number | null;

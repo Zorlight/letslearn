@@ -6,7 +6,8 @@ import (
 )
 
 type User struct {
-	ID uuid.UUID `json:"id" gorm:"primaryKey"`
+	ID         uuid.UUID `json:"id" gorm:"primaryKey"`
+	FacebookID string    `json:"-" gorm:"unique"`
 	gorm.Model
 	Username     string `json:"username" gorm:"unique;size:20;not null"`
 	Email        string `json:"email" gorm:"unique;not null"`
@@ -21,6 +22,7 @@ type UserRepository interface {
 	GetByID(uuid.UUID) (*User, error)
 	GetByName(string) (*User, error)
 	GetByEmail(string) (*User, error)
+	GetByFacebookID(string) (*User, error)
 
 	Create(User) error
 	Update(User) error

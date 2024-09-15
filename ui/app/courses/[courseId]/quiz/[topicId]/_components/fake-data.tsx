@@ -72,4 +72,22 @@ export const questionBank: Question[] = [
       },
     ],
   },
+  {
+    id: "3",
+    questionName: "What is the capital of Spain?",
+    questionText: "What is the capital of Spain?",
+    status: QuestionStatus.DRAFT,
+    type: QuestionType.TRUE_FALSE,
+    defaultMark: 1,
+    createdBy: "admin",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    modifiedBy: "admin",
+    usage: 0,
+    correctAnswer: true,
+    feedbackOfFalse: "Incorrect!",
+    feedbackOfTrue: "Correct!",
+  },
 ];
+
+export const questions = questionBank;

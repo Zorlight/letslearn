@@ -18,10 +18,17 @@ import {
 } from "../static-data";
 
 interface Props {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  children?: React.ReactNode;
   onAddQuestion?: (type: QuestionType) => void;
 }
-const CreateQuestionDialog = ({ onAddQuestion }: Props) => {
-  const [open, setOpen] = useState(false);
+const CreateQuestionDialog = ({
+  open,
+  onOpenChange,
+  onAddQuestion,
+  children,
+}: Props) => {
   const [selectedType, setSelectedType] = useState<QuestionTypeOption>(
     questionTypeOptions[0]
   );
@@ -29,20 +36,15 @@ const CreateQuestionDialog = ({ onAddQuestion }: Props) => {
     setSelectedType(type);
   };
   const handleAddQuestion = () => {
-    setOpen(false);
+    onOpenChange(false);
     if (onAddQuestion) onAddQuestion(selectedType.type);
   };
   const handleCancel = () => {
-    setOpen(false);
+    onOpenChange(false);
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default">
-          <CirclePlus size={16} />
-          Create a new question
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <h5 className="text-orange-600 font-bold">

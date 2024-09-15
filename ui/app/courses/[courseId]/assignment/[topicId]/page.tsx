@@ -1,15 +1,15 @@
 "use client";
-import React, { useMemo, useState } from "react";
-import { topics } from "../../_components/fake-data";
-import { colorMap, iconMap } from "../../_components/topic-map";
-import { notFound } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { course } from "../../_components/fake-data";
-import Link from "next/link";
 import TabList from "@/components/ui/tab-list";
+import { fakeCourses } from "@/fake-data/course";
+import { fakeTopics } from "@/fake-data/topic";
+import { useTab } from "@/hooks/useTab";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { useMemo, useState } from "react";
+import { colorMap, iconMap } from "../../_components/topic-map";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
-import { Separator } from "@/lib/shadcn/separator";
 
 interface Props {
   params: {
@@ -19,12 +19,15 @@ interface Props {
 }
 const AssignmentIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
+  const [topics, setTopics] = useState(fakeTopics);
+  const course = useMemo(
+    () => fakeCourses.find((course) => course.id === courseId),
+    [courseId]
+  );
   const topic = topics.find((topic) => topic.id === topicId);
 
-  const [selectedTab, setSelectedTab] = useState<string>(Tab.ASSIGNMENT);
-  const handleTabSelected = (tab: string) => {
-    setSelectedTab(tab);
-  };
+  const tabContext = useTab<string>();
+  const { selectedTab } = tabContext;
 
   if (!topic) return notFound();
   const sectionId = topic.sectionId;
@@ -60,12 +63,7 @@ const AssignmentIdPage = ({ params }: Props) => {
           <Icon size={24} />
           <h1 className="text-2xl font-bold">{topic.title}</h1>
         </div>
-        <TabList
-          tabs={tabs}
-          selectedTab={selectedTab}
-          className="mt-4"
-          onSelected={handleTabSelected}
-        />
+        <TabList tabs={tabs} className="mt-4" />
       </div>
 
       <TabContent selectedTab={selectedTab} className="max-w-3xl mx-auto" />

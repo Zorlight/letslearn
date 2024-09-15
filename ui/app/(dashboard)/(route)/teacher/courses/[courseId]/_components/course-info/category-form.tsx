@@ -3,9 +3,10 @@ import { Button } from "@/lib/shadcn/button";
 import { cn } from "@/lib/utils";
 import { ChevronsUpDown, Pen } from "lucide-react";
 import { useState } from "react";
-import { categories } from "./categories";
-import { Course } from "@/models/course";
+import { Category, Course } from "@/models/course";
 import { Combobox } from "@/components/ui/combobox";
+import { fakeCategories } from "@/fake-data/category";
+import { categories } from "../static-data";
 
 interface Props {
   data: Course;
@@ -15,28 +16,29 @@ interface Props {
 
 const CategoryForm = ({ data, courseId, onChange }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [category, setCategory] = useState<string | null>(
-    data.category?.name || null
-  );
+  const [categoryId, setCategoryId] = useState<string | null>(data.categoryId);
   const handleOptionChange = (value: string) => {
-    setCategory(value);
+    setCategoryId(value);
   };
   const onSubmit = () => {
     console.log(data);
     //Logic to update course title
 
-    if (onChange) onChange({ ...data, category });
+    if (onChange) onChange({ ...data, categoryId });
     toggleEdit();
   };
   const toggleEdit = () => setIsEditing(!isEditing);
   const handleCancel = () => {
-    setCategory(data.category);
+    setCategoryId(data.categoryId);
     toggleEdit();
   };
+  const category = fakeCategories.find(
+    (category) => category.id === categoryId
+  );
   return (
     <div className="h-fit bg-indigo-50 rounded-md px-4 py-4 border space-y-2">
       <div className="flex flex-row items-center justify-between">
-        <h1 className="font-semibold">Course Category</h1>
+        <h5 className="font-semibold">Course Category</h5>
 
         {isEditing ? (
           <Button
@@ -65,7 +67,7 @@ const CategoryForm = ({ data, courseId, onChange }: Props) => {
             onChange={handleOptionChange}
           >
             <Button variant="outline" className="w-full justify-between">
-              {category ? category : "Select category..."}
+              {category ? category.name : "Select category..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </Combobox>
@@ -81,7 +83,7 @@ const CategoryForm = ({ data, courseId, onChange }: Props) => {
         </div>
       ) : (
         <p className={cn("text-sm text-slate-600", !data && "italic")}>
-          {data.category ? data.category : "No category"}
+          {category ? category.name : "No category"}
         </p>
       )}
     </div>

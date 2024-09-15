@@ -55,10 +55,12 @@ const MultipleChoiceQuestionTab = () => {
   const initShowContent = ["General", "Answers"];
   const collapsibleContent = [
     <MultipleChoiceQuestionGeneralSetting
+      key={0}
       initValue={generalSetting}
       onChange={handleGeneralSettingChange}
     />,
     <MultipleChoiceQuestionAnswerSetting
+      key={1}
       initValue={answerSetting}
       onChange={handleAnswerSettingChange}
     />,

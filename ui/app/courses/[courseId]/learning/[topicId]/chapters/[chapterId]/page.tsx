@@ -1,62 +1,81 @@
-import React, { useMemo } from "react";
-import { course, purchases } from "./_components/fake-data";
+"use client";
 import Banner from "@/components/ui/banner";
-import VideoPlayer from "@/lib/cloudinary/video-player";
-import ChapterVideoPlayer from "./_components/chapter-video-display";
-import { Button } from "@/lib/shadcn/button";
-import { displayNumber } from "@/lib/utils";
-import { Separator } from "@/lib/shadcn/separator";
+import { fakeCourses } from "@/fake-data/course";
+import { fakeTopics } from "@/fake-data/topic";
 import Preview from "@/lib/react-quill/preview";
-import Link from "next/link";
+import { Button } from "@/lib/shadcn/button";
+import { Separator } from "@/lib/shadcn/separator";
+import { displayNumber } from "@/lib/utils";
+import { Course } from "@/models/course";
+import { LearningTopic, TopicType } from "@/models/topic";
 import { CheckCircle, File, XCircle } from "lucide-react";
-import { chapters } from "../../_components/fake-data";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { fakePurchases } from "@/fake-data/purchase";
+import { fakeChapters } from "@/fake-data/chapter";
+import ChapterVideoPlayer from "../../_components/chapter-video-display";
 
 interface Props {
   params: {
     courseId: string;
+    topicId: string;
     chapterId: string;
   };
 }
 const ChapterIdPage = ({ params }: Props) => {
-  const { courseId, chapterId } = params;
-  const { resources } = course;
+  const { courseId, topicId, chapterId } = params;
 
-  //check if user has purchased course
-  const purchase = purchases.find(
-    (purchase) => purchase.courseId === courseId && purchase.userId === "1"
-  );
+  //get course by id
+  const course = useMemo(() => {
+    return fakeCourses.find((course) => course.id === courseId) as Course;
+  }, [courseId]);
+
+  //get topics by id
+  const topic = useMemo(() => {
+    return fakeTopics.find(
+      (topic) => topic.id === topicId && topic.type === TopicType.LEARNING
+    ) as LearningTopic;
+  }, [topicId]);
 
   //get chapter by id
   const chapter = useMemo(() => {
-    return chapters.find((chapter) => chapter.id === chapterId);
-  }, [chapters, chapterId]);
+    return fakeChapters.find((chapter) => chapter.id === chapterId);
+  }, [chapterId]);
 
   //get next chapter
   const nextChapter = useMemo(() => {
-    return chapters.find((nextChapter) => nextChapter.id === chapter?.id);
-  }, [chapters, chapter]);
+    //get index of current chapter
+    const index = topic.chapterIds.findIndex((id) => id === chapterId);
+    if (index === -1 || index === topic.chapterIds.length) return null;
 
+    const nextChapterId = topic.chapterIds[index + 1];
+    return fakeChapters.find((chapter) => chapter.id === nextChapterId);
+  }, [chapterId, topic.chapterIds]);
+
+  //check if user has purchased course
+  const purchase = fakePurchases.find(
+    (purchase) => purchase.courseId === courseId && purchase.userId === "1"
+  );
+
+  const { resources } = course!;
   const { videoUrl } = chapter!;
   const completeOnEnd = !!purchase && !chapter?.userProgress[0]?.isCompleted;
   const isLocked = !chapter?.isFree && !purchase;
   const isCompleted = !!chapter?.userProgress[0]?.isCompleted;
   const Icon = isCompleted ? XCircle : CheckCircle;
+
   return (
-    <div className="relative w-full h-full">
-      <div className="sticky top-[80px] w-full z-50">
-        {isCompleted && (
-          <Banner
-            label="You have already completed this chapter"
-            variant="success"
-          />
-        )}
-        {isLocked && (
-          <Banner
-            label="You need to purchase this course to watch this chapter"
-            variant="warning"
-          />
-        )}
-      </div>
+    <>
+      {isCompleted && (
+        <Banner variant="success" className="top-[80px]">
+          You have already completed this chapter
+        </Banner>
+      )}
+      {isLocked && (
+        <Banner variant="warning" className="top-[80px]">
+          You need to purchase this course to watch this chapter
+        </Banner>
+      )}
 
       <div className="mx-auto max-w-5xl flex flex-col p-4">
         <ChapterVideoPlayer
@@ -113,7 +132,7 @@ const ChapterIdPage = ({ params }: Props) => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

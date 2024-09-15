@@ -10,7 +10,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CourseSidebarChapterItem from "./course-sidebar-chapter-item";
-import { Topic } from "@/models/chapter";
+import { Topic } from "@/models/topic";
 
 interface Props {
   chapterId: string;
@@ -39,12 +39,12 @@ const CourseSidebarChapter = ({
   const [showContent, setShowContent] = useState(true);
   const [chapterContents, setChapterContents] = useState<Topic[]>([]);
 
-  useEffect(() => {
-    const filterContent = (chapterId: string) => {
-      return contents.filter((content) => content.chapterId === chapterId);
-    };
-    setChapterContents(filterContent(chapterId));
-  }, [chapterId, contents]);
+  // useEffect(() => {
+  //   const filterContent = (chapterId: string) => {
+  //     return contents.filter((content) => content.chapterId === chapterId);
+  //   };
+  //   setChapterContents(filterContent(chapterId));
+  // }, [chapterId, contents]);
   return (
     <>
       <div

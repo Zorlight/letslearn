@@ -68,12 +68,16 @@ const CourseTable = ({ courses, error, pagination }: Props) => {
     return filteredData;
   };
 
+  const handleEditRow = (id: string) => {
+    router.push(`/teacher/courses/${id}`);
+  };
+
   return (
     <>
       <CustomDatatable
         data={filteredData}
         pagination={pagination}
-        columns={courseTableColumns()}
+        columns={courseTableColumns({ onEdit: handleEditRow })}
         columnTitles={courseColumnTitles}
         buttons={[
           <Button

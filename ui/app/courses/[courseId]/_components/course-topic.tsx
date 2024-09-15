@@ -2,11 +2,11 @@
 import { Button } from "@/lib/shadcn/button";
 import { Separator } from "@/lib/shadcn/separator";
 import { cn } from "@/lib/utils";
-import { Topic, TopicMap } from "@/models/course";
 
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { colorMap, iconMap } from "./topic-map";
+import { Topic, TopicMap } from "@/models/topic";
 
 interface Props {
   topic: Topic;
@@ -15,7 +15,7 @@ interface Props {
 const CourseTopic = ({ topic }: Props) => {
   const router = useRouter();
   const path = usePathname();
-  const { title, type, url } = topic;
+  const { title, type } = topic;
 
   const getTopicIcon = (type: keyof TopicMap) => {
     let icon;
@@ -45,7 +45,9 @@ const CourseTopic = ({ topic }: Props) => {
 
   const handleMeetingAction = () => {};
 
-  const handleLearningAction = () => {};
+  const handleLearningAction = () => {
+    router.push(`${path}/learning/${topic.id}`);
+  };
 
   const handleAssignmentAction = () => {
     router.push(`${path}/assignment/${topic.id}`);

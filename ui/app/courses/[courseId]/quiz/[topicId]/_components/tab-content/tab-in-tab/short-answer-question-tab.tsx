@@ -49,10 +49,12 @@ const ShortAnswerQuestionTab = () => {
   const initShowContent = ["General", "Answers"];
   const collapsibleContent = [
     <ShortAnswerQuestionGeneralSetting
+      key={0}
       initValue={generalSetting}
       onChange={handleGeneralSettingChange}
     />,
     <ShortAnswerQuestionAnswerSetting
+      key={1}
       initValue={answerSetting}
       onChange={handleAnswerSettingChange}
     />,

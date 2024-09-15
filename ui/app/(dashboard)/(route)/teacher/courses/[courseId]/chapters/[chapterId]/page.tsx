@@ -47,11 +47,9 @@ const ChapterEditPage = ({ params }: Props) => {
   return (
     <>
       {!chapter.isPublished && (
-        <Banner
-          label="This chapter is unpublished. It will not be visible to students."
-          variant="warning"
-          className="mb-4"
-        />
+        <Banner variant="warning" className="mb-4">
+          This chapter is unpublished. It will not be visible to students.
+        </Banner>
       )}
       <div className="p-6">
         <Link

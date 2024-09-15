@@ -1,13 +1,16 @@
 "use client";
+import { useTab } from "@/hooks/useTab";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { useMemo, useState } from "react";
 import TabList from "../../../../../components/ui/tab-list";
-import { course, topics } from "../../_components/fake-data";
 import { colorMap, iconMap } from "../../_components/topic-map";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
+import { useMemo } from "react";
+import { fakeCourses } from "@/fake-data/course";
+import { Course } from "@/models/course";
+import { fakeTopics } from "@/fake-data/topic";
 
 interface Props {
   params: {
@@ -17,12 +20,18 @@ interface Props {
 }
 const LinkIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
-  const topic = topics.find((topic) => topic.id === topicId);
+  const tabContext = useTab<string>();
+  const { selectedTab } = tabContext;
 
-  const [selectedTab, setSelectedTab] = useState<string>(Tab.URL);
-  const handleTabSelected = (tab: string) => {
-    setSelectedTab(tab);
-  };
+  //get course by id
+  const course = useMemo(() => {
+    return fakeCourses.find((course) => course.id === courseId) as Course;
+  }, [courseId]);
+
+  //get topics by id
+  const topic = useMemo(() => {
+    return fakeTopics.find((topic) => topic.id === topicId);
+  }, [topicId]);
 
   if (!topic) return notFound();
   const sectionId = topic.sectionId;
@@ -58,12 +67,7 @@ const LinkIdPage = ({ params }: Props) => {
           <Icon size={24} />
           <h1 className="text-2xl font-bold">{topic.title}</h1>
         </div>
-        <TabList
-          tabs={tabs}
-          selectedTab={selectedTab}
-          className="mt-4"
-          onSelected={handleTabSelected}
-        />
+        <TabList tabs={tabs} className="mt-4" />
         <TabContent selectedTab={selectedTab} />
       </div>
     </div>

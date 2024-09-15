@@ -1,11 +1,8 @@
+import { Topic } from "./topic";
+
 export type AttachedFile = {
   data: File;
   cloudUrl: string;
-};
-
-export type Category = {
-  id: string;
-  name: string;
 };
 
 export type Category = {
@@ -19,8 +16,7 @@ export type Course = {
   description: string | null;
   imageUrl: string | null;
   price: number | null;
-  category: Category | null;
-  category: Category | null;
+  categoryId: string | null;
   level: number | string | null;
   students: number | null;
   sections: Section[];
@@ -33,26 +29,4 @@ export type Section = {
   courseId: string;
   title: string;
   topics: Topic[];
-};
-
-export type Topic = {
-  id: string;
-  sectionId: string;
-  type: keyof TopicMap;
-  title: string;
-  url?: string;
-};
-
-export type TopicMap = {
-  link: any;
-  meeting: any;
-  learning: any;
-  assignment: any;
-  choice: any;
-  file: {
-    document: any;
-    audio: any;
-    video: any;
-  };
-  quiz: any;
 };

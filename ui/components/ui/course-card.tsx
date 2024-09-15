@@ -1,24 +1,16 @@
 "use client";
 import ImageDisplay from "@/lib/cloudinary/image-display";
+import { displayNumber } from "@/lib/utils";
+import { Course } from "@/models/course";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import IconBadge from "../buttons/icon-badge";
-import { CourseWithProgress } from "./course-list";
-import { cn, displayNumber } from "@/lib/utils";
-import { Progress } from "@/lib/shadcn/progress";
 interface Props {
-  item: CourseWithProgress;
+  course: Course;
 }
-const CourseCard = ({ item }: Props) => {
-  const url = `/courses/${item.id}`;
-  const {
-    imageUrl,
-    title,
-    chapters: { length },
-    progress,
-    price,
-    category,
-  } = item;
+const CourseCard = ({ course }: Props) => {
+  const url = `/courses/${course.id}`;
+  const { imageUrl, title, price, category } = course;
   return (
     <Link href={url}>
       <div className="h-full border rounded-lg p-3 hover:shadow-md transition-all overflow-hidden group">
@@ -38,7 +30,8 @@ const CourseCard = ({ item }: Props) => {
               length <= 1 ? "Chapter" : "Chapters"
             }`}</span>
           </div>
-          {progress != null ? (
+          <p className="text-sm text-indigo-950">{displayNumber(price, "$")}</p>
+          {/* {progress != null ? (
             <>
               <Progress value={progress} />
               <span
@@ -54,7 +47,7 @@ const CourseCard = ({ item }: Props) => {
             <p className="text-sm text-indigo-950">
               {displayNumber(price, "$")}
             </p>
-          )}
+          )} */}
         </div>
       </div>
     </Link>

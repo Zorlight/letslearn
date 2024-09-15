@@ -61,14 +61,16 @@ const publishColumn = (
   return col;
 };
 
-const actionColumn = (): ColumnDef<Course> => {
+interface actionColumnProps {
+  onEdit?: (id: string) => void;
+}
+const actionColumn = ({ onEdit }: actionColumnProps): ColumnDef<Course> => {
   const col: ColumnDef<Course> = {
     id: "Action",
     cell: ({ row }) => {
-      const router = useRouter();
       let id: string = row.getValue("id");
       const handleEdit = () => {
-        router.replace(`/teacher/courses/${id}`);
+        if (onEdit) onEdit(id);
       };
 
       return (
@@ -98,7 +100,12 @@ const actionColumn = (): ColumnDef<Course> => {
   return col;
 };
 
-export const courseTableColumns = (): ColumnDef<Course>[] => {
+interface CourseTableColumnProps {
+  onEdit?: (id: string) => void;
+}
+export const courseTableColumns = ({
+  onEdit,
+}: CourseTableColumnProps): ColumnDef<Course>[] => {
   const columns: ColumnDef<Course>[] = [
     defaultSelectColumn<Course>(),
     defaultIndexColumn<Course>(),
@@ -111,7 +118,7 @@ export const courseTableColumns = (): ColumnDef<Course>[] => {
     else col = defaultColumn<Course>(key, courseColumnTitles);
     columns.push(col);
   }
-  columns.push(actionColumn());
+  columns.push(actionColumn({ onEdit }));
 
   return columns;
 };

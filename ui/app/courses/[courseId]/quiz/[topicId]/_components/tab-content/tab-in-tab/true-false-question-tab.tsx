@@ -25,6 +25,7 @@ const TrueFalseQuestionTab = () => {
   const initShowContent = ["General"];
   const collapsibleContent = [
     <TrueFalseQuestionGeneralSetting
+      key={0}
       initValue={generalSetting}
       onChange={handleGeneralSettingChange}
     />,

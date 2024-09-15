@@ -2,8 +2,8 @@
 import Cell from "@/app/courses/[courseId]/_components/simple-table/table-cell";
 import TableRow from "@/app/courses/[courseId]/_components/simple-table/table-row";
 import { useState } from "react";
-import { fakeResponses } from "../../../../assignment/[topicId]/_components/fake-data";
 import UserButton from "@/components/buttons/user-button";
+import { fakeResponses } from "@/fake-data/student-response";
 
 export type ResponsesData = {
   option: string;

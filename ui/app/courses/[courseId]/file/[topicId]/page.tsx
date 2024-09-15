@@ -1,14 +1,17 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { topics } from "../../_components/fake-data";
 import { colorMap, iconMap } from "../../_components/topic-map";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { course } from "../../_components/fake-data";
 import Link from "next/link";
 import TabList from "@/components/ui/tab-list";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
+import { useTab } from "@/hooks/useTab";
+import { fakeCourses } from "@/fake-data/course";
+import { Course } from "@/models/course";
+import { fakeTopics } from "@/fake-data/topic";
+import { FileTopic, TopicType } from "@/models/topic";
 
 interface Props {
   params: {
@@ -18,12 +21,20 @@ interface Props {
 }
 const UploadIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
-  const topic = topics.find((topic) => topic.id === topicId);
+  //get course by id
+  const course = useMemo(() => {
+    return fakeCourses.find((course) => course.id === courseId) as Course;
+  }, [courseId]);
 
-  const [selectedTab, setSelectedTab] = useState<string>(Tab.FILE);
-  const handleTabSelected = (tab: string) => {
-    setSelectedTab(tab);
-  };
+  //get topics by id
+  const topic = useMemo(() => {
+    return fakeTopics.find(
+      (topic) => topic.id === topicId && topic.type === TopicType.FILE
+    ) as FileTopic;
+  }, [topicId]);
+
+  const tabContext = useTab<string>();
+  const { selectedTab } = tabContext;
 
   if (!topic) return notFound();
   const sectionId = topic.sectionId;
@@ -60,12 +71,7 @@ const UploadIdPage = ({ params }: Props) => {
           <Icon size={24} />
           <h1 className="text-2xl font-bold">{topic.title}</h1>
         </div>
-        <TabList
-          tabs={tabs}
-          selectedTab={selectedTab}
-          className="mt-4"
-          onSelected={handleTabSelected}
-        />
+        <TabList tabs={tabs} className="mt-4" />
         <TabContent selectedTab={selectedTab} />
       </div>
     </div>

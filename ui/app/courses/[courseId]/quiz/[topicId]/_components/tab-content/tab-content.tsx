@@ -1,5 +1,5 @@
 import { Separator } from "@/lib/shadcn/separator";
-import React from "react";
+import React, { useEffect } from "react";
 import { Tab, TabInTab } from "../static-data";
 import TabQuestionBank from "./tab-question-bank";
 import TabQuiz from "./tab-quiz";
@@ -10,14 +10,24 @@ import { ArrowLeft } from "lucide-react";
 import ShortAnswerQuestionTab from "./tab-in-tab/short-answer-question-tab";
 import MultipleChoiceQuestionTab from "./tab-in-tab/multiple-choice-question-tab";
 import TabQuestion from "./tab-question";
+import { useTab } from "@/hooks/useTab";
+import BackwardButton from "./_components/backward-button";
+import QuizAttemptingTab from "./tab-in-tab/quiz-attempting-tab";
+import { cn } from "@/lib/utils";
 
 interface Props {
-  selectedTab: string;
   className?: string;
 }
 
-const TabContent = ({ selectedTab, className }: Props) => {
+const TabContent = ({ className }: Props) => {
+  const tabContext = useTab<string>();
+  const { selectedTab } = tabContext;
   const [tabInTab, setTabInTab] = React.useState<TabInTab>(TabInTab.MAIN_TAB);
+
+  // Reset tabInTab to MAIN_TAB when selectedTab changes
+  useEffect(() => {
+    setTabInTab(TabInTab.MAIN_TAB);
+  }, [selectedTab]);
 
   const handleTabInTabChange = (tab: TabInTab) => {
     setTabInTab(tab);
@@ -26,10 +36,17 @@ const TabContent = ({ selectedTab, className }: Props) => {
   switch (selectedTab) {
     case Tab.QUIZ:
       return (
-        <div className={className}>
-          <Separator />
-          <div className="py-4">
-            <TabQuiz />
+        <div className="relative">
+          {tabInTab == TabInTab.QUIZ_TAB && <div className="absolute"></div>}
+
+          <div className={cn("relative", className)}>
+            <Separator />
+            <div className="py-4">
+              {tabInTab === TabInTab.MAIN_TAB && (
+                <TabQuiz onTabInTabChange={handleTabInTabChange} />
+              )}
+              {tabInTab === TabInTab.QUIZ_TAB && <QuizAttemptingTab />}
+            </div>
           </div>
         </div>
       );
@@ -48,19 +65,10 @@ const TabContent = ({ selectedTab, className }: Props) => {
           <Separator />
           <div className="relative p-4">
             {tabInTab !== TabInTab.MAIN_TAB && (
-              <div className="absolute top-3 left-3">
-                <Button
-                  className="rounded-full group hover:shadow-lg"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleTabInTabChange(TabInTab.MAIN_TAB)}
-                >
-                  <ArrowLeft
-                    size={16}
-                    className="group-hover:-translate-x-1 transition-all duration-100"
-                  />
-                </Button>
-              </div>
+              <BackwardButton
+                onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
+                className="absolute top-3 left-3"
+              />
             )}
             {tabInTab === TabInTab.MAIN_TAB && (
               <TabQuestionBank onTabInTabChange={handleTabInTabChange} />
@@ -81,12 +89,31 @@ const TabContent = ({ selectedTab, className }: Props) => {
       );
     case Tab.QUESTION:
       return (
-        <div className={className}>
+        <>
           <Separator />
-          <div className="py-4">
-            <TabQuestion />
+          <div className="relative p-4">
+            {tabInTab !== TabInTab.MAIN_TAB && (
+              <BackwardButton
+                onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
+                className="absolute top-3 left-3"
+              />
+            )}
+            {tabInTab === TabInTab.MAIN_TAB && (
+              <TabQuestion onTabInTabChange={handleTabInTabChange} />
+            )}
+            <div className="mx-20">
+              {tabInTab === TabInTab.TRUE_FALSE_QUESTION_TAB && (
+                <TrueFalseQuestionTab />
+              )}
+              {tabInTab === TabInTab.SHORT_ANSWER_QUESTION_TAB && (
+                <ShortAnswerQuestionTab />
+              )}
+              {tabInTab === TabInTab.MULTIPLE_CHOICE_QUESTION_TAB && (
+                <MultipleChoiceQuestionTab />
+              )}
+            </div>
           </div>
-        </div>
+        </>
       );
     case Tab.MORE:
       return <div></div>;

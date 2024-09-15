@@ -1,13 +1,15 @@
 "use client";
+import { fakeChapters } from "@/fake-data/chapter";
+import { fakeCourses } from "@/fake-data/course";
 import { Course } from "@/models/course";
-import { nanoid } from "@reduxjs/toolkit";
 import {
   CircleDollarSign,
   File,
   LayoutDashboard,
   ListChecks,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import CourseAction from "./_components/_ui/course-action";
 import CourseItemLayout from "./_components/_ui/course-item-layout";
 import ChapterForm from "./_components/course-chapter/chapter-form";
 import CategoryForm from "./_components/course-info/category-form";
@@ -16,9 +18,6 @@ import ImageForm from "./_components/course-info/image-form";
 import TitleForm from "./_components/course-info/title-form";
 import PriceForm from "./_components/course-price/price-form";
 import AttachmentForm from "./_components/course-resource/attachment-form";
-import CourseAction from "./_components/_ui/course-action";
-import { coursesData } from "../_components/fake.data";
-import { chapters } from "@/app/courses/[courseId]/_components/fake-data";
 
 interface Props {
   params: {
@@ -27,13 +26,10 @@ interface Props {
 }
 const CourseEditPage = ({ params }: Props) => {
   const { courseId } = params;
-  const [course, setCourse] = useState(coursesData[0]);
-  const { title, description, imageUrl, price, category } = course;
-  const requireFields = [title, description, imageUrl, price, category];
-  const currentFields = useMemo(
-    () => requireFields.filter((field) => field).length,
-    [title, description, imageUrl, price, category]
-  );
+  const [course, setCourse] = useState(fakeCourses[0]);
+  const { title, description, imageUrl, price, categoryId } = course;
+  const requireFields = [title, description, imageUrl, price, categoryId];
+  const currentFields = requireFields.filter((field) => field).length;
 
   const isCompleted = currentFields === requireFields.length;
 
@@ -84,7 +80,7 @@ const CourseEditPage = ({ params }: Props) => {
         </CourseItemLayout>
 
         <CourseItemLayout icon={<ListChecks />} title="Course chapter">
-          <ChapterForm data={chapters} courseId={courseId} />
+          <ChapterForm data={fakeChapters} courseId={courseId} />
         </CourseItemLayout>
         <CourseItemLayout icon={<CircleDollarSign />} title="Course price">
           <PriceForm

@@ -13,13 +13,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/lib/shadcn/dropdown-menu";
-import { Input } from "@/lib/shadcn/input";
 import { Question } from "@/models/question";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronsUpDown, MoreHorizontal, Pen, X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { questionIconMap, QuestionStatus } from "../static-data";
+import { ChevronsUpDown, MoreHorizontal, Pen } from "lucide-react";
+import { questionIconMap, QuestionStatus } from "../../static-data";
+import QuestionNameColumn from "./question-name-column";
 
 const questionColumnTitles = {
   id: "ID",
@@ -78,43 +76,17 @@ const questionNameColumn = (
     ),
     cell: ({ row }) => {
       let questionName: string = row.getValue(accessorKey);
-      const [isEditing, setIsEditing] = useState<boolean>(false);
-      const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-          setIsEditing(false);
-          if (onQuestionNameChange)
-            onQuestionNameChange(row.getValue("id"), e.currentTarget.value);
-          console.log("onQuestionNameChange", e.currentTarget.value);
+
+      const handleQuestionNameChange = (questionName: string) => {
+        if (onQuestionNameChange) {
+          onQuestionNameChange(row.getValue("id"), questionName);
         }
       };
-      const toggleEdit = () => setIsEditing(!isEditing);
-
       return (
-        <div className="h-10 w-[300px] flex flex-row items-center gap-2 px-2">
-          {isEditing ? (
-            <Input
-              type="text"
-              defaultValue={questionName}
-              onKeyDown={handleKeyDown}
-              className="w-[280px]"
-            />
-          ) : (
-            <span>{questionName}</span>
-          )}
-          {isEditing ? (
-            <X
-              size={14}
-              onClick={toggleEdit}
-              className="hover:text-red-600 transition-all duration-200"
-            />
-          ) : (
-            <Pen
-              size={14}
-              onClick={toggleEdit}
-              className="hover:opacity-75 transition-all duration-200"
-            />
-          )}
-        </div>
+        <QuestionNameColumn
+          questionName={questionName}
+          onChange={handleQuestionNameChange}
+        />
       );
     },
     enableSorting: true,
@@ -124,8 +96,7 @@ const questionNameColumn = (
 
 const questionStatusColumn = (
   accessorKey: string,
-  title: string,
-  onQuestionNameChange?: (questionId: string, questionName: string) => void
+  title: string
 ): ColumnDef<Question> => {
   const col: ColumnDef<Question> = {
     accessorKey: accessorKey,
@@ -165,7 +136,6 @@ const actionColumn = (): ColumnDef<Question> => {
   const col: ColumnDef<Question> = {
     id: "Action",
     cell: ({ row }) => {
-      const router = useRouter();
       let id: string = row.getValue("id");
       const handleEdit = () => {};
 

@@ -1,6 +1,6 @@
-import { ChartData } from "./chart";
+import { ChartData } from "@/models/chart";
 
-export const chartDataList: ChartData[] = [
+export const fakeChartData: ChartData[] = [
   {
     name: "Introduction to Accounting",
     value: 400,

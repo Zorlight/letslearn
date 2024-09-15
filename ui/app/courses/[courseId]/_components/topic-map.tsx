@@ -1,4 +1,3 @@
-import { TopicMap } from "@/models/course";
 import {
   FileAudio,
   FileText,
@@ -10,6 +9,7 @@ import {
   Video,
 } from "lucide-react";
 import { ChoicesIcon } from "./icons";
+import { TopicMap } from "@/models/topic";
 
 const colorMap: TopicMap = {
   link: "text-green-700",

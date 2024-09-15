@@ -15,6 +15,7 @@ interface Props {
   onTrigger?: (value: string) => void;
   showContent: string[];
   children: ReactNode;
+  className?: string;
 }
 const CollapsibleContent = ({
   title,
@@ -22,13 +23,14 @@ const CollapsibleContent = ({
   onTrigger,
   children,
   showContent,
+  className,
 }: Props) => {
   const handleTrigger = () => {
     if (onTrigger) onTrigger(value);
   };
   return (
-    <AccordionItem value={value}>
-      <AccordionTrigger>
+    <AccordionItem value={value} className={className}>
+      <AccordionTrigger className="decoration-indigo-800">
         <div
           className="w-fit flex flex-row items-center justify-start gap-4 cursor-pointer"
           onClick={handleTrigger}

@@ -15,7 +15,7 @@ const ChapterAction = ({
 }: Props) => {
   return (
     <div className="flex flex-row items-center gap-2">
-      <Button variant="outline" className="">
+      <Button variant="outline" size="sm">
         {isPublished ? "Unpublish" : "Publish"}
       </Button>
       <Button variant="default" className="" size="icon">

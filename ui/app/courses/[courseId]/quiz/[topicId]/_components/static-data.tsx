@@ -86,6 +86,7 @@ export enum TabInTab {
   SHORT_ANSWER_QUESTION_TAB = "New Short Answer Question",
   MULTIPLE_CHOICE_QUESTION_TAB = "New Multiple Choice Question",
   ESSAY_QUESTION_TAB = "New Essay Question",
+  QUIZ_TAB = "Quiz tab",
 }
 
 export enum QuestionStatus {
@@ -124,3 +125,32 @@ export enum BulletType {
   ROMAN_UPPERCASE = "I. II. III., ...",
   NUMBERING = "1. 2. 3., ...",
 }
+
+export const answerKeys = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+];

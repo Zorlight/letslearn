@@ -1,6 +1,6 @@
-import { ResponsesData } from "../../../choice/[topicId]/_components/tab-content/tab-responses";
+import { ChoiceResponseData } from "@/models/student-response";
 
-export const fakeResponses: ResponsesData[] = [
+export const fakeResponses: ChoiceResponseData[] = [
   {
     option: "Option 1",
     studentResponses: ["Student 1", "Student 2", "Student 3"],

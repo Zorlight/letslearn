@@ -57,7 +57,7 @@ const ImageForm = ({ data, courseId, onChange }: Props) => {
   return (
     <div className="w-full h-fit bg-indigo-50 rounded-md px-4 py-4 border space-y-2">
       <div className="flex flex-row items-center justify-between">
-        <h1 className="font-semibold">Course Image</h1>
+        <h5 className="font-semibold">Course Image</h5>
 
         <Button
           variant="link"

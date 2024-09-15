@@ -31,7 +31,7 @@ const ChapterAccessForm = ({ data, chapterId, onChange }: Props) => {
   return (
     <div className="h-fit bg-indigo-50 rounded-md px-4 py-4 border space-y-2">
       <div className="flex flex-row items-center justify-between">
-        <h1 className="font-semibold">Chapter access setting</h1>
+        <h5 className="font-semibold">Chapter access setting</h5>
 
         {isEditing ? (
           <Button

@@ -1,4 +1,4 @@
-import { Topic } from "@/models/course";
+import { Topic } from "@/models/topic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";

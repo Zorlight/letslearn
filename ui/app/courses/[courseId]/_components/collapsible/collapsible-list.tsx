@@ -3,20 +3,36 @@ import CollapsibleContent from "@/app/courses/[courseId]/_components/collapsible
 import useCollapsibleList from "@/hooks/useCollapsibleList";
 import { Accordion } from "@/lib/shadcn/accordion";
 import { Button } from "@/lib/shadcn/button";
+import { cn } from "@/lib/utils";
 import { ReactNode, useEffect } from "react";
 
 interface Props {
   titles: string[];
   initShowContent?: string[];
   children: ReactNode[];
+  listClassName?: string;
+  contentClassName?: string;
+  onItemTrigger?: (value: string) => void;
 }
-const CollapsibleList = ({ children, titles, initShowContent }: Props) => {
+const CollapsibleList = ({
+  children,
+  titles,
+  initShowContent,
+  listClassName,
+  contentClassName,
+  onItemTrigger,
+}: Props) => {
   const { showContent, handleItemTrigger, collapseAll, setShowContent } =
     useCollapsibleList();
 
   useEffect(() => {
     if (initShowContent) setShowContent(initShowContent);
   }, []);
+
+  const handleTriggerClick = (value: string) => {
+    if (onItemTrigger) onItemTrigger(value);
+    handleItemTrigger(value);
+  };
 
   return (
     <div>
@@ -28,7 +44,7 @@ const CollapsibleList = ({ children, titles, initShowContent }: Props) => {
       <Accordion
         value={showContent}
         type="multiple"
-        className="w-full flex flex-col gap-4"
+        className={cn("w-full flex flex-col gap-4", listClassName)}
       >
         {children.map((child, index) => (
           <CollapsibleContent
@@ -36,7 +52,8 @@ const CollapsibleList = ({ children, titles, initShowContent }: Props) => {
             title={titles[index]}
             value={titles[index]}
             showContent={showContent}
-            onTrigger={handleItemTrigger}
+            onTrigger={handleTriggerClick}
+            className={contentClassName}
           >
             {child}
           </CollapsibleContent>

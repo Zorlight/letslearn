@@ -1,14 +1,15 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import Tab from "./tab";
+import { useTab } from "@/hooks/useTab";
 
 interface Props {
   tabs: string[];
-  selectedTab: string;
-  onSelected?: (tab: string) => void;
   className?: string;
 }
-const TabList = ({ tabs, selectedTab, onSelected, className }: Props) => {
+const TabList = ({ tabs, className }: Props) => {
+  const tabContext = useTab<string>();
+  const { selectedTab, handleTabSelected } = tabContext;
   return (
     <div className={cn("flex flex-row items-center", className)}>
       {tabs.map((tab, index) => (
@@ -16,7 +17,7 @@ const TabList = ({ tabs, selectedTab, onSelected, className }: Props) => {
           key={index}
           title={tab}
           isSelected={tab === selectedTab}
-          onClick={() => onSelected && onSelected(tab)}
+          onClick={() => handleTabSelected(tab)}
         />
       ))}
     </div>

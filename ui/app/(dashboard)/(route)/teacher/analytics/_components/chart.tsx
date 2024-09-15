@@ -1,8 +1,7 @@
 "use client";
 import { Card } from "@/lib/shadcn/card";
+import { ChartData } from "@/models/chart";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-
-export type ChartData = { name: string; value: number };
 
 interface Props {
   data: ChartData[];

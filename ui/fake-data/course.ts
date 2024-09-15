@@ -1,45 +1,14 @@
-import { CourseWithProgress } from "@/components/ui/course-list";
-import { Chapter } from "@/models/chapter";
-import { Category } from "@/models/course";
+import { Course } from "@/models/course";
 
-export const categoryList: Category[] = [
-  {
-    id: "1",
-    name: "Accounting",
-  },
-  {
-    id: "2",
-    name: "Computer Science",
-  },
-  {
-    id: "3",
-    name: "Engineering",
-  },
-  {
-    id: "4",
-    name: "Filming",
-  },
-  {
-    id: "5",
-    name: "Music",
-  },
-  {
-    id: "6",
-    name: "Sport",
-  },
-  {
-    id: "7",
-    name: "Photography",
-  },
-];
+import { fakeCategories } from "./category";
+import { fakeSections } from "./section";
 
-export const courseWithProgress: CourseWithProgress[] = [
+export const fakeCourses: Course[] = [
   {
     id: "1",
     title: "Introduction to Accounting",
-    category: categoryList[0],
-    chapters: [] as Chapter[],
-    progress: 10,
+    categoryId: "1",
+    sections: fakeSections.filter((section) => section.courseId === "1"),
     description:
       "This is a course that introduces you to the basics of accounting.",
     imageUrl:
@@ -53,9 +22,8 @@ export const courseWithProgress: CourseWithProgress[] = [
   {
     id: "2",
     title: "Introduction to Computer Science",
-    category: categoryList[1],
-    chapters: [] as Chapter[],
-    progress: 20,
+    categoryId: "2",
+    sections: fakeSections.filter((section) => section.courseId === "2"),
     description:
       "This is a course that introduces you to the basics of computer science.",
     imageUrl:
@@ -69,9 +37,8 @@ export const courseWithProgress: CourseWithProgress[] = [
   {
     id: "3",
     title: "Introduction to Engineering",
-    category: categoryList[2],
-    chapters: [] as Chapter[],
-    progress: null,
+    categoryId: "3",
+    sections: fakeSections.filter((section) => section.courseId === "3"),
     description:
       "This is a course that introduces you to the basics of engineering.",
     imageUrl:
@@ -85,9 +52,8 @@ export const courseWithProgress: CourseWithProgress[] = [
   {
     id: "4",
     title: "Introduction to Filming",
-    category: categoryList[3],
-    chapters: [] as Chapter[],
-    progress: null,
+    categoryId: "4",
+    sections: fakeSections.filter((section) => section.courseId === "4"),
     description:
       "This is a course that introduces you to the basics of filming.",
     imageUrl:
@@ -101,9 +67,8 @@ export const courseWithProgress: CourseWithProgress[] = [
   {
     id: "5",
     title: "Introduction to Music",
-    category: categoryList[4],
-    chapters: [] as Chapter[],
-    progress: 20,
+    categoryId: "5",
+    sections: fakeSections.filter((section) => section.courseId === "5"),
     description: "This is a course that introduces you to the basics of music.",
     imageUrl:
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bXVzaWN8ZW58MHwwfDB8fHwy",
@@ -112,5 +77,63 @@ export const courseWithProgress: CourseWithProgress[] = [
     students: 0,
     resources: [],
     isPublished: true,
+  },
+  {
+    id: "6",
+    title: "Introduction to Computer Science",
+    description: "",
+    imageUrl: "",
+    price: 1.65,
+    categoryId: null,
+    level: null,
+    students: null,
+    sections: [],
+    resources: [],
+    isPublished: true,
+  },
+  {
+    id: "7",
+    title: "Introduction to React JS",
+    description: "",
+    imageUrl: "",
+    price: 1.99,
+    categoryId: null,
+    level: null,
+    students: null,
+    sections: [],
+    resources: [],
+    isPublished: false,
+  },
+  {
+    id: "8",
+    title: "Introduction to Next JS",
+    description: "",
+    imageUrl: "",
+    price: 1.65,
+    categoryId: null,
+    level: null,
+    students: null,
+    sections: [],
+    resources: [],
+    isPublished: false,
+  },
+  {
+    id: "9",
+    title: "Introduction to Computer Science",
+    description: "Course 1 description",
+    imageUrl: "",
+    categoryId: null,
+    price: 100,
+    isPublished: true,
+    level: "beginner",
+    resources: [
+      {
+        cloudUrl:
+          "https://res.cloudinary.com/dggtc5ucv/video/upload/v1724920739/avff2nj4g4pnlsmjmfeb.mp4",
+        data: new File([""], "filename"),
+      },
+    ],
+    students: 10,
+    sections: fakeSections.filter((section) => section.courseId === "5"),
   },
 ];

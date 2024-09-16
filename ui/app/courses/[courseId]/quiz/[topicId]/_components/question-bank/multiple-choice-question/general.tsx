@@ -15,7 +15,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type MultipleChoiceQuestionGeneralForm = {
+export type ChoiceQuestionGeneralForm = {
   questionName: string;
   questionText: string;
   questionStatus: QuestionStatus;
@@ -23,7 +23,7 @@ export type MultipleChoiceQuestionGeneralForm = {
   multipleChoice: boolean;
   bulletType: BulletType;
 };
-const schema: ZodType<MultipleChoiceQuestionGeneralForm> = z.object({
+const schema: ZodType<ChoiceQuestionGeneralForm> = z.object({
   questionName: z.string().min(1, "Name is required"),
   questionText: z.string(),
   questionStatus: z.nativeEnum(QuestionStatus),
@@ -33,14 +33,11 @@ const schema: ZodType<MultipleChoiceQuestionGeneralForm> = z.object({
 });
 
 interface Props {
-  initValue: MultipleChoiceQuestionGeneralForm;
-  onChange?: (data: MultipleChoiceQuestionGeneralForm) => void;
+  initValue: ChoiceQuestionGeneralForm;
+  onChange?: (data: ChoiceQuestionGeneralForm) => void;
 }
 
-const MultipleChoiceQuestionGeneralSetting = ({
-  initValue,
-  onChange,
-}: Props) => {
+const ChoiceQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
   const {
     questionName,
     questionText,
@@ -49,7 +46,7 @@ const MultipleChoiceQuestionGeneralSetting = ({
     multipleChoice,
     bulletType,
   } = initValue;
-  const form = useForm<MultipleChoiceQuestionGeneralForm>({
+  const form = useForm<ChoiceQuestionGeneralForm>({
     resolver: zodResolver(schema),
     defaultValues: initValue,
   });
@@ -61,11 +58,11 @@ const MultipleChoiceQuestionGeneralSetting = ({
 
     //Logic to update general setting
   };
-  const handleSettingChange = (data: MultipleChoiceQuestionGeneralForm) => {
+  const handleSettingChange = (data: ChoiceQuestionGeneralForm) => {
     if (onChange) onChange(data);
   };
   const handleEditorChange = (
-    key: keyof MultipleChoiceQuestionGeneralForm,
+    key: keyof ChoiceQuestionGeneralForm,
     data: any
   ) => {
     //set value because the editor is not a controlled component (not registered with react-hook-form)
@@ -74,7 +71,7 @@ const MultipleChoiceQuestionGeneralSetting = ({
   };
 
   const handleInputChange = (
-    key: keyof MultipleChoiceQuestionGeneralForm,
+    key: keyof ChoiceQuestionGeneralForm,
     data: string
   ) => {
     setValue(key, data);
@@ -82,7 +79,7 @@ const MultipleChoiceQuestionGeneralSetting = ({
   };
 
   const handleComboboxChange = (
-    key: keyof MultipleChoiceQuestionGeneralForm,
+    key: keyof ChoiceQuestionGeneralForm,
     data: string
   ) => {
     setValue(key, data);
@@ -177,4 +174,4 @@ const RowSetting = ({ title, children, htmlFor, className }: RowProps) => {
   );
 };
 
-export default MultipleChoiceQuestionGeneralSetting;
+export default ChoiceQuestionGeneralSetting;

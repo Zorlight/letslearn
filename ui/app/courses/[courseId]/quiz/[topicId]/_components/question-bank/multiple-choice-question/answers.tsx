@@ -12,10 +12,10 @@ import { z, ZodType } from "zod";
 import { gradePercentOptions } from "../../static-data";
 import { QuestionChoice } from "@/models/question";
 
-export type MultipleChoiceQuestionAnswerForm = {
+export type ChoiceQuestionAnswerForm = {
   choices: QuestionChoice[];
 };
-const schema: ZodType<MultipleChoiceQuestionAnswerForm> = z.object({
+const schema: ZodType<ChoiceQuestionAnswerForm> = z.object({
   choices: z.array(
     z.object({
       text: z.string(),
@@ -26,16 +26,13 @@ const schema: ZodType<MultipleChoiceQuestionAnswerForm> = z.object({
 });
 
 interface Props {
-  initValue: MultipleChoiceQuestionAnswerForm;
-  onChange?: (data: MultipleChoiceQuestionAnswerForm) => void;
+  initValue: ChoiceQuestionAnswerForm;
+  onChange?: (data: ChoiceQuestionAnswerForm) => void;
 }
 
-const MultipleChoiceQuestionAnswerSetting = ({
-  initValue,
-  onChange,
-}: Props) => {
+const ChoiceQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
   const { choices } = initValue;
-  const form = useForm<MultipleChoiceQuestionAnswerForm>({
+  const form = useForm<ChoiceQuestionAnswerForm>({
     resolver: zodResolver(schema),
     defaultValues: initValue,
   });
@@ -47,7 +44,7 @@ const MultipleChoiceQuestionAnswerSetting = ({
 
     //Logic to update Answer setting
   };
-  const handleSettingChange = (data: MultipleChoiceQuestionAnswerForm) => {
+  const handleSettingChange = (data: ChoiceQuestionAnswerForm) => {
     if (onChange) onChange(data);
   };
 
@@ -201,4 +198,4 @@ const OptionUI = ({ children }: OptionUIProps) => {
   return <div className="">{children} %</div>;
 };
 
-export default MultipleChoiceQuestionAnswerSetting;
+export default ChoiceQuestionAnswerSetting;

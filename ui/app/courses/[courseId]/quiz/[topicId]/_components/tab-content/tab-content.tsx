@@ -1,19 +1,17 @@
+import { useTab } from "@/hooks/useTab";
 import { Separator } from "@/lib/shadcn/separator";
+import { cn } from "@/lib/utils";
 import React, { useEffect } from "react";
 import { Tab, TabInTab } from "../static-data";
+import BackwardButton from "./_components/backward-button";
+import ChoiceQuestionTab from "./tab-in-tab/choice-question-tab";
+import QuizAttemptingTab from "./tab-in-tab/quiz-attempting-tab";
+import ShortAnswerQuestionTab from "./tab-in-tab/short-answer-question-tab";
+import TrueFalseQuestionTab from "./tab-in-tab/true-false-question-tab";
+import TabQuestion from "./tab-question";
 import TabQuestionBank from "./tab-question-bank";
 import TabQuiz from "./tab-quiz";
 import TabSetting from "./tab-setting";
-import TrueFalseQuestionTab from "./tab-in-tab/true-false-question-tab";
-import { Button } from "@/lib/shadcn/button";
-import { ArrowLeft } from "lucide-react";
-import ShortAnswerQuestionTab from "./tab-in-tab/short-answer-question-tab";
-import MultipleChoiceQuestionTab from "./tab-in-tab/multiple-choice-question-tab";
-import TabQuestion from "./tab-question";
-import { useTab } from "@/hooks/useTab";
-import BackwardButton from "./_components/backward-button";
-import QuizAttemptingTab from "./tab-in-tab/quiz-attempting-tab";
-import { cn } from "@/lib/utils";
 
 interface Props {
   className?: string;
@@ -21,8 +19,8 @@ interface Props {
 
 const TabContent = ({ className }: Props) => {
   const tabContext = useTab<string>();
-  const { selectedTab } = tabContext;
   const [tabInTab, setTabInTab] = React.useState<TabInTab>(TabInTab.MAIN_TAB);
+  const { selectedTab } = tabContext;
 
   // Reset tabInTab to MAIN_TAB when selectedTab changes
   useEffect(() => {
@@ -80,8 +78,8 @@ const TabContent = ({ className }: Props) => {
               {tabInTab === TabInTab.SHORT_ANSWER_QUESTION_TAB && (
                 <ShortAnswerQuestionTab />
               )}
-              {tabInTab === TabInTab.MULTIPLE_CHOICE_QUESTION_TAB && (
-                <MultipleChoiceQuestionTab />
+              {tabInTab === TabInTab.CHOICE_QUESTION_TAB && (
+                <ChoiceQuestionTab />
               )}
             </div>
           </div>
@@ -108,8 +106,8 @@ const TabContent = ({ className }: Props) => {
               {tabInTab === TabInTab.SHORT_ANSWER_QUESTION_TAB && (
                 <ShortAnswerQuestionTab />
               )}
-              {tabInTab === TabInTab.MULTIPLE_CHOICE_QUESTION_TAB && (
-                <MultipleChoiceQuestionTab />
+              {tabInTab === TabInTab.CHOICE_QUESTION_TAB && (
+                <ChoiceQuestionTab />
               )}
             </div>
           </div>

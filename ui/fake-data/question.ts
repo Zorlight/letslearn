@@ -1,0 +1,62 @@
+import {
+  QuestionStatus,
+  QuestionType,
+} from "@/app/courses/[courseId]/quiz/[topicId]/_components/static-data";
+import { Question } from "@/models/question";
+
+export const fakeQuestions: Question[] = [
+  {
+    id: "1",
+    questionName: "What is your name ?",
+    questionText: "What is your name ?",
+    type: QuestionType.CHOICE,
+    multiple: false,
+    status: QuestionStatus.READY,
+    defaultMark: 10,
+    createdBy: "John Doe",
+    createdAt: "2021-10-01",
+    updatedAt: "2021-10-01",
+    modifiedBy: "John Doe",
+    usage: 10,
+    choices: [
+      { text: "John Doe", gradePercent: 0, feedback: "Incorrect" },
+      { text: "Jane Doe", gradePercent: 0, feedback: "Incorrect" },
+      {
+        text: "John Smith hahaaaaaaaaaaaaaaa",
+        gradePercent: 100,
+        feedback: "Correct",
+      },
+      { text: "Jane Smith", gradePercent: 0, feedback: "Incorrect" },
+    ],
+  },
+  {
+    id: "2",
+    questionName: "What is your age ?",
+    questionText: "What is your age ?",
+    type: QuestionType.SHORT_ANSWER,
+    status: QuestionStatus.READY,
+    defaultMark: 10,
+    createdBy: "John Doe",
+    createdAt: "2021-10-01",
+    updatedAt: "2021-10-01",
+    modifiedBy: "John Doe",
+    usage: 10,
+    choices: [{ text: "20", gradePercent: 100, feedback: "Correct" }],
+  },
+  {
+    id: "2",
+    questionName: "Are you male?",
+    questionText: "Are you male?",
+    type: QuestionType.TRUE_FALSE,
+    status: QuestionStatus.READY,
+    defaultMark: 10,
+    createdBy: "John Doe",
+    createdAt: "2021-10-01",
+    updatedAt: "2021-10-01",
+    modifiedBy: "John Doe",
+    usage: 10,
+    correctAnswer: true,
+    feedbackOfTrue: "Correct",
+    feedbackOfFalse: "Incorrect",
+  },
+];

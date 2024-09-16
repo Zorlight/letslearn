@@ -41,7 +41,7 @@ export const attemptsAllowedOptions = [
 export enum QuestionType {
   TRUE_FALSE = "True/False",
   SHORT_ANSWER = "Short Answer",
-  MULTIPLE_CHOICE = "Multiple Choice",
+  CHOICE = "Choices Answer",
   ESSAY = "Essay",
 }
 
@@ -53,7 +53,7 @@ export type QuestionTypeOption = {
 export const questionIconMap = {
   [QuestionType.TRUE_FALSE]: <TwoDot />,
   [QuestionType.SHORT_ANSWER]: <RectangleHorizontal size={16} />,
-  [QuestionType.MULTIPLE_CHOICE]: <List size={16} />,
+  [QuestionType.CHOICE]: <List size={16} />,
   [QuestionType.ESSAY]: <FileText size={16} />,
 };
 
@@ -69,7 +69,7 @@ export const questionTypeOptions: QuestionTypeOption[] = [
       "A question that requires a short text answer, typically a single word or a few words.",
   },
   {
-    type: QuestionType.MULTIPLE_CHOICE,
+    type: QuestionType.CHOICE,
     description:
       "A question that provides a list of options for the user to choose from.",
   },
@@ -84,7 +84,7 @@ export enum TabInTab {
   MAIN_TAB = "Main Tab",
   TRUE_FALSE_QUESTION_TAB = "New True/False Question",
   SHORT_ANSWER_QUESTION_TAB = "New Short Answer Question",
-  MULTIPLE_CHOICE_QUESTION_TAB = "New Multiple Choice Question",
+  CHOICE_QUESTION_TAB = "New Choice Question",
   ESSAY_QUESTION_TAB = "New Essay Question",
   QUIZ_TAB = "Quiz tab",
 }

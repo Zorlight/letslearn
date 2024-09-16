@@ -1,22 +1,22 @@
-import AnswerDisplay from "../../quiz-attempting/answer-display";
+import { fakeQuestions } from "@/fake-data/question";
+import MultipleChoiceAnswer from "../../quiz-attempting/choice-answer";
 import QuestionDisplay from "../../quiz-attempting/question-display";
+import { Separator } from "@/lib/shadcn/separator";
 
 const QuizAttemptingTab = () => {
   return (
-    <div className="flex flex-col gap-2">
-      <QuestionDisplay questionOrder={1} totalQuestions={10}>
-        What is your name ?
-      </QuestionDisplay>
-      <AnswerDisplay answerIndex={0}>My name is John Doe</AnswerDisplay>
-      <AnswerDisplay answerIndex={1} variant="selected">
-        My name is John Doe
-      </AnswerDisplay>
-      <AnswerDisplay answerIndex={2} variant="correct">
-        My name is John Doe
-      </AnswerDisplay>
-      <AnswerDisplay answerIndex={3} variant="incorrect">
-        My name is John Doe
-      </AnswerDisplay>
+    <div className="flex flex-col gap-6">
+      <QuestionDisplay
+        questionOrder={1}
+        totalQuestions={10}
+        question={fakeQuestions[0]}
+      />
+      <Separator />
+      <QuestionDisplay
+        questionOrder={2}
+        totalQuestions={10}
+        question={fakeQuestions[2]}
+      />
     </div>
   );
 };

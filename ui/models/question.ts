@@ -30,7 +30,8 @@ export type QuestionChoice = {
 };
 
 interface MultipleChoiceQuestion extends BaseQuestion {
-  type: QuestionType.MULTIPLE_CHOICE;
+  type: QuestionType.CHOICE;
+  multiple: boolean;
   choices: QuestionChoice[];
 }
 

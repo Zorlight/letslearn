@@ -1,16 +1,16 @@
 import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/collapsible-list";
 import { useState } from "react";
-import MultipleChoiceQuestionAnswerSetting, {
-  MultipleChoiceQuestionAnswerForm,
+import ChoiceQuestionAnswerSetting, {
+  ChoiceQuestionAnswerForm,
 } from "../../question-bank/multiple-choice-question/answers";
-import MultipleChoiceQuestionGeneralSetting, {
-  MultipleChoiceQuestionGeneralForm,
-} from "../../question-bank/multiple-choice-question/general";
 import { BulletType, QuestionStatus } from "../../static-data";
+import ChoiceQuestionGeneralSetting, {
+  ChoiceQuestionGeneralForm,
+} from "../../question-bank/multiple-choice-question/general";
 
-const MultipleChoiceQuestionTab = () => {
+const ChoiceQuestionTab = () => {
   const [generalSetting, setGeneralSetting] =
-    useState<MultipleChoiceQuestionGeneralForm>({
+    useState<ChoiceQuestionGeneralForm>({
       questionName: "",
       questionText: "",
       questionStatus: QuestionStatus.READY,
@@ -18,48 +18,43 @@ const MultipleChoiceQuestionTab = () => {
       multipleChoice: false,
       bulletType: BulletType.NO_ORDER,
     });
-  const [answerSetting, setAnswerSetting] =
-    useState<MultipleChoiceQuestionAnswerForm>({
-      choices: [
-        {
-          text: "Choice 1",
-          gradePercent: 100,
-          feedback: "",
-        },
-        {
-          text: "Choice 2",
-          gradePercent: 100,
-          feedback: "",
-        },
-        {
-          text: "Choice 3",
-          gradePercent: 100,
-          feedback: "",
-        },
-      ],
-    });
+  const [answerSetting, setAnswerSetting] = useState<ChoiceQuestionAnswerForm>({
+    choices: [
+      {
+        text: "Choice 1",
+        gradePercent: 100,
+        feedback: "",
+      },
+      {
+        text: "Choice 2",
+        gradePercent: 100,
+        feedback: "",
+      },
+      {
+        text: "Choice 3",
+        gradePercent: 100,
+        feedback: "",
+      },
+    ],
+  });
 
-  const handleGeneralSettingChange = (
-    data: MultipleChoiceQuestionGeneralForm
-  ) => {
+  const handleGeneralSettingChange = (data: ChoiceQuestionGeneralForm) => {
     setGeneralSetting((prev) => ({ ...prev, ...data }));
   };
 
-  const handleAnswerSettingChange = (
-    data: MultipleChoiceQuestionAnswerForm
-  ) => {
+  const handleAnswerSettingChange = (data: ChoiceQuestionAnswerForm) => {
     setAnswerSetting((prev) => ({ ...prev, ...data }));
   };
 
   const titles = ["General", "Answers"];
   const initShowContent = ["General", "Answers"];
   const collapsibleContent = [
-    <MultipleChoiceQuestionGeneralSetting
+    <ChoiceQuestionGeneralSetting
       key={0}
       initValue={generalSetting}
       onChange={handleGeneralSettingChange}
     />,
-    <MultipleChoiceQuestionAnswerSetting
+    <ChoiceQuestionAnswerSetting
       key={1}
       initValue={answerSetting}
       onChange={handleAnswerSettingChange}
@@ -68,7 +63,7 @@ const MultipleChoiceQuestionTab = () => {
   return (
     <div>
       <h1 className="font-bold text-2xl text-orange-600">
-        Adding a Multiple choice question
+        Adding a Multiple or Single choice question
       </h1>
       <CollapsibleList titles={titles} initShowContent={initShowContent}>
         {collapsibleContent}
@@ -77,4 +72,4 @@ const MultipleChoiceQuestionTab = () => {
   );
 };
 
-export default MultipleChoiceQuestionTab;
+export default ChoiceQuestionTab;

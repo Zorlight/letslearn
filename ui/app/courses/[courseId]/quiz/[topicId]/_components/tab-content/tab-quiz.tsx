@@ -44,28 +44,4 @@ const TabQuiz = ({ onTabInTabChange }: Props) => {
   );
 };
 
-interface TableRowProps {
-  children: React.ReactNode;
-}
-const TableRow = ({ children }: TableRowProps) => {
-  return <tr className="odd:bg-gray-100 hover:bg-gray-200">{children}</tr>;
-};
-
-interface CellProps {
-  children: React.ReactNode;
-  isLeftColumn?: boolean;
-}
-const Cell = ({ children, isLeftColumn }: CellProps) => {
-  return (
-    <td
-      className={cn(
-        "p-2 border text-sm",
-        isLeftColumn && "w-[200px] font-bold"
-      )}
-    >
-      {children}
-    </td>
-  );
-};
-
 export default TabQuiz;

@@ -12,14 +12,22 @@ interface Props {
   totalQuestions: number;
   question: Question;
   description?: string;
+  showCorrectAnswer?: boolean;
 }
 const QuestionDisplay = ({
   questionOrder,
   totalQuestions,
   question,
   description,
+  showCorrectAnswer,
 }: Props) => {
   const { type } = question;
+  let desc;
+  if (description) desc = description;
+  else if (type === QuestionType.CHOICE) {
+    if (question.multiple) desc = questionDescription.MultipleChoice;
+    else desc = questionDescription.SingleChoice;
+  } else desc = questionDescription[type];
   return (
     <div className="flex flex-col gap-2 p-4 bg-slate-50 rounded-md">
       {/* Question here */}
@@ -32,18 +40,20 @@ const QuestionDisplay = ({
         <p className="text-gray-500 font-semibold">{question.questionText}</p>
       </div>
       {/* Description here */}
-      <p className="text-slate-600 text-sm">
-        {description ? description : questionDescription[type]}
-      </p>
+      <p className="text-slate-600 text-sm">{desc}</p>
       {/* Answer here */}
       {question.type === QuestionType.CHOICE && (
         <ChoicesDisplay
           choices={question.choices}
           multiple={question.multiple}
+          showCorrectAnswer={showCorrectAnswer}
         />
       )}
       {question.type === QuestionType.TRUE_FALSE && (
-        <TrueFalseChoiceDisplay correctAnswer={question.correctAnswer} />
+        <TrueFalseChoiceDisplay
+          correctAnswer={question.correctAnswer}
+          showCorrectAnswer={showCorrectAnswer}
+        />
       )}
     </div>
   );

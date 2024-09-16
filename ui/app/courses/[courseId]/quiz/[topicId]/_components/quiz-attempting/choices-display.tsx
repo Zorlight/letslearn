@@ -8,12 +8,14 @@ interface Props {
   onSelectAnswer?: (answerIndex: number) => void;
   onSelectMultipleAnswers?: (answerIndexes: number[]) => void;
   multiple?: boolean;
+  showCorrectAnswer?: boolean;
 }
 const ChoicesDisplay = ({
   choices,
   onSelectAnswer,
   onSelectMultipleAnswers,
   multiple,
+  showCorrectAnswer,
 }: Props) => {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const correctAnswerIndexes = useMemo(() => {
@@ -60,8 +62,9 @@ const ChoicesDisplay = ({
           key={index}
           answerIndex={index}
           selectedIndexes={selectedIndexes}
+          multiple={multiple}
           isCorrect={correctAnswerIndexes.includes(choice)}
-          showCorrectAnswer={false}
+          showCorrectAnswer={showCorrectAnswer}
           onSelect={handleSelectAnswer}
         >
           {choice.text}

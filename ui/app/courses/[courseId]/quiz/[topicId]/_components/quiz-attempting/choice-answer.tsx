@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { answerKeys } from "../static-data";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
+import { Circle, CircleCheckBig } from "lucide-react";
 
 const answerVariants = cva(
-  "flex flex-row items-center gap-4 py-2 px-6 rounded-md cursor-pointer transition-all duration-200",
+  "flex flex-row items-center gap-3 py-2 px-3 rounded-md cursor-pointer transition-all duration-200",
   {
     variants: {
       variant: {
@@ -24,6 +25,7 @@ const answerVariants = cva(
 interface Props extends VariantProps<typeof answerVariants> {
   answerIndex: number;
   selectedIndexes: number[];
+  multiple?: boolean;
   isCorrect: boolean;
   showCorrectAnswer?: boolean;
   children: React.ReactNode;
@@ -34,6 +36,7 @@ const ChoiceAnswer = ({
   answerIndex,
   selectedIndexes,
   isCorrect,
+  multiple = false,
   showCorrectAnswer,
   children,
   variant = "default",
@@ -63,18 +66,32 @@ const ChoiceAnswer = ({
       className={cn(answerVariants({ variant: state }))}
       onClick={handleSelectAnswer}
     >
-      <div className="px-2 py-1 rounded-md bg-white">
-        <span
-          className={cn(
-            "font-semibold text-slate-600 transition-all duration-200",
-            state === "selected" && "text-cyan-500",
-            state === "correct" && " text-green-600",
-            state === "incorrect" && "text-red-600"
+      {multiple && (
+        <div>
+          {state === "default" && (
+            <Circle size={16} className="text-cyan-600" />
           )}
-        >
-          {answerKeys[answerIndex]}
-        </span>
-      </div>
+          {state === "selected" && (
+            <CircleCheckBig size={16} className="text-white"></CircleCheckBig>
+          )}
+          {state === "correct" && <span className="text-white">✓</span>}
+          {state === "incorrect" && <span className="text-white">✗</span>}
+        </div>
+      )}
+      {!multiple && (
+        <div className="px-2 py-1 rounded-md bg-white">
+          <span
+            className={cn(
+              "font-semibold text-slate-600 transition-all duration-200",
+              state === "selected" && "text-cyan-500",
+              state === "correct" && " text-green-600",
+              state === "incorrect" && "text-red-600"
+            )}
+          >
+            {answerKeys[answerIndex]}
+          </span>
+        </div>
+      )}
       <p className="font-semibold">{children}</p>
     </div>
   );

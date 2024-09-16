@@ -28,7 +28,14 @@ export type ChoiceResponseData = {
   studentResponses: string[];
 };
 
+<<<<<<< Updated upstream
 export type StudentResponse =
   | QuizResponse
   | AssignmentResponse
   | ChoiceResponse;
+=======
+export interface ChoiceResponse extends StudentResponse {
+  type: ResponseType.CHOICE;
+  data: ChoiceResponseData[];
+}
+>>>>>>> Stashed changes

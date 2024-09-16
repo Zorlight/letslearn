@@ -14,8 +14,11 @@ type User struct {
 	PasswordHash string `json:"-"`
 	IsVerified   bool   `json:"isVerified" gorm:"not full;default:false"`
 
-	RefreshTokens []RefreshToken `json:"-"`
-	VerifyToken   []VerifyToken  `json:"-"`
+	RefreshTokens   []RefreshToken `json:"-"`
+	VerifyTokens    []VerifyToken  `json:"-"`
+	UserProgresses  []UserProgress
+	Courses         []Course          `gorm:"many2many:user_courses"`
+	QuestionChoices []StudentResponse `gorm:"foreignKey:StudentID"`
 }
 
 type UserRepository interface {

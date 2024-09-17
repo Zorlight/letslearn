@@ -14,8 +14,8 @@ const answerVariants = cva(
         selected: "bg-gradient-to-br from-green-600 to-green-400 text-white", //when select but not show correct answer
         correct: "bg-white text-slate-600 border-green-500", // when select and show correct answer and correct
         incorrect: "bg-white text-slate-600 border-red-500", // when select and show correct answer and incorrect
-        notSelected: "bg-white text-slate-600 border-green-500", // when not select and show correct answer and this is not correct answer
-        missing: "bg-white text-slate-600 border-green-500", // when not select and show correct answer and this is correct answer
+        notSelected: "bg-white text-slate-600", // when not select and show correct answer and this is not correct answer
+        missing: "bg-white text-slate-600 border-orange-500", // when not select and show correct answer and this is correct answer
       },
     },
     defaultVariants: {
@@ -81,9 +81,15 @@ const TrueAnswer = ({
       {state === "selected" && (
         <CircleCheckBig size={16} className="text-white" />
       )}
+      {state === "correct" && (
+        <CircleCheckBig size={16} className="text-cyan-600" />
+      )}
+      {state === "incorrect" && (
+        <CircleCheckBig size={16} className="text-cyan-600" />
+      )}
       <span>True</span>
       {state === "correct" && <span className="text-green-500">✓</span>}
-      {state === "missing" && <span className="text-green-500">✓</span>}
+      {state === "missing" && <span className="text-orange-500">✓</span>}
       {state === "incorrect" && <span className="text-red-500">✗</span>}
     </div>
   );

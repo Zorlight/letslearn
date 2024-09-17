@@ -3,7 +3,7 @@ import { Separator } from "@/lib/shadcn/separator";
 import { cn } from "@/lib/utils";
 import React, { useEffect } from "react";
 import { Tab, TabInTab } from "../static-data";
-import BackwardButton from "./_components/backward-button";
+import BackwardButtonIcon from "./_components/backward-button-icon";
 import ChoiceQuestionTab from "./tab-in-tab/choice-question-tab";
 import QuizAttemptingTab from "./tab-in-tab/quiz-attempting-tab";
 import ShortAnswerQuestionTab from "./tab-in-tab/short-answer-question-tab";
@@ -12,6 +12,7 @@ import TabQuestion from "./tab-question";
 import TabQuestionBank from "./tab-question-bank";
 import TabQuiz from "./tab-quiz";
 import TabSetting from "./tab-setting";
+import BackwardButtonIconText from "./_components/backward-button-icon-text";
 
 interface Props {
   className?: string;
@@ -35,16 +36,20 @@ const TabContent = ({ className }: Props) => {
     case Tab.QUIZ:
       return (
         <div className="relative">
-          {tabInTab == TabInTab.QUIZ_TAB && <div className="absolute"></div>}
-
-          <div className={cn("relative", className)}>
-            <Separator />
-            <div className="py-4">
-              {tabInTab === TabInTab.MAIN_TAB && (
-                <TabQuiz onTabInTabChange={handleTabInTabChange} />
-              )}
-              {tabInTab === TabInTab.QUIZ_TAB && <QuizAttemptingTab />}
-            </div>
+          <Separator />
+          <div className="py-4">
+            {tabInTab === TabInTab.MAIN_TAB && (
+              <TabQuiz
+                onTabInTabChange={handleTabInTabChange}
+                className={className}
+              />
+            )}
+            {tabInTab === TabInTab.QUIZ_TAB && (
+              <QuizAttemptingTab
+                className={className}
+                onTabInTabChange={handleTabInTabChange}
+              />
+            )}
           </div>
         </div>
       );
@@ -63,7 +68,7 @@ const TabContent = ({ className }: Props) => {
           <Separator />
           <div className="relative p-4">
             {tabInTab !== TabInTab.MAIN_TAB && (
-              <BackwardButton
+              <BackwardButtonIcon
                 onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
                 className="absolute top-3 left-3"
               />
@@ -91,7 +96,7 @@ const TabContent = ({ className }: Props) => {
           <Separator />
           <div className="relative p-4">
             {tabInTab !== TabInTab.MAIN_TAB && (
-              <BackwardButton
+              <BackwardButtonIcon
                 onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
                 className="absolute top-3 left-3"
               />

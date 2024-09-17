@@ -5,16 +5,16 @@ import React, { useEffect, useState } from "react";
 import { answerKeys } from "../../static-data";
 
 const answerVariants = cva(
-  "flex flex-row items-center gap-3 py-2 px-3 rounded-md cursor-pointer transition-all duration-200 border",
+  "flex flex-row items-center gap-3 py-2 px-3 rounded-md cursor-pointer transition-all duration-200 border border-transparent",
   {
     variants: {
       variant: {
-        default: "bg-indigo-100 hover:bg-blue-200 text-slate-600",
+        default: "bg-slate-100 hover:bg-blue-100 text-slate-600",
         selected: "bg-cyan-600 text-white shadow-md",
         correct: "bg-white text-slate-600 border-green-500",
         incorrect: "bg-white text-slate-600 border-red-500",
-        missing: "bg-white text-slate-600 border-green-500",
-        notSelected: "bg-white text-slate-600",
+        missing: "bg-white text-slate-600 border-orange-500",
+        notSelected: "bg-white text-slate-600 border-slate-200",
       },
     },
     defaultVariants: {
@@ -95,7 +95,7 @@ const SingleChoiceAnswer = ({
 
       <p className="font-semibold">{children}</p>
       {state === "correct" && <span className="text-green-500">✓</span>}
-      {state === "missing" && <span className="text-green-500">✓</span>}
+      {state === "missing" && <span className="text-orange-500">✓</span>}
       {state === "incorrect" && <span className="text-red-500">✗</span>}
     </div>
   );

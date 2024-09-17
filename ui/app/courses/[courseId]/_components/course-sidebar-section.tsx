@@ -1,11 +1,11 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Section, Topic } from "@/models/course";
+import { Section } from "@/models/course";
+import { Topic } from "@/models/topic";
 import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CourseSidebarTopicItem from "./course-sidebar-topic-";
-import Link from "next/link";
 
 interface Props {
   courseId: string;

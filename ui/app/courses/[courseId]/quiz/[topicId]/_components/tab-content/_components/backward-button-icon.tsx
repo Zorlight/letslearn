@@ -6,7 +6,7 @@ interface Props {
   onClick?: () => void;
   className?: string;
 }
-const BackwardButton = ({ onClick, className }: Props) => {
+const BackwardButtonIcon = ({ onClick, className }: Props) => {
   return (
     <Button
       className={cn("rounded-full group hover:shadow-lg", className)}
@@ -22,4 +22,4 @@ const BackwardButton = ({ onClick, className }: Props) => {
   );
 };
 
-export default BackwardButton;
+export default BackwardButtonIcon;

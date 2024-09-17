@@ -8,8 +8,9 @@ import { GradingMethod, TabInTab } from "../static-data";
 
 interface Props {
   onTabInTabChange: (tab: TabInTab) => void;
+  className?: string;
 }
-const TabQuiz = ({ onTabInTabChange }: Props) => {
+const TabQuiz = ({ className, onTabInTabChange }: Props) => {
   const handlePreviewQuiz = () => {
     onTabInTabChange(TabInTab.QUIZ_TAB);
   };
@@ -17,7 +18,7 @@ const TabQuiz = ({ onTabInTabChange }: Props) => {
   const attemptsAllowed = 3;
   const gradingMethod = GradingMethod.HIGHEST_GRADE;
   return (
-    <div className="space-y-2">
+    <div className={cn("space-y-2", className)}>
       <div className="bg-slate-50 rounded-md p-6 space-y-2">
         <h5 className="font-medium">Quiz - 20/2/2022!</h5>
         <Separator />

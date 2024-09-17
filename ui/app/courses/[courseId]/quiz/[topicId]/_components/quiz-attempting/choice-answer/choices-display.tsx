@@ -43,17 +43,46 @@ const ChoicesDisplay = ({
     }
   };
 
+  // Calculate the mark when the correct answer is shown
   useEffect(() => {
     if (showCorrectAnswer && onShowingMark) {
       // Calculate the mark based on the selected indexes
-      const mark = selectedIndexes.reduce((acc, index) => {
-        return (
-          acc + Math.round((defaultMark * choices[index].gradePercent) / 100)
+      let mark = 0;
+      if (multiple) {
+        //if all the correct answers are selected -> full mark
+        const isAllCorrectAnswersSelected = correctAnswerIndexes.every(
+          (index) => selectedIndexes.includes(index)
         );
-      }, 0);
+        if (isAllCorrectAnswersSelected) mark = defaultMark;
+        else {
+          //calculate total percentage of correct answers
+          const totalCorrectPercentage = selectedIndexes.reduce(
+            (acc, index) => acc + choices[index].gradePercent,
+            0
+          );
+          //calculate the mark
+          mark = Math.round(
+            (totalCorrectPercentage / correctAnswerIndexes.length) * defaultMark
+          );
+        }
+      } else {
+        if (selectedIndexes.length > 0) {
+          // Get the selected answer and calculate the mark
+          const selectedAnswer = choices[selectedIndexes[0]];
+          mark = defaultMark * selectedAnswer.gradePercent;
+        }
+      }
       onShowingMark(mark);
     }
-  }, [showCorrectAnswer, selectedIndexes, choices, onShowingMark, defaultMark]);
+  }, [
+    showCorrectAnswer,
+    selectedIndexes,
+    choices,
+    onShowingMark,
+    defaultMark,
+    correctAnswerIndexes,
+    multiple,
+  ]);
 
   const grid2 = "grid grid-cols-2";
   const grid4 = "grid grid-cols-4";

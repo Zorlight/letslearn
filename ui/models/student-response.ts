@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export enum ResponseType {
   QUIZ = "quiz",
   ASSIGNMENT = "assignment",
@@ -5,8 +7,7 @@ export enum ResponseType {
 }
 
 export interface BaseStudentResponse {
-  studentId: string;
-  studentName: string;
+  student: User;
   type: ResponseType;
 }
 

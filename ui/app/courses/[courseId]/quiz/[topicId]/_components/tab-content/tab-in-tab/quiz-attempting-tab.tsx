@@ -1,6 +1,6 @@
 "use client";
 import { fakeQuestions } from "@/fake-data/question";
-import MultipleChoiceAnswer from "../../quiz-attempting/choice-answer";
+import MultipleChoiceAnswer from "../../quiz-attempting/choice-answer/single-choice-answer";
 import QuestionDisplay from "../../quiz-attempting/question-display";
 import { Separator } from "@/lib/shadcn/separator";
 import { useState } from "react";

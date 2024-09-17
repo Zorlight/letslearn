@@ -16,7 +16,7 @@ interface BaseQuestion {
   usage: number;
 }
 
-interface TrueFalseQuestion extends BaseQuestion {
+export interface TrueFalseQuestion extends BaseQuestion {
   type: QuestionType.TRUE_FALSE;
   correctAnswer: boolean;
   feedbackOfTrue: string;
@@ -29,18 +29,15 @@ export type QuestionChoice = {
   feedback: string;
 };
 
-interface MultipleChoiceQuestion extends BaseQuestion {
+export interface ChoiceQuestion extends BaseQuestion {
   type: QuestionType.CHOICE;
   multiple: boolean;
   choices: QuestionChoice[];
 }
 
-interface ShortAnswerQuestion extends BaseQuestion {
+export interface ShortAnswerQuestion extends BaseQuestion {
   type: QuestionType.SHORT_ANSWER;
   choices: QuestionChoice[];
 }
 
-export type Question =
-  | TrueFalseQuestion
-  | MultipleChoiceQuestion
-  | ShortAnswerQuestion;
+export type Question = TrueFalseQuestion | ChoiceQuestion | ShortAnswerQuestion;

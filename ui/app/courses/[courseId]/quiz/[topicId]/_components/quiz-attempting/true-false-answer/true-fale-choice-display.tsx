@@ -1,22 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FalseAnswer from "./false-answer";
 import TrueAnswer from "./true-answer";
+import { TrueFalseQuestion } from "@/models/question";
 
 interface Props {
-  correctAnswer: boolean;
-  onSelectAnswer?: (answer: boolean) => void;
+  question: TrueFalseQuestion;
+  onShowingMark?: (mark: number) => void;
   showCorrectAnswer?: boolean;
 }
 const TrueFalseChoiceDisplay = ({
-  correctAnswer,
-  onSelectAnswer,
+  question,
+  onShowingMark,
   showCorrectAnswer,
 }: Props) => {
+  const { correctAnswer, defaultMark } = question;
   const [selected, setSelected] = useState<boolean>();
   const handleSelectAnswer = (answer: boolean) => {
     setSelected(answer);
-    if (onSelectAnswer) onSelectAnswer(answer);
   };
+
+  useEffect(() => {
+    if (showCorrectAnswer) {
+      if (onShowingMark) {
+        const mark = selected === correctAnswer ? defaultMark : 0;
+        onShowingMark(mark);
+      }
+    }
+  }, [showCorrectAnswer, selected, correctAnswer, onShowingMark, defaultMark]);
 
   return (
     <div className="w-full flex flex-row gap-2">

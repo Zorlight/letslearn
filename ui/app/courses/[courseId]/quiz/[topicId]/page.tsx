@@ -44,7 +44,7 @@ const QuizIdPage = ({ params }: Props) => {
   const tabs = Object.values(Tab);
 
   return (
-    <TabProvider initTab={Tab.QUESTION}>
+    <TabProvider initTab={Tab.QUIZ}>
       <div className="p-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex flex-row items-center gap-2 mb-4">

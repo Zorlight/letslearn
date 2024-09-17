@@ -55,7 +55,7 @@ export const fakeQuestions: Question[] = [
     updatedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
-    correctAnswer: true,
+    correctAnswer: false,
     feedbackOfTrue: "Correct",
     feedbackOfFalse: "Incorrect",
   },
@@ -76,7 +76,7 @@ export const fakeQuestions: Question[] = [
       { text: "Music", gradePercent: 25, feedback: "Wow" },
       { text: "Science", gradePercent: 25, feedback: "Impressive" },
       { text: "Math", gradePercent: 25, feedback: "Good" },
-      { text: "Biology", gradePercent: 25, feedback: "Excellent" },
+      { text: "Biology", gradePercent: 0, feedback: "Be de" },
     ],
   },
 ];

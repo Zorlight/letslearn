@@ -5,28 +5,31 @@ import { TrueFalseQuestion } from "@/models/question";
 
 interface Props {
   question: TrueFalseQuestion;
-  onShowingMark?: (mark: number) => void;
   showCorrectAnswer?: boolean;
+  onMarkChange?: (mark: number) => void;
+  onAnswerSelected?: (hasAnswered: boolean) => void;
 }
 const TrueFalseChoiceDisplay = ({
   question,
-  onShowingMark,
   showCorrectAnswer,
+  onMarkChange,
+  onAnswerSelected,
 }: Props) => {
   const { correctAnswer, defaultMark } = question;
   const [selected, setSelected] = useState<boolean>();
   const handleSelectAnswer = (answer: boolean) => {
     setSelected(answer);
+
+    // Calculate mark
+    const mark = calculateMark(answer);
+    if (onMarkChange) onMarkChange(mark);
+    if (onAnswerSelected) onAnswerSelected(true);
   };
 
-  useEffect(() => {
-    if (showCorrectAnswer) {
-      if (onShowingMark) {
-        const mark = selected === correctAnswer ? defaultMark : 0;
-        onShowingMark(mark);
-      }
-    }
-  }, [showCorrectAnswer, selected, correctAnswer, onShowingMark, defaultMark]);
+  const calculateMark = (selected: boolean) => {
+    if (selected === correctAnswer) return defaultMark;
+    return 0;
+  };
 
   return (
     <div className="w-full flex flex-row gap-2">

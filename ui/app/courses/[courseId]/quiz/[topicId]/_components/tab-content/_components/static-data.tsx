@@ -16,12 +16,20 @@ export const symbolAnnotations: SymbolAnnotation[] = [
     description: "You didn't select this correct answer!",
   },
   {
+    symbol: <span className="text-red-500">✗</span>,
+    description: "You selected the incorrect answer!",
+  },
+  {
     symbol: <CircleCheckBig size={16} className="text-cyan-600" />,
     description: "You selected this answer!",
   },
   {
     symbol: <Circle size={16} className="text-cyan-600" />,
     description: "You didn't select this answer!",
+  },
+  {
+    symbol: <FlagIcon variant="default" />,
+    description: "The question is unflagged!",
   },
   {
     symbol: <FlagIcon variant="active" />,
@@ -46,7 +54,7 @@ export const colorAnnotations: ColorAnnotation[] = [
     description: "This color represents the incorrect answer!",
   },
   {
-    colorClassName: "bg-orange-500",
+    colorClassName: "bg-yellow-500",
     description: "This color represents the missing answer!",
   },
 ];

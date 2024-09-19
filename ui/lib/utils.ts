@@ -86,6 +86,18 @@ function handleFilterColumn<T>(
   return filterList;
 }
 
+const getDurationBySecond = (startTime: any, endTime: any) => {
+  if (!startTime || !endTime) return 0;
+
+  try {
+    startTime = new Date(startTime);
+    endTime = new Date(endTime);
+    return Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+  } catch (e) {
+    return null;
+  }
+};
+
 export {
   cn,
   displayNumber,
@@ -94,4 +106,5 @@ export {
   getByteFromSize,
   getPublicIdFromCloudinaryUrl,
   handleFilterColumn,
+  getDurationBySecond,
 };

@@ -3,44 +3,39 @@ import { Tab } from "../static-data";
 import TabChoice from "./tab-choice";
 import TabResponses from "./tab-responses";
 import TabSetting from "./tab-setting";
+import { useTab } from "@/hooks/useTab";
+import TabContentLayout from "@/components/ui/tab-content-layout";
+import { notFound } from "next/navigation";
 
 interface Props {
-  selectedTab: string;
   className?: string;
 }
-const TabContent = ({ selectedTab, className }: Props) => {
+const TabContent = ({ className }: Props) => {
+  const tabContext = useTab<string>();
+  const { selectedTab } = tabContext;
   switch (selectedTab) {
     case Tab.CHOICE:
       return (
-        <div className={className}>
-          <Separator />
-          <div className="py-4">
-            <TabChoice />
-          </div>
-        </div>
+        <TabContentLayout className={className}>
+          <TabChoice />
+        </TabContentLayout>
       );
     case Tab.SETTING:
       return (
-        <div className={className}>
-          <Separator />
-          <div className="p-4">
-            <TabSetting />
-          </div>
-        </div>
+        <TabContentLayout className={className}>
+          <TabSetting />
+        </TabContentLayout>
       );
     case Tab.RESPONSES:
       return (
-        <>
-          <Separator />
-          <div className="p-4">
-            <TabResponses />
-          </div>
-        </>
+        <TabContentLayout className={className} fullWidth>
+          <TabResponses />
+        </TabContentLayout>
       );
     case Tab.MORE:
-      return <div></div>;
+      return <TabContentLayout></TabContentLayout>;
     default:
-      return <div></div>;
+      return notFound();
   }
 };
 

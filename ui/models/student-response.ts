@@ -8,11 +8,21 @@ export enum ResponseType {
 
 export interface BaseStudentResponse {
   student: User;
-  type: ResponseType;
+}
+
+export enum QuizStatus {
+  FINISHED = "Finished",
+  NOT_FINISHED = "Not finished",
+  NOT_STARTED = "Not started",
 }
 
 export interface QuizResponse extends BaseStudentResponse {
   type: ResponseType.QUIZ;
+  status: QuizStatus;
+  startedAt: string;
+  completedAt: string;
+  mark: number;
+  totalMark: number;
 }
 
 export interface AssignmentResponse extends BaseStudentResponse {
@@ -29,14 +39,7 @@ export type ChoiceResponseData = {
   studentResponses: string[];
 };
 
-<<<<<<< Updated upstream
 export type StudentResponse =
   | QuizResponse
   | AssignmentResponse
   | ChoiceResponse;
-=======
-export interface ChoiceResponse extends StudentResponse {
-  type: ResponseType.CHOICE;
-  data: ChoiceResponseData[];
-}
->>>>>>> Stashed changes

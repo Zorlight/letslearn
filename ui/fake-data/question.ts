@@ -8,7 +8,8 @@ export const fakeQuestions: Question[] = [
   {
     id: "1",
     questionName: "What is your name ?",
-    questionText: "What is your name ?",
+    questionText:
+      "What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?",
     type: QuestionType.CHOICE,
     multiple: false,
     status: QuestionStatus.READY,
@@ -156,7 +157,7 @@ export const fakeQuestions: Question[] = [
       { text: "Pizza", gradePercent: 25, feedback: "Wow" },
       { text: "Hamburger", gradePercent: 25, feedback: "Impressive" },
       { text: "Sushi", gradePercent: 50, feedback: "Good" },
-      { text: "Steak", gradePercent: 0, feedback: "Be de" },
+      { text: "Steak", gradePercent: -20, feedback: "Be de" },
     ],
   },
 ];

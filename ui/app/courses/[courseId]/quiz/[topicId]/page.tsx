@@ -1,16 +1,15 @@
 "use client";
-import React, { createContext, useContext, useMemo, useState } from "react";
-import { colorMap, iconMap } from "../../_components/topic-map";
-import { notFound } from "next/navigation";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 import TabList from "@/components/ui/tab-list";
-import { Tab } from "./_components/static-data";
-import TabContent from "./_components/tab-content/tab-content";
-import { TabContext, TabProvider } from "@/provider/TabProvider";
-import { useTab } from "@/hooks/useTab";
 import { fakeCourses } from "@/fake-data/course";
 import { fakeTopics } from "@/fake-data/topic";
+import { cn } from "@/lib/utils";
+import { TabProvider } from "@/provider/TabProvider";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import React, { useMemo } from "react";
+import { colorMap, iconMap } from "../../_components/topic-map";
+import { Tab } from "./_components/static-data";
+import TabContent from "./_components/tab-content/tab-content";
 
 interface Props {
   params: {
@@ -21,7 +20,6 @@ interface Props {
 
 const QuizIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
-  const tabContext = useTab<string>();
 
   //get course by id
   const course = useMemo(() => {

@@ -6,13 +6,15 @@ import SingleChoiceAnswer from "./single-choice-answer";
 
 interface Props {
   question: ChoiceQuestion;
-  onShowingMark?: (mark: number) => void;
   showCorrectAnswer?: boolean;
+  onMarkChange?: (mark: number) => void;
+  onAnswerSelected?: (hasAnswered: boolean) => void;
 }
 const ChoicesDisplay = ({
   question,
-  onShowingMark,
+  onMarkChange,
   showCorrectAnswer,
+  onAnswerSelected,
 }: Props) => {
   const { choices, multiple, defaultMark } = question;
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
@@ -22,71 +24,69 @@ const ChoicesDisplay = ({
       .map((choice) => choices.indexOf(choice));
   }, [choices]);
 
-  const maxLength = choices
-    .map((choice) => choice.text.length)
-    .reduce((a, b) => Math.max(a, b), 0);
+  const calcullateMultipleChoiceMark = (selectedIndexes: number[]) => {
+    let mark = 0;
+    //if all the correct answers are selected -> full mark
 
-  const handleSelectAnswer = (answerIndex: number) => {
-    // If single answer is allowed, update selected index
-    if (!multiple) {
-      setSelectedIndexes([answerIndex]);
-    }
-    // If multiple answers are allowed, update selected indexes
+    const totalCorrectPercentage = selectedIndexes.reduce(
+      (acc, index) => acc + choices[index].gradePercent,
+      0
+    );
+    const isAllCorrectAnswersSelected = totalCorrectPercentage === 100;
+    if (isAllCorrectAnswersSelected) mark = defaultMark;
     else {
-      const newSelectedIndexes = [...selectedIndexes];
-
-      if (selectedIndexes.includes(answerIndex))
-        newSelectedIndexes.splice(selectedIndexes.indexOf(answerIndex), 1);
-      else newSelectedIndexes.push(answerIndex);
-
-      setSelectedIndexes(newSelectedIndexes);
+      //calculate total percentage of correct answers
+      console.log("total percent", totalCorrectPercentage);
+      //calculate the mark
+      mark = Math.round((defaultMark * totalCorrectPercentage) / 100);
     }
+    return mark;
   };
 
-  // Calculate the mark when the correct answer is shown
-  useEffect(() => {
-    if (showCorrectAnswer && onShowingMark) {
-      // Calculate the mark based on the selected indexes
-      let mark = 0;
-      if (multiple) {
-        //if all the correct answers are selected -> full mark
-        const isAllCorrectAnswersSelected = correctAnswerIndexes.every(
-          (index) => selectedIndexes.includes(index)
-        );
-        if (isAllCorrectAnswersSelected) mark = defaultMark;
-        else {
-          //calculate total percentage of correct answers
-          const totalCorrectPercentage = selectedIndexes.reduce(
-            (acc, index) => acc + choices[index].gradePercent,
-            0
-          );
-          //calculate the mark
-          mark = Math.round(
-            (totalCorrectPercentage / correctAnswerIndexes.length) * defaultMark
-          );
-        }
-      } else {
-        if (selectedIndexes.length > 0) {
-          // Get the selected answer and calculate the mark
-          const selectedAnswer = choices[selectedIndexes[0]];
-          mark = defaultMark * selectedAnswer.gradePercent;
-        }
-      }
-      onShowingMark(mark);
+  const calculateSingleChoiceMark = (selectedIndexes: number[]) => {
+    if (selectedIndexes.length > 0) {
+      // Get the selected answer and calculate the mark
+      const selectedAnswer = choices[selectedIndexes[0]];
+      const mark = (defaultMark * selectedAnswer.gradePercent) / 100;
+      return mark;
     }
-  }, [
-    showCorrectAnswer,
-    selectedIndexes,
-    choices,
-    onShowingMark,
-    defaultMark,
-    correctAnswerIndexes,
-    multiple,
-  ]);
+    return 0;
+  };
+
+  const handleSelectSingleAnswer = (answerIndex: number) => {
+    const newSelectedIndexes = [answerIndex];
+    setSelectedIndexes(newSelectedIndexes);
+
+    //Calculate the mark when the user answers the question
+    let mark = calculateSingleChoiceMark(newSelectedIndexes);
+    if (onMarkChange) onMarkChange(mark);
+
+    //Let the navigation know that the user has answered the question or not
+    if (onAnswerSelected) onAnswerSelected(true);
+  };
+
+  const handleSelectMultipleAnswer = (answerIndex: number) => {
+    const newSelectedIndexes = [...selectedIndexes];
+
+    if (selectedIndexes.includes(answerIndex))
+      newSelectedIndexes.splice(selectedIndexes.indexOf(answerIndex), 1);
+    else newSelectedIndexes.push(answerIndex);
+
+    setSelectedIndexes(newSelectedIndexes);
+
+    let mark = calcullateMultipleChoiceMark(newSelectedIndexes);
+    if (onMarkChange) onMarkChange(mark);
+
+    //Let the navigation know that the user has answered the question or not
+    if (onAnswerSelected) onAnswerSelected(newSelectedIndexes.length > 0);
+  };
 
   const grid2 = "grid grid-cols-2";
   const grid4 = "grid grid-cols-4";
   const rowLayout = "flex flex-col";
+  const maxLength = choices
+    .map((choice) => choice.text.length)
+    .reduce((a, b) => Math.max(a, b), 0);
 
   return (
     <div
@@ -106,7 +106,7 @@ const ChoicesDisplay = ({
               selectedIndexes={selectedIndexes}
               correctAnswerIndexed={correctAnswerIndexes}
               showCorrectAnswer={showCorrectAnswer}
-              onSelect={handleSelectAnswer}
+              onSelect={handleSelectMultipleAnswer}
             >
               {choice.text}
             </MultipleChoiceAnswer>
@@ -119,7 +119,7 @@ const ChoicesDisplay = ({
             selectedIndexes={selectedIndexes}
             correctAnswerIndexes={correctAnswerIndexes}
             showCorrectAnswer={showCorrectAnswer}
-            onSelect={handleSelectAnswer}
+            onSelect={handleSelectSingleAnswer}
           >
             {choice.text}
           </SingleChoiceAnswer>

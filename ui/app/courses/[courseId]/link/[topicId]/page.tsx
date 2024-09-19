@@ -11,6 +11,7 @@ import { useMemo } from "react";
 import { fakeCourses } from "@/fake-data/course";
 import { Course } from "@/models/course";
 import { fakeTopics } from "@/fake-data/topic";
+import { TabProvider } from "@/provider/TabProvider";
 
 interface Props {
   params: {
@@ -20,8 +21,6 @@ interface Props {
 }
 const LinkIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
-  const tabContext = useTab<string>();
-  const { selectedTab } = tabContext;
 
   //get course by id
   const course = useMemo(() => {
@@ -67,8 +66,10 @@ const LinkIdPage = ({ params }: Props) => {
           <Icon size={24} />
           <h1 className="text-2xl font-bold">{topic.title}</h1>
         </div>
-        <TabList tabs={tabs} className="mt-4" />
-        <TabContent selectedTab={selectedTab} />
+        <TabProvider initTab={Tab.URL}>
+          <TabList tabs={tabs} className="mt-4" />
+          <TabContent />
+        </TabProvider>
       </div>
     </div>
   );

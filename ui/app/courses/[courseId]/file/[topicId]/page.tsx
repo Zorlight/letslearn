@@ -12,6 +12,7 @@ import { fakeCourses } from "@/fake-data/course";
 import { Course } from "@/models/course";
 import { fakeTopics } from "@/fake-data/topic";
 import { FileTopic, TopicType } from "@/models/topic";
+import { TabProvider } from "@/provider/TabProvider";
 
 interface Props {
   params: {
@@ -33,9 +34,6 @@ const UploadIdPage = ({ params }: Props) => {
     ) as FileTopic;
   }, [topicId]);
 
-  const tabContext = useTab<string>();
-  const { selectedTab } = tabContext;
-
   if (!topic) return notFound();
   const sectionId = topic.sectionId;
   if (!course) return notFound();
@@ -48,33 +46,36 @@ const UploadIdPage = ({ params }: Props) => {
   const tabs = Object.values(Tab);
 
   return (
-    <div className="p-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex flex-row items-center gap-2 mb-4">
-          <Link
-            href={`/courses/${course.id}`}
-            className="text-cyan-600 hover:underline underline-offset-2 decoration-1"
-          >
-            {course.title}
-          </Link>
-          <span className="text-slate-600">/</span>
-          <Link
-            href={`/courses/${course.id}#section-${section.id}`}
-            className="text-cyan-600 hover:underline underline-offset-2 decoration-1"
-          >
-            {section.title}
-          </Link>
-          <span className="text-slate-600">/</span>
-          <span>{topic.title}</span>
+    <TabProvider initTab={Tab.FILE}>
+      <div className="p-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex flex-row items-center gap-2 mb-4">
+            <Link
+              href={`/courses/${course.id}`}
+              className="text-cyan-600 hover:underline underline-offset-2 decoration-1"
+            >
+              {course.title}
+            </Link>
+            <span className="text-slate-600">/</span>
+            <Link
+              href={`/courses/${course.id}#section-${section.id}`}
+              className="text-cyan-600 hover:underline underline-offset-2 decoration-1"
+            >
+              {section.title}
+            </Link>
+            <span className="text-slate-600">/</span>
+            <span>{topic.title}</span>
+          </div>
+          <div className={cn("flex flex-row items-center gap-4", color)}>
+            <Icon size={24} />
+            <h1 className="text-2xl font-bold">{topic.title}</h1>
+          </div>
+
+          <TabList tabs={tabs} className="mt-4" />
+          <TabContent />
         </div>
-        <div className={cn("flex flex-row items-center gap-4", color)}>
-          <Icon size={24} />
-          <h1 className="text-2xl font-bold">{topic.title}</h1>
-        </div>
-        <TabList tabs={tabs} className="mt-4" />
-        <TabContent selectedTab={selectedTab} />
       </div>
-    </div>
+    </TabProvider>
   );
 };
 

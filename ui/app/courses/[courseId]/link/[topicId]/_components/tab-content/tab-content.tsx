@@ -1,21 +1,34 @@
-import React from "react";
+import TabContentLayout from "@/components/ui/tab-content-layout";
+import { useTab } from "@/hooks/useTab";
+import { notFound } from "next/navigation";
 import { Tab } from "../static-data";
-import TabUrl from "./tab-url";
 import TabSetting from "./tab-setting";
+import TabUrl from "./tab-url";
 
 interface Props {
-  selectedTab: string;
+  className?: string;
 }
-const TabContent = ({ selectedTab }: Props) => {
+
+const TabContent = ({ className }: Props) => {
+  const tabContext = useTab<string>();
+  const { selectedTab } = tabContext;
   switch (selectedTab) {
     case Tab.URL:
-      return <TabUrl />;
+      return (
+        <TabContentLayout className={className}>
+          <TabUrl />
+        </TabContentLayout>
+      );
     case Tab.SETTING:
-      return <TabSetting />;
+      return (
+        <TabContentLayout className={className}>
+          <TabSetting />
+        </TabContentLayout>
+      );
     case Tab.MORE:
-      return <div></div>;
+      return <TabContentLayout></TabContentLayout>;
     default:
-      return <div></div>;
+      return notFound();
   }
 };
 

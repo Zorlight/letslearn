@@ -86,7 +86,7 @@ export enum TabInTab {
   SHORT_ANSWER_QUESTION_TAB = "New Short Answer Question",
   CHOICE_QUESTION_TAB = "New Choice Question",
   ESSAY_QUESTION_TAB = "New Essay Question",
-  QUIZ_TAB = "Quiz tab",
+  QUIZ_ATTEMPTING_TAB = "Quiz Attempting",
 }
 
 export enum QuestionStatus {
@@ -154,3 +154,10 @@ export const answerKeys = [
   "Y",
   "Z",
 ];
+
+export enum QuestionResult {
+  NOT_SHOW = "Not Show",
+  FULL_MARK = "Full mark",
+  PARTIAL_MARK = "Partial mark",
+  ZERO_MARK = "Zero mark",
+}

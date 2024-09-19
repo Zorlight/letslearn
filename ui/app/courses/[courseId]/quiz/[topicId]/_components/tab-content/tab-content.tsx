@@ -12,7 +12,8 @@ import TabQuestion from "./tab-question";
 import TabQuestionBank from "./tab-question-bank";
 import TabQuiz from "./tab-quiz";
 import TabSetting from "./tab-setting";
-import BackwardButtonIconText from "./_components/backward-button-icon-text";
+import TabContentLayout from "@/components/ui/tab-content-layout";
+import { notFound } from "next/navigation";
 
 interface Props {
   className?: string;
@@ -35,93 +36,77 @@ const TabContent = ({ className }: Props) => {
   switch (selectedTab) {
     case Tab.QUIZ:
       return (
-        <div className="relative">
-          <Separator />
-          <div className="py-4">
-            {tabInTab === TabInTab.MAIN_TAB && (
-              <TabQuiz
-                onTabInTabChange={handleTabInTabChange}
-                className={className}
-              />
-            )}
-            {tabInTab === TabInTab.QUIZ_TAB && (
-              <QuizAttemptingTab
-                className={className}
-                onTabInTabChange={handleTabInTabChange}
-              />
-            )}
-          </div>
-        </div>
+        <TabContentLayout className={className}>
+          {tabInTab === TabInTab.MAIN_TAB && (
+            <TabQuiz
+              onTabInTabChange={handleTabInTabChange}
+              className={className}
+            />
+          )}
+          {tabInTab === TabInTab.QUIZ_ATTEMPTING_TAB && (
+            <QuizAttemptingTab
+              className={className}
+              onTabInTabChange={handleTabInTabChange}
+            />
+          )}
+        </TabContentLayout>
       );
     case Tab.SETTING:
       return (
-        <div className={className}>
-          <Separator />
-          <div className="p-4">
-            <TabSetting />
-          </div>
-        </div>
+        <TabContentLayout className={className}>
+          <TabSetting />
+        </TabContentLayout>
       );
     case Tab.QUESTION_BANK:
       return (
-        <>
-          <Separator />
-          <div className="relative p-4">
-            {tabInTab !== TabInTab.MAIN_TAB && (
-              <BackwardButtonIcon
-                onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
-                className="absolute top-3 left-3"
-              />
+        <TabContentLayout className={className} fullWidth>
+          {tabInTab !== TabInTab.MAIN_TAB && (
+            <BackwardButtonIcon
+              onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
+              className="absolute top-3 left-3"
+            />
+          )}
+          {tabInTab === TabInTab.MAIN_TAB && (
+            <TabQuestionBank onTabInTabChange={handleTabInTabChange} />
+          )}
+          <div className="mx-20">
+            {tabInTab === TabInTab.TRUE_FALSE_QUESTION_TAB && (
+              <TrueFalseQuestionTab />
             )}
-            {tabInTab === TabInTab.MAIN_TAB && (
-              <TabQuestionBank onTabInTabChange={handleTabInTabChange} />
+            {tabInTab === TabInTab.SHORT_ANSWER_QUESTION_TAB && (
+              <ShortAnswerQuestionTab />
             )}
-            <div className="mx-20">
-              {tabInTab === TabInTab.TRUE_FALSE_QUESTION_TAB && (
-                <TrueFalseQuestionTab />
-              )}
-              {tabInTab === TabInTab.SHORT_ANSWER_QUESTION_TAB && (
-                <ShortAnswerQuestionTab />
-              )}
-              {tabInTab === TabInTab.CHOICE_QUESTION_TAB && (
-                <ChoiceQuestionTab />
-              )}
-            </div>
+            {tabInTab === TabInTab.CHOICE_QUESTION_TAB && <ChoiceQuestionTab />}
           </div>
-        </>
+        </TabContentLayout>
       );
     case Tab.QUESTION:
       return (
-        <>
-          <Separator />
-          <div className="relative p-4">
-            {tabInTab !== TabInTab.MAIN_TAB && (
-              <BackwardButtonIcon
-                onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
-                className="absolute top-3 left-3"
-              />
+        <TabContentLayout className={className} fullWidth>
+          {tabInTab !== TabInTab.MAIN_TAB && (
+            <BackwardButtonIcon
+              onClick={() => setTabInTab(TabInTab.MAIN_TAB)}
+              className="absolute top-3 left-3"
+            />
+          )}
+          {tabInTab === TabInTab.MAIN_TAB && (
+            <TabQuestion onTabInTabChange={handleTabInTabChange} />
+          )}
+          <div className="mx-20">
+            {tabInTab === TabInTab.TRUE_FALSE_QUESTION_TAB && (
+              <TrueFalseQuestionTab />
             )}
-            {tabInTab === TabInTab.MAIN_TAB && (
-              <TabQuestion onTabInTabChange={handleTabInTabChange} />
+            {tabInTab === TabInTab.SHORT_ANSWER_QUESTION_TAB && (
+              <ShortAnswerQuestionTab />
             )}
-            <div className="mx-20">
-              {tabInTab === TabInTab.TRUE_FALSE_QUESTION_TAB && (
-                <TrueFalseQuestionTab />
-              )}
-              {tabInTab === TabInTab.SHORT_ANSWER_QUESTION_TAB && (
-                <ShortAnswerQuestionTab />
-              )}
-              {tabInTab === TabInTab.CHOICE_QUESTION_TAB && (
-                <ChoiceQuestionTab />
-              )}
-            </div>
+            {tabInTab === TabInTab.CHOICE_QUESTION_TAB && <ChoiceQuestionTab />}
           </div>
-        </>
+        </TabContentLayout>
       );
     case Tab.MORE:
-      return <div></div>;
+      return <TabContentLayout></TabContentLayout>;
     default:
-      return <div></div>;
+      return notFound();
   }
 };
 

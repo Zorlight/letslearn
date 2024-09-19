@@ -9,11 +9,12 @@ const answerVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-slate-100 hover:bg-blue-100 text-slate-600", // when not select and not show correct answer
+        default:
+          "bg-slate-100 hover:bg-blue-100 hover:text-cyan-600 text-slate-600", // when not select and not show correct answer
         selected: "bg-cyan-600 text-white shadow-md", // when select and not show correct answer
         correct: "bg-white text-slate-600 border-green-500", // when select and show correct answer and correct
         incorrect: "bg-white text-slate-600 border-red-500", // when select and show correct answer and incorrect
-        missing: "bg-white text-slate-600 border-orange-500", // when not select and show correct answer and this is correct answer
+        missing: "bg-white text-slate-600 border-yellow-500", // when not select and show correct answer and this is correct answer
         notSelected: "bg-white text-slate-600 border-slate-200", // when not select and show correct answer and this is incorrect answer
       },
     },
@@ -99,7 +100,7 @@ const MultipleChoiceAnswer = ({
       </div>
       <p className="font-semibold">{children}</p>
       {state === "correct" && <span className="text-green-500">✓</span>}
-      {state === "missing" && <span className="text-orange-500">✓</span>}
+      {state === "missing" && <span className="text-yellow-500">✓</span>}
       {state === "incorrect" && <span className="text-red-500">✗</span>}
     </div>
   );

@@ -1,8 +1,8 @@
 import Banner from "@/components/ui/banner";
-import { questions } from "../fake-data";
 import QuestionList from "../question/question-list";
 import { QuestionType, TabInTab } from "../static-data";
 import { tabInTabMapper } from "./tab-in-tab/tap-in-tab-mapper";
+import { fakeQuestions } from "@/fake-data/question";
 
 interface Props {
   onTabInTabChange: (tab: TabInTab) => void;
@@ -30,7 +30,7 @@ const TabQuestion = ({ onTabInTabChange }: Props) => {
         </Banner>
         <div className="flex flex-row items-center justify-between">
           <p className="my-4">
-            {`Question: ${questions.length} | This quiz is ${
+            {`Question: ${fakeQuestions.length} | This quiz is ${
               isQuizOpen ? "open" : "close"
             }`}
             {``}

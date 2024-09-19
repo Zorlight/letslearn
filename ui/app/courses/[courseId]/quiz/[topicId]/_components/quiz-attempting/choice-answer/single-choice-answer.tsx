@@ -9,11 +9,12 @@ const answerVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-slate-100 hover:bg-blue-100 text-slate-600",
+        default:
+          "bg-slate-100 hover:bg-blue-100 hover:text-cyan-600 text-slate-600",
         selected: "bg-cyan-600 text-white shadow-md",
         correct: "bg-white text-slate-600 border-green-500",
         incorrect: "bg-white text-slate-600 border-red-500",
-        missing: "bg-white text-slate-600 border-orange-500",
+        missing: "bg-white text-slate-600 border-yellow-500",
         notSelected: "bg-white text-slate-600 border-slate-200",
       },
     },
@@ -95,7 +96,7 @@ const SingleChoiceAnswer = ({
 
       <p className="font-semibold">{children}</p>
       {state === "correct" && <span className="text-green-500">✓</span>}
-      {state === "missing" && <span className="text-orange-500">✓</span>}
+      {state === "missing" && <span className="text-yellow-500">✓</span>}
       {state === "incorrect" && <span className="text-red-500">✗</span>}
     </div>
   );

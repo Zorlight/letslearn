@@ -1,15 +1,17 @@
 import { Progress } from "@/lib/shadcn/progress";
 import { Course } from "@/models/course";
-import { topics, purchases } from "./fake-data";
 import { cn } from "@/lib/utils";
 import CourseSidebarChapter from "./course-sidebar-chapter";
+import { fakePurchases } from "@/fake-data/purchase";
+import { fakeChapters } from "@/fake-data/chapter";
+import { fakeTopics } from "@/fake-data/topic";
 
 interface Props {
   course: Course;
 }
 const CourseSidebar = ({ course }: Props) => {
   const userId = "1";
-  const purchase = purchases.find(
+  const purchase = fakePurchases.find(
     (purchase) => purchase.courseId === course.id && purchase.userId === userId
   );
   const progress = 33;
@@ -31,7 +33,7 @@ const CourseSidebar = ({ course }: Props) => {
       </div>
 
       <div className="flex flex-col w-full">
-        {course.chapters.map((chapter, index) => {
+        {fakeChapters.map((chapter, index) => {
           const { userProgress, isFree } = chapter;
           return (
             <CourseSidebarChapter
@@ -43,7 +45,7 @@ const CourseSidebar = ({ course }: Props) => {
                 userProgress[0] ? userProgress[0].isCompleted : false
               }
               isLocked={!isFree && !purchase}
-              contents={topics}
+              contents={fakeTopics}
             />
           );
         })}

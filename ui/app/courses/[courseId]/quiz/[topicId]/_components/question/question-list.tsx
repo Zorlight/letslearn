@@ -1,17 +1,17 @@
 import DraggableContainer from "@/lib/@hello-pangea/draggable-container";
 import { Question } from "@/models/question";
 import React from "react";
-import { questions } from "../fake-data";
 import CreateQuestionDialog from "../question-bank/create-question-dialog";
 import { QuestionType } from "../static-data";
 import QuestionAddButton from "./question-add-button";
 import QuestionRow from "./question-row";
+import { fakeQuestions } from "@/fake-data/question";
 
 interface Props {
   onAddNewQuestion?: (type: QuestionType) => void;
 }
 const QuestionList = ({ onAddNewQuestion }: Props) => {
-  const [data, setData] = React.useState<Question[]>(questions);
+  const [data, setData] = React.useState<Question[]>(fakeQuestions);
   const [openDialog, setOpenDialog] = React.useState(false);
 
   return (

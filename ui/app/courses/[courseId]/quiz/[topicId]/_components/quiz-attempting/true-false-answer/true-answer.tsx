@@ -6,16 +6,16 @@ import { cva, VariantProps } from "class-variance-authority";
 import { CircleCheckBig } from "lucide-react";
 
 const answerVariants = cva(
-  "w-full flex items-center justify-center gap-2 py-2 px-6 rounded-md cursor-pointer transition-all duration-200 bg-green-800 border",
+  "w-full flex items-center justify-center gap-2 py-2 px-6 rounded-md cursor-pointer transition-all duration-200 bg-slate-100 text-slate-600 border border-transparent",
   {
     variants: {
       variant: {
-        default: "hover:bg-green-600 text-white/50", // when not select and not show correct answer
-        selected: "bg-gradient-to-br from-green-600 to-green-400 text-white", //when select but not show correct answer
+        default: "hover:bg-blue-100 hover:text-cyan-600 text-slate-600", // when not select and not show correct answer
+        selected: "bg-cyan-600 text-white", //when select but not show correct answer
         correct: "bg-white text-slate-600 border-green-500", // when select and show correct answer and correct
         incorrect: "bg-white text-slate-600 border-red-500", // when select and show correct answer and incorrect
-        notSelected: "bg-white text-slate-600", // when not select and show correct answer and this is not correct answer
-        missing: "bg-white text-slate-600 border-orange-500", // when not select and show correct answer and this is correct answer
+        notSelected: "bg-white text-slate-600 border-slate-200", // when not select and show correct answer and this is not correct answer
+        missing: "bg-white text-slate-600 border-yellow-500", // when not select and show correct answer and this is correct answer
       },
     },
     defaultVariants: {
@@ -89,7 +89,7 @@ const TrueAnswer = ({
       )}
       <span>True</span>
       {state === "correct" && <span className="text-green-500">✓</span>}
-      {state === "missing" && <span className="text-orange-500">✓</span>}
+      {state === "missing" && <span className="text-yellow-500">✓</span>}
       {state === "incorrect" && <span className="text-red-500">✗</span>}
     </div>
   );

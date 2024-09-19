@@ -50,7 +50,7 @@ const CourseSidebarToggle = ({ course, className }: Props) => {
     <Sheet>
       <SheetTrigger
         className={cn(
-          "fixed left-0 z-50 top-44 w-auto p-4 bg-slate-100 rounded-r-full hover:pl-8 hover:bg-slate-200 transition-all",
+          "fixed left-0 z-50 top-44 w-auto p-4 bg-slate-100 rounded-r-full hover:pl-8 hover:bg-slate-200 transition-all opacity-70 hover:opacity-100",
           className
         )}
         // style={{ top: `${top}px` }}

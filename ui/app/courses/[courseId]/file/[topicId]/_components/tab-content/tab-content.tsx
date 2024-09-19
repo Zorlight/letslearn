@@ -2,20 +2,33 @@ import React from "react";
 import { Tab } from "../static-data";
 import TabSetting from "./tab-setting";
 import TabFile from "./tab-file";
+import { useTab } from "@/hooks/useTab";
+import TabContentLayout from "@/components/ui/tab-content-layout";
+import { notFound } from "next/navigation";
 
 interface Props {
-  selectedTab: string;
+  className?: string;
 }
-const TabContent = ({ selectedTab }: Props) => {
+const TabContent = ({ className }: Props) => {
+  const tabContext = useTab<string>();
+  const { selectedTab } = tabContext;
   switch (selectedTab) {
     case Tab.FILE:
-      return <TabFile />;
+      return (
+        <TabContentLayout className={className}>
+          <TabFile />
+        </TabContentLayout>
+      );
     case Tab.SETTING:
-      return <TabSetting />;
+      return (
+        <TabContentLayout className={className}>
+          <TabSetting />
+        </TabContentLayout>
+      );
     case Tab.MORE:
-      return <div></div>;
+      return <TabContentLayout></TabContentLayout>;
     default:
-      return <div></div>;
+      return notFound();
   }
 };
 

@@ -3,11 +3,11 @@ import { fakeResponses } from "@/fake-data/student-response";
 import { Button } from "@/lib/shadcn/button";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
-import { questionBank } from "../fake-data";
 import CreateQuestionDialog from "../question-bank/create-question-dialog";
 import QuestionTable from "../question-bank/table/question-table";
 import { QuestionType, TabInTab } from "../static-data";
 import { tabInTabMapper } from "./tab-in-tab/tap-in-tab-mapper";
+import { fakeQuestions } from "@/fake-data/question";
 
 interface Props {
   onTabInTabChange: (tab: TabInTab) => void;
@@ -39,7 +39,7 @@ const TabQuestionBank = ({ onTabInTabChange }: Props) => {
     <div className="w-full flex flex-col gap-8">
       <div className="py-4 space-y-2">
         <h4 className="text-orange-600">Question bank</h4>
-        <QuestionTable data={questionBank} buttons={buttons} />
+        <QuestionTable data={fakeQuestions} buttons={buttons} />
       </div>
     </div>
   );

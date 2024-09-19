@@ -12,7 +12,7 @@ interface Props {
 }
 const TabQuiz = ({ className, onTabInTabChange }: Props) => {
   const handlePreviewQuiz = () => {
-    onTabInTabChange(TabInTab.QUIZ_TAB);
+    onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
   };
 
   const attemptsAllowed = 3;

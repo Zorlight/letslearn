@@ -3,8 +3,8 @@ export const FlagIcon = ({
 }: {
   variant?: "default" | "active";
 }) => {
-  let flagPoleColor = "#3f3a3a";
-  let flagColor = "#958b8b";
+  let flagPoleColor = "#fffb00";
+  let flagColor = "#08ea6e";
 
   if (variant === "active") flagColor = "#ff2929";
 
@@ -20,7 +20,7 @@ export const FlagIcon = ({
         fillRule="evenodd"
         d="M6.5 1.75a.75.75 0 0 0-1.5 0v20a.75.75 0 0 0 1.5 0z"
         clipRule="evenodd"
-        opacity="0.5"
+        opacity="1"
       />
       <path
         fill={flagColor}

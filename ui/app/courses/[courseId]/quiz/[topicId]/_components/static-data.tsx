@@ -24,6 +24,8 @@ export enum GradingMethod {
   LAST_GRADE = "Last Grade",
 }
 
+export const gradingMethodOptions = Object.values(GradingMethod);
+
 export const attemptsAllowedOptions = [
   "Unlimited",
   "1",

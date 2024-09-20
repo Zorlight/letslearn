@@ -146,7 +146,7 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
     case Tab.SETTING:
       return (
         <TabContentLayout className={className}>
-          <TabSetting />
+          <TabSetting quiz={quiz} onQuizChange={onQuizChange} />
         </TabContentLayout>
       );
     case Tab.QUESTION:

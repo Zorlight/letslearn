@@ -9,10 +9,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z, ZodType } from "zod";
 import ChoiceQuestionAnswerSetting, {
   ChoiceQuestionAnswerForm,
-} from "../../question-bank/multiple-choice-question/answers";
+} from "../../question-bank/choice-question/answers";
 import ChoiceQuestionGeneralSetting, {
   ChoiceQuestionGeneralForm,
-} from "../../question-bank/multiple-choice-question/general";
+} from "../../question-bank/choice-question/general";
 import { QuestionStatus, QuestionType } from "../../static-data";
 import {
   defaultAnswerSetting,

@@ -6,12 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getLocalTimeZone, now, ZonedDateTime } from "@internationalized/date";
 import { DatePicker } from "@nextui-org/date-picker";
 import { nanoid } from "@reduxjs/toolkit";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import { unknown, z, ZodType } from "zod";
 import { TimeLimitType } from "../../static-data";
 import { Input } from "@/lib/shadcn/input";
 import { Combobox } from "@/components/ui/combobox";
 import { ChevronsUpDown } from "lucide-react";
+import { QuizSettingForm } from "../setting-list";
 
 export type TimingSettingForm = {
   open: {
@@ -28,54 +29,27 @@ export type TimingSettingForm = {
     unit: TimeLimitType;
   };
 };
-const schema: ZodType<TimingSettingForm> = z.object({
-  open: z.object({
-    enabled: z.boolean(),
-    value: z.string(),
-  }),
-  close: z.object({
-    enabled: z.boolean(),
-    value: z.string(),
-  }),
-  timeLimit: z.object({
-    enabled: z.boolean(),
-    value: z.number(),
-    unit: z.nativeEnum(TimeLimitType),
-  }),
-});
 
 interface TimingSettingProps {
-  initValue: TimingSettingForm;
+  formData: TimingSettingForm;
   onChange?: (data: TimingSettingForm) => void;
 }
 
-const TimingSetting = ({ initValue, onChange }: TimingSettingProps) => {
-  const { open, close, timeLimit } = initValue;
-  const form = useForm<TimingSettingForm>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      open,
-      close,
-      timeLimit,
-    },
-  });
-  const { setValue, getValues, handleSubmit } = form;
-  const { errors, isValid, isSubmitting } = form.formState;
-  const onSubmit = () => {
-    const toSubmit = getValues();
-    console.log(toSubmit);
-
-    //Logic to update general setting
-  };
+const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
+  const form = useFormContext<QuizSettingForm>();
+  const { register } = form;
+  const {
+    errors: { gradeSettingForm: errors },
+  } = form.formState;
+  const { open, close, timeLimit } = formData;
   const handleSettingChange = (data: TimingSettingForm) => {
     if (onChange) onChange(data);
   };
 
   const handleEnableChange = (key: keyof TimingSettingForm, value: boolean) => {
-    setValue(key, { ...getValues(key), enabled: value });
     handleSettingChange({
-      ...getValues(),
-      [key]: { ...getValues(key), enabled: value },
+      ...formData,
+      [key]: { ...formData[key], enabled: value },
     });
   };
 
@@ -84,17 +58,15 @@ const TimingSetting = ({ initValue, onChange }: TimingSettingProps) => {
     zoneDatetime: ZonedDateTime
   ) => {
     const date = zonedDateTimeToDate(zoneDatetime);
-    setValue(key, { ...getValues(key), value: date.toISOString() });
     handleSettingChange({
-      ...getValues(),
-      [key]: { ...getValues(key), value: date.toISOString() },
+      ...formData,
+      [key]: { ...formData[key], value: date.toISOString() },
     });
   };
 
   const handleInputChange = (key: keyof TimingSettingForm, value: number) => {
-    const newSetting = { ...getValues() };
+    const newSetting = { ...formData };
     newSetting[key].value = value;
-    setValue(key, newSetting[key]);
     handleSettingChange(newSetting);
   };
 
@@ -102,48 +74,38 @@ const TimingSetting = ({ initValue, onChange }: TimingSettingProps) => {
     key: keyof TimingSettingForm,
     value: string
   ) => {
-    const newSetting = { ...getValues() };
+    const newSetting = { ...formData };
     if ("unit" in newSetting[key] && typeof newSetting[key].unit === "string")
       newSetting[key].unit = value;
-    setValue(key, newSetting[key]);
     handleSettingChange(newSetting);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col p-4 gap-8"
-    >
+    <div className="w-full flex flex-col p-4 gap-8">
       <RowSettingWithDatePicker
         title="Open the quiz"
-        form={initValue}
+        form={formData}
         keyProp="open"
         handleEnableChange={handleEnableChange}
         handleDatePickerChange={handleDatePickerChange}
       />
       <RowSettingWithDatePicker
         title="Close the quiz"
-        form={initValue}
+        form={formData}
         keyProp="close"
         handleEnableChange={handleEnableChange}
         handleDatePickerChange={handleDatePickerChange}
       />
       <RowSettingWithCombobox
         title="Time limit"
-        form={initValue}
+        form={formData}
         keyProp="timeLimit"
         options={Object.values(TimeLimitType)}
         handleEnableChange={handleEnableChange}
         handleInputChange={handleInputChange}
         handleComboboxChange={handleComboboxChange}
       />
-
-      <div className="flex flex-row justify-center">
-        <Button type="submit" size="sm">
-          Save
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 

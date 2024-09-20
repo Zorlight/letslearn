@@ -1,4 +1,7 @@
-import { TimeLimitType } from "@/app/courses/[courseId]/quiz/[topicId]/_components/static-data";
+import {
+  GradingMethod,
+  TimeLimitType,
+} from "@/app/courses/[courseId]/quiz/[topicId]/_components/static-data";
 import { Quiz } from "@/models/quiz";
 import { fakeQuestions } from "./question";
 
@@ -20,7 +23,7 @@ export const fakeQuiz: Quiz = {
     unit: TimeLimitType.HOURS,
   },
   gradeToPass: 5,
-  gradingMethod: "HIGHEST_GRADE",
+  gradingMethod: GradingMethod.HIGHEST_GRADE,
   attemptAllowed: "Unlimited",
   questions: fakeQuestions.slice(0, 6),
 };

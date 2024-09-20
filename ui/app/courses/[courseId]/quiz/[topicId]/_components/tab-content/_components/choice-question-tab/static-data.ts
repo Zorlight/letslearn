@@ -1,5 +1,5 @@
-import { ChoiceQuestionAnswerForm } from "../../../question-bank/multiple-choice-question/answers";
-import { ChoiceQuestionGeneralForm } from "../../../question-bank/multiple-choice-question/general";
+import { ChoiceQuestionAnswerForm } from "../../../question-bank/choice-question/answers";
+import { ChoiceQuestionGeneralForm } from "../../../question-bank/choice-question/general";
 import { QuestionStatus } from "../../../static-data";
 
 export const defaultGeneralSetting: ChoiceQuestionGeneralForm = {

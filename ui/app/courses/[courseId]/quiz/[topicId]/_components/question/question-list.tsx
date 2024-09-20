@@ -1,24 +1,34 @@
 import DraggableContainer from "@/lib/@hello-pangea/draggable-container";
 import { Question } from "@/models/question";
-import React from "react";
-import CreateQuestionDialog from "../question-bank/create-question-dialog";
+import React, { useEffect, useState } from "react";
+import CreateQuestionDialog from "../question-bank/dialog/create-question-dialog";
 import { QuestionType } from "../static-data";
 import QuestionAddButton from "./question-add-button";
 import QuestionRow from "./question-row";
+import GetQuestionFromBankDialog from "../question-bank/dialog/get-question-from-bank-dialog";
 
 interface Props {
   questions: Question[];
+  questionsBank: Question[];
   onReorderedQuestion: (data: Question[]) => void;
   onAddNewQuestion?: (type: QuestionType) => void;
+  onAddQuestionFromBank?: (question: Question[]) => void;
   onRemoveQuestion?: (index: number) => void;
 }
 const QuestionList = ({
   questions,
+  questionsBank,
   onAddNewQuestion,
+  onAddQuestionFromBank,
   onRemoveQuestion,
   onReorderedQuestion,
 }: Props) => {
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [openAddNewQuestionDialog, setOpenAddNewQuestionDialog] =
+    useState(false);
+
+  const [openAddQuestionFromBankDialog, setOpenAddQuestionFromBankDialog] =
+    useState(false);
+
   return (
     <div className="flex flex-col gap-2 bg-gray-50 rounded-md p-4">
       <DraggableContainer
@@ -34,11 +44,21 @@ const QuestionList = ({
         )}
       />
       <div className="ml-auto">
-        <QuestionAddButton onAddNewQuestion={() => setOpenDialog(true)} />
+        <QuestionAddButton
+          onAddNewQuestion={() => setOpenAddNewQuestionDialog(true)}
+          onAddQuestionFromBank={() => setOpenAddQuestionFromBankDialog(true)}
+        />
         <CreateQuestionDialog
-          open={openDialog}
-          onOpenChange={setOpenDialog}
+          open={openAddNewQuestionDialog}
+          onOpenChange={setOpenAddNewQuestionDialog}
           onAddQuestion={onAddNewQuestion}
+        />
+        <GetQuestionFromBankDialog
+          questions={questions}
+          questionsBank={questionsBank}
+          open={openAddQuestionFromBankDialog}
+          onOpenChange={setOpenAddQuestionFromBankDialog}
+          onAddQuestionFromBank={onAddQuestionFromBank}
         />
       </div>
     </div>

@@ -16,7 +16,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     choices: [
@@ -39,7 +39,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     choices: [{ text: "20", gradePercent: 100, feedback: "Correct" }],
@@ -53,7 +53,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     correctAnswer: false,
@@ -70,7 +70,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     choices: [
@@ -90,7 +90,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     choices: [
@@ -110,7 +110,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     choices: [
@@ -130,7 +130,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     choices: [
@@ -150,7 +150,7 @@ export const fakeQuestions: Question[] = [
     defaultMark: 10,
     createdBy: "John Doe",
     createdAt: "2021-10-01",
-    updatedAt: "2021-10-01",
+    modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,
     choices: [

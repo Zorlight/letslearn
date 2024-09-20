@@ -22,5 +22,5 @@ export const fakeQuiz: Quiz = {
   gradeToPass: 5,
   gradingMethod: "HIGHEST_GRADE",
   attemptAllowed: "Unlimited",
-  questions: fakeQuestions,
+  questions: fakeQuestions.slice(0, 6),
 };

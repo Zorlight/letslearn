@@ -13,6 +13,7 @@ import TabQuestionBank from "./tab-question-bank";
 import TabQuiz from "./tab-quiz";
 import TabSetting from "./tab-setting";
 import { Quiz } from "@/models/quiz";
+import { fakeQuestions } from "@/fake-data/question";
 
 interface Props {
   className?: string;
@@ -24,6 +25,7 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
   const { questions } = quiz;
+  const [questionsBank, setQuestionsBank] = useState<Question[]>(fakeQuestions);
   const [tabInTab, setTabInTab] = useState<TabInTab>(TabInTab.MAIN_TAB);
   const [tabInTabQuestion, setTabInTabQuestion] = useState<
     Question | undefined
@@ -85,6 +87,27 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
     if (onQuizChange) onQuizChange({ ...quiz, questions });
   };
 
+  const hasExistingQuestion = (
+    question: Question,
+    questionList: Question[]
+  ) => {
+    return questionList.find((q) => q.id === question.id);
+  };
+
+  const handleAddQuestionFromBank = (comingQuestions: Question[]) => {
+    const newQuestions = [...questions];
+    //add if not exist
+    comingQuestions.forEach((question) => {
+      if (!hasExistingQuestion(question, newQuestions))
+        newQuestions.push(question);
+    });
+
+    if (onQuizChange) onQuizChange({ ...quiz, questions: newQuestions });
+  };
+
+  console.log("questionsBank", questionsBank);
+  console.log("questions", questions);
+
   switch (selectedTab) {
     case Tab.QUIZ:
       return (
@@ -138,11 +161,14 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
           {tabInTab === TabInTab.MAIN_TAB && (
             <div className="mx-20">
               <TabQuestion
-                questions={questions}
+                quiz={quiz}
+                questionsBank={questionsBank}
+                quizResponses={quizResponses}
                 onAddNewQuestion={handleAddNewQuestion}
                 onRemoveQuestion={handleRemoveQuestion}
                 onReorderedQuestion={handleReorderedQuestion}
                 onTabInTabChange={handleTabInTabChange}
+                onAddQuestionFromBank={handleAddQuestionFromBank}
               />
             </div>
           )}
@@ -165,11 +191,13 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
             />
           )}
           {tabInTab === TabInTab.MAIN_TAB && (
-            <TabQuestionBank
-              questions={questions}
-              onTabInTabChange={handleTabInTabChange}
-              onTabInTabQuestionChange={handleTabInTabQuestionChange}
-            />
+            <div className="mx-20">
+              <TabQuestionBank
+                questions={questionsBank}
+                onTabInTabChange={handleTabInTabChange}
+                onTabInTabQuestionChange={handleTabInTabQuestionChange}
+              />
+            </div>
           )}
           <div className="mx-20">
             <TabInTabContent

@@ -9,8 +9,12 @@ import { CirclePlus } from "lucide-react";
 
 interface Props {
   onAddNewQuestion?: () => void;
+  onAddQuestionFromBank?: () => void;
 }
-const QuestionAddButton = ({ onAddNewQuestion }: Props) => {
+const QuestionAddButton = ({
+  onAddNewQuestion,
+  onAddQuestionFromBank,
+}: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -31,7 +35,7 @@ const QuestionAddButton = ({ onAddNewQuestion }: Props) => {
         </DropdownMenuItem>
         <DropdownMenuItem
           className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer ease-linear duration-100"
-          // onClick={onEdit}
+          onClick={onAddQuestionFromBank}
         >
           <CirclePlus size={16} />
           <p>From question bank</p>

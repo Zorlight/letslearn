@@ -28,6 +28,7 @@ const questionColumnTitles = {
   usage: "Usage",
   createdBy: "Created by",
   modifiedBy: "Modified by",
+  modifiedAt: "Modified at",
 };
 
 const questionColumnVisibility = {
@@ -35,9 +36,10 @@ const questionColumnVisibility = {
   type: true,
   questionName: true,
   status: true,
-  createdAt: true,
-  createdBy: true,
+  createdAt: false,
+  createdBy: false,
   modifiedBy: true,
+  modifiedAt: true,
   usage: true,
 };
 

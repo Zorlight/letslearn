@@ -3,7 +3,7 @@ import { fakeResponses } from "@/fake-data/student-response";
 import { Button } from "@/lib/shadcn/button";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
-import CreateQuestionDialog from "../question-bank/create-question-dialog";
+import CreateQuestionDialog from "../question-bank/dialog/create-question-dialog";
 import QuestionTable from "../question-bank/table/question-table";
 import { QuestionType, TabInTab } from "../static-data";
 import { tabInTabMapper } from "./tab-in-tab/tap-in-tab-mapper";

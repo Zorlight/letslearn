@@ -58,3 +58,9 @@ export const colorAnnotations: ColorAnnotation[] = [
     description: "This color represents the missing answer!",
   },
 ];
+
+export enum QuizOpenCloseState {
+  NOT_OPEN = "NOT_OPEN",
+  OPEN = "OPEN",
+  ENDED = "Ended",
+}

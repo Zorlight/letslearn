@@ -8,14 +8,13 @@ import {
   DialogTrigger,
 } from "@/lib/shadcn/dialog";
 import { cn } from "@/lib/utils";
-import { CirclePlus } from "lucide-react";
 import { useState } from "react";
 import {
   questionIconMap,
   QuestionType,
   QuestionTypeOption,
   questionTypeOptions,
-} from "../static-data";
+} from "../../static-data";
 
 interface Props {
   open: boolean;

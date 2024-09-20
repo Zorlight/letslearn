@@ -2,14 +2,13 @@
 import { Button } from "@/lib/shadcn/button";
 import { Input } from "@/lib/shadcn/input";
 import TinyEditor from "@/lib/tinymce/editor";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z, ZodType } from "zod";
+import { useForm, useFormContext } from "react-hook-form";
 import { QuestionStatus } from "../../static-data";
 import { nanoid } from "@reduxjs/toolkit";
 import { Combobox } from "@/components/ui/combobox";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TrueFalseQuestionForm } from "../../tab-content/tab-in-tab/true-false-question-tab";
 
 export type TrueFalseQuestionGeneralForm = {
   questionName: string;
@@ -20,22 +19,13 @@ export type TrueFalseQuestionGeneralForm = {
   feedbackOfTrue: string;
   feedbackOfFalse: string;
 };
-const schema: ZodType<TrueFalseQuestionGeneralForm> = z.object({
-  questionName: z.string().min(1, "Name is required"),
-  questionText: z.string(),
-  questionStatus: z.nativeEnum(QuestionStatus),
-  defaultMark: z.number().int().positive(),
-  correctAnswer: z.boolean(),
-  feedbackOfTrue: z.string(),
-  feedbackOfFalse: z.string(),
-});
 
 interface Props {
-  initValue: TrueFalseQuestionGeneralForm;
+  formData: TrueFalseQuestionGeneralForm;
   onChange?: (data: TrueFalseQuestionGeneralForm) => void;
 }
 
-const TrueFalseQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
+const TrueFalseQuestionGeneralSetting = ({ formData, onChange }: Props) => {
   const {
     questionName,
     questionText,
@@ -44,19 +34,13 @@ const TrueFalseQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
     correctAnswer,
     feedbackOfTrue,
     feedbackOfFalse,
-  } = initValue;
-  const form = useForm<TrueFalseQuestionGeneralForm>({
-    resolver: zodResolver(schema),
-    defaultValues: initValue,
-  });
-  const { register, setValue, getValues, handleSubmit } = form;
-  const { errors, isValid, isSubmitting } = form.formState;
-  const onSubmit = () => {
-    const toSubmit = getValues();
-    console.log(toSubmit);
+  } = formData;
+  const form = useFormContext<TrueFalseQuestionForm>();
+  const { register } = form;
+  const {
+    errors: { generalSettingForm: errors },
+  } = form.formState;
 
-    //Logic to update general setting
-  };
   const handleSettingChange = (data: TrueFalseQuestionGeneralForm) => {
     if (onChange) onChange(data);
   };
@@ -64,25 +48,21 @@ const TrueFalseQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
     key: keyof TrueFalseQuestionGeneralForm,
     data: any
   ) => {
-    //set value because the editor is not a controlled component (not registered with react-hook-form)
-    setValue(key, data);
-    handleSettingChange({ ...getValues(), [key]: data });
+    handleSettingChange({ ...formData, [key]: data });
   };
 
   const handleInputChange = (
     key: keyof TrueFalseQuestionGeneralForm,
     data: string
   ) => {
-    setValue(key, data);
-    handleSettingChange({ ...getValues(), [key]: data });
+    handleSettingChange({ ...formData, [key]: data });
   };
 
   const handleComboboxChange = (
     key: keyof TrueFalseQuestionGeneralForm,
-    data: string
+    data: string | boolean
   ) => {
-    setValue(key, data);
-    handleSettingChange({ ...getValues(), [key]: data });
+    handleSettingChange({ ...formData, [key]: data });
   };
 
   const questionStatusOptions = Object.values(QuestionStatus);
@@ -91,20 +71,17 @@ const TrueFalseQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
   const correctAnswerOptions = ["True", "False"];
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col p-4 gap-8"
-    >
+    <div className="w-full flex flex-col p-4 gap-8">
       <RowSetting title="Question name" htmlFor={questionNameHtmlFor}>
         <Input
           id={questionNameHtmlFor}
           className="flex-1 focus:outline-none"
           placeholder="Enter a name"
           defaultValue={questionName !== "" ? questionName : undefined}
-          {...register("questionName")}
+          {...register("generalSettingForm.questionName")}
           onChange={(e) => handleInputChange("questionName", e.target.value)}
         />
-        {errors.questionName && (
+        {errors?.questionName && (
           <p className="absolute top-full text-red-500 text-xs font-semibold">
             {errors.questionName.message}
           </p>
@@ -138,10 +115,12 @@ const TrueFalseQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
           placeholder="Enter a name"
           type="number"
           defaultValue={defaultMark != 0 ? defaultMark : undefined}
-          {...register("defaultMark")}
+          {...register("generalSettingForm.defaultMark", {
+            valueAsNumber: true,
+          })}
           onChange={(e) => handleInputChange("defaultMark", e.target.value)}
         />
-        {errors.defaultMark && (
+        {errors?.defaultMark && (
           <p className="absolute top-full text-red-500 text-xs font-semibold">
             {errors.defaultMark.message}
           </p>
@@ -150,9 +129,11 @@ const TrueFalseQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
       <RowSetting title="Correct answer">
         <Combobox
           showSearch={false}
-          initialValue={correctAnswerOptions[0]}
+          initialValue={correctAnswer ? "True" : "False"}
           options={correctAnswerOptions}
-          onChange={(value) => handleComboboxChange("correctAnswer", value)}
+          onChange={(value) =>
+            handleComboboxChange("correctAnswer", value === "True")
+          }
           className="w-40"
           popoverClassName="w-40"
         >
@@ -180,12 +161,7 @@ const TrueFalseQuestionGeneralSetting = ({ initValue, onChange }: Props) => {
           initValue={feedbackOfFalse}
         />
       </RowSetting>
-      <div className="flex flex-row justify-center">
-        <Button type="submit" size="sm">
-          Save
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 

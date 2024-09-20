@@ -1,48 +1,143 @@
 import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/collapsible-list";
-import { useState } from "react";
-import ShortAnswerQuestionGeneralSetting, {
-  ShortAnswerQuestionGeneralForm,
-} from "../../question-bank/short-answer-question/general";
-import { QuestionStatus } from "../../static-data";
+import { fakeUser } from "@/fake-data/user";
+import { Button } from "@/lib/shadcn/button";
+import { ShortAnswerQuestion } from "@/models/question";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { nanoid } from "@reduxjs/toolkit";
+import { FormProvider, useForm } from "react-hook-form";
+import { z, ZodType } from "zod";
 import ShortAnswerQuestionAnswerSetting, {
   ShortAnswerQuestionAnswerForm,
 } from "../../question-bank/short-answer-question/answers";
+import ShortAnswerQuestionGeneralSetting, {
+  ShortAnswerQuestionGeneralForm,
+} from "../../question-bank/short-answer-question/general";
+import { QuestionStatus, QuestionType } from "../../static-data";
+import {
+  dafaultGeneralSetting,
+  defaultAnswerSetting,
+} from "../_components/short-answer-question-tab/static-data";
+import { getTextFromHtml } from "@/lib/utils";
 
-const ShortAnswerQuestionTab = () => {
-  const [generalSetting, setGeneralSetting] =
-    useState<ShortAnswerQuestionGeneralForm>({
-      questionName: "",
-      questionText: "",
-      questionStatus: QuestionStatus.READY,
-      defaultMark: 1,
-    });
-  const [answerSetting, setAnswerSetting] =
-    useState<ShortAnswerQuestionAnswerForm>({
-      answers: [
-        {
-          text: "Answer",
-          gradePercent: 100,
-          feedback: "",
-        },
-        {
-          text: "answer",
-          gradePercent: 100,
-          feedback: "",
-        },
-        {
-          text: "ANSWER",
-          gradePercent: 100,
-          feedback: "",
-        },
-      ],
-    });
+const generalSettingSchema: ZodType<ShortAnswerQuestionGeneralForm> = z.object({
+  questionName: z.string().min(1, "Required"),
+  questionText: z.string().min(1, "Required"),
+  questionStatus: z.nativeEnum(QuestionStatus),
+  defaultMark: z.number().int().positive(),
+});
+
+const answerSettingSchema: ZodType<ShortAnswerQuestionAnswerForm> = z.object({
+  answers: z.array(
+    z.object({
+      text: z.string().refine((data) => getTextFromHtml(data).length > 0, {
+        message: "Required",
+      }),
+      gradePercent: z.number(),
+      feedback: z.string(),
+    })
+  ),
+});
+
+export type ShortAnswerQuestionForm = {
+  generalSettingForm: ShortAnswerQuestionGeneralForm;
+  answerSettingForm: ShortAnswerQuestionAnswerForm;
+};
+
+// Combine child schemas into one
+const schema: ZodType<ShortAnswerQuestionForm> = z.object({
+  generalSettingForm: generalSettingSchema,
+  answerSettingForm: answerSettingSchema,
+});
+
+interface Props {
+  question: ShortAnswerQuestion | undefined;
+  onSubmitQuestion?: (data: ShortAnswerQuestion) => void;
+}
+const ShortAnswerQuestionTab = ({ question, onSubmitQuestion }: Props) => {
+  const thisUser = fakeUser;
+  const handleGetGeneralSetting = (question: ShortAnswerQuestion) => {
+    const generalSetting: ShortAnswerQuestionGeneralForm = {
+      questionName: question.questionName,
+      questionText: question.questionText,
+      questionStatus: question.status,
+      defaultMark: question.defaultMark,
+    };
+    return generalSetting;
+  };
+  const handleGetAnswerSetting = (question: ShortAnswerQuestion) => {
+    const answerSetting: ShortAnswerQuestionAnswerForm = {
+      answers: question.choices,
+    };
+    return answerSetting;
+  };
+
+  const initGeneralSetting = question
+    ? handleGetGeneralSetting(question)
+    : dafaultGeneralSetting;
+  const initAnswerSetting = question
+    ? handleGetAnswerSetting(question)
+    : defaultAnswerSetting;
+
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      generalSettingForm: initGeneralSetting,
+      answerSettingForm: initAnswerSetting,
+    },
+  });
+  const { setValue, watch } = form;
 
   const handleGeneralSettingChange = (data: ShortAnswerQuestionGeneralForm) => {
-    setGeneralSetting((prev) => ({ ...prev, ...data }));
+    setValue("generalSettingForm", data);
   };
 
   const handleAnswerSettingChange = (data: ShortAnswerQuestionAnswerForm) => {
-    setAnswerSetting((prev) => ({ ...prev, ...data }));
+    setValue("answerSettingForm", data);
+  };
+
+  const handleCreateQuestion = (data: ShortAnswerQuestionForm) => {
+    const questionToCreate: ShortAnswerQuestion = {
+      id: nanoid(),
+      type: QuestionType.SHORT_ANSWER,
+      questionName: data.generalSettingForm.questionName,
+      questionText: data.generalSettingForm.questionText,
+      status: data.generalSettingForm.questionStatus,
+      defaultMark: data.generalSettingForm.defaultMark,
+      choices: data.answerSettingForm.answers,
+      createdAt: new Date().toISOString(),
+      createdBy: thisUser.username,
+      modifiedAt: new Date().toISOString(),
+      modifiedBy: thisUser.username,
+      usage: 0,
+    };
+    return questionToCreate;
+  };
+
+  const handleEditQuestion = (
+    question: ShortAnswerQuestion,
+    data: ShortAnswerQuestionForm
+  ) => {
+    const questionToEdit: ShortAnswerQuestion = {
+      ...question,
+      questionName: data.generalSettingForm.questionName,
+      questionText: data.generalSettingForm.questionText,
+      status: data.generalSettingForm.questionStatus,
+      defaultMark: data.generalSettingForm.defaultMark,
+      choices: data.answerSettingForm.answers,
+      createdAt: new Date().toISOString(),
+      createdBy: thisUser.username,
+      modifiedAt: new Date().toISOString(),
+      modifiedBy: thisUser.username,
+    };
+    return questionToEdit;
+  };
+
+  const onSubmit = (data: ShortAnswerQuestionForm) => {
+    let questionToSubmit;
+    if (question) questionToSubmit = handleEditQuestion(question, data);
+    else questionToSubmit = handleCreateQuestion(data);
+
+    if (onSubmitQuestion) onSubmitQuestion(questionToSubmit);
   };
 
   const titles = ["General", "Answers"];
@@ -50,24 +145,31 @@ const ShortAnswerQuestionTab = () => {
   const collapsibleContent = [
     <ShortAnswerQuestionGeneralSetting
       key={0}
-      initValue={generalSetting}
+      formData={watch("generalSettingForm")}
       onChange={handleGeneralSettingChange}
     />,
     <ShortAnswerQuestionAnswerSetting
       key={1}
-      initValue={answerSetting}
+      formData={watch("answerSettingForm")}
       onChange={handleAnswerSettingChange}
     />,
   ];
   return (
-    <div>
-      <h1 className="font-bold text-2xl text-orange-600">
-        Adding a Short answer question
-      </h1>
-      <CollapsibleList titles={titles} initShowContent={initShowContent}>
-        {collapsibleContent}
-      </CollapsibleList>
-    </div>
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <h1 className="font-bold text-2xl text-orange-600">
+          Adding a Short answer question
+        </h1>
+        <CollapsibleList titles={titles} initShowContent={initShowContent}>
+          {collapsibleContent}
+        </CollapsibleList>
+        <div className="w-full flex flex-row justify-center">
+          <Button type="submit" variant="default">
+            Submit
+          </Button>
+        </div>
+      </form>
+    </FormProvider>
   );
 };
 

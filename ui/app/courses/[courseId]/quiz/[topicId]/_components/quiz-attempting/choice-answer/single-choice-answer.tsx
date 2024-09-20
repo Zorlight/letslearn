@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { answerKeys } from "../../static-data";
 
 const answerVariants = cva(
-  "flex flex-row items-center gap-3 py-2 px-3 rounded-md cursor-pointer transition-all duration-200 border border-transparent",
+  "flex flex-row items-center gap-3 py-2 px-3 rounded-md cursor-pointer transition-all duration-200 border border-transparent group",
   {
     variants: {
       variant: {
@@ -85,6 +85,7 @@ const SingleChoiceAnswer = ({
       <div
         className={cn(
           "px-2 py-1 rounded-md bg-white font-semibold text-slate-600 transition-all duration-200",
+          state === "default" && "text-slate-600 group-hover:text-cyan-600",
           state === "selected" && "text-cyan-500",
           state === "correct" && " text-white bg-cyan-600",
           state === "incorrect" && "text-white bg-cyan-600",

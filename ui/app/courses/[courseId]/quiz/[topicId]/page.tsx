@@ -6,10 +6,12 @@ import { cn } from "@/lib/utils";
 import { TabProvider } from "@/provider/TabProvider";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { colorMap, iconMap } from "../../_components/topic-map";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
+import { Quiz } from "@/models/quiz";
+import { fakeQuiz } from "@/fake-data/quiz";
 
 interface Props {
   params: {
@@ -20,6 +22,11 @@ interface Props {
 
 const QuizIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
+  const [quiz, setQuiz] = useState<Quiz>(fakeQuiz);
+
+  useEffect(() => {
+    console.log("quiz", quiz);
+  }, [quiz]);
 
   //get course by id
   const course = useMemo(() => {
@@ -36,6 +43,10 @@ const QuizIdPage = ({ params }: Props) => {
   if (!course) return notFound();
   const section = course.sections.find((section) => section.id === sectionId);
   if (!section) return notFound();
+
+  const handleQuizChange = (quiz: Quiz) => {
+    setQuiz(quiz);
+  };
 
   const Icon = iconMap.quiz;
   const color = colorMap.quiz;
@@ -60,7 +71,11 @@ const QuizIdPage = ({ params }: Props) => {
           </div>
           <TabList tabs={tabs} className="mt-4" />
         </div>
-        <TabContent className="max-w-3xl mx-auto" />
+        <TabContent
+          className="max-w-3xl mx-auto"
+          quiz={quiz}
+          onQuizChange={handleQuizChange}
+        />
       </div>
     </TabProvider>
   );

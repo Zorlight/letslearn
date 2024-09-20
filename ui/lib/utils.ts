@@ -86,16 +86,55 @@ function handleFilterColumn<T>(
   return filterList;
 }
 
+// 3680s -> 1 hour 1 minute 20 second
 const getDurationBySecond = (startTime: any, endTime: any) => {
   if (!startTime || !endTime) return 0;
 
   try {
     startTime = new Date(startTime);
     endTime = new Date(endTime);
-    return Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
   } catch (e) {
     return null;
   }
+
+  const duration = Math.floor(endTime / 1000) - Math.floor(startTime / 1000);
+  const years = Math.floor(duration / 31536000);
+  const months = Math.floor(duration / 2628000);
+  const days = Math.floor(duration / 86400);
+  const hours = Math.floor(duration / 3600);
+  const minutes = Math.floor((duration % 3600) / 60);
+  const seconds = duration % 60;
+  // any value that is 0 will not be displayed
+  const time = [
+    years && `${years} ${years > 1 ? "years" : "year"}`,
+    months && `${months} ${months > 1 ? "months" : "month"}`,
+    days && `${days} ${days > 1 ? "days" : "day"}`,
+    hours && `${hours} ${hours > 1 ? "hours" : "hour"}`,
+    minutes && `${minutes} ${minutes > 1 ? "minutes" : "minute"}`,
+    seconds && `${seconds} ${seconds > 1 ? "seconds" : "second"}`,
+  ]
+    .filter((value) => value)
+    .join(" ");
+
+  return time;
+};
+
+const getTextFromHtml = (html: string) => {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent || "";
+};
+
+const scrollTo = (id: string, adjustTopPosition: number = 0) => {
+  if (typeof window === undefined) return;
+  const questionToScroll = document.getElementById(id);
+  if (!questionToScroll) return;
+  const topPositionOfQuestion = questionToScroll.offsetTop;
+
+  // Scroll with adjustment for the navbar height
+  window.scrollTo({
+    top: topPositionOfQuestion + adjustTopPosition,
+    behavior: "smooth",
+  });
 };
 
 export {
@@ -107,4 +146,6 @@ export {
   getPublicIdFromCloudinaryUrl,
   handleFilterColumn,
   getDurationBySecond,
+  getTextFromHtml,
+  scrollTo,
 };

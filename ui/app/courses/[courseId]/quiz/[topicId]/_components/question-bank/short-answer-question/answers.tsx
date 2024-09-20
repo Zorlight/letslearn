@@ -3,13 +3,13 @@ import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
 import { Input } from "@/lib/shadcn/input";
 import TinyEditor from "@/lib/tinymce/editor";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { cn, scrollTo } from "@/lib/utils";
 import { nanoid } from "@reduxjs/toolkit";
 import { ChevronsUpDown, CirclePlus, Trash } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z, ZodType } from "zod";
+import { useFormContext } from "react-hook-form";
 import { gradePercentOptions } from "../../static-data";
+import { ShortAnswerQuestionForm } from "../../tab-content/tab-in-tab/short-answer-question-tab";
+import { useEffect } from "react";
 
 type ShortAnswer = {
   text: string;
@@ -20,35 +20,18 @@ type ShortAnswer = {
 export type ShortAnswerQuestionAnswerForm = {
   answers: ShortAnswer[];
 };
-const schema: ZodType<ShortAnswerQuestionAnswerForm> = z.object({
-  answers: z.array(
-    z.object({
-      text: z.string(),
-      gradePercent: z.number(),
-      feedback: z.string(),
-    })
-  ),
-});
 
 interface Props {
-  initValue: ShortAnswerQuestionAnswerForm;
+  formData: ShortAnswerQuestionAnswerForm;
   onChange?: (data: ShortAnswerQuestionAnswerForm) => void;
 }
 
-const ShortAnswerQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
-  const { answers } = initValue;
-  const form = useForm<ShortAnswerQuestionAnswerForm>({
-    resolver: zodResolver(schema),
-    defaultValues: initValue,
-  });
-  const { register, setValue, getValues, handleSubmit } = form;
-  const { errors, isValid, isSubmitting } = form.formState;
-  const onSubmit = () => {
-    const toSubmit = getValues();
-    console.log(toSubmit);
-
-    //Logic to update Answer setting
-  };
+const ShortAnswerQuestionAnswerSetting = ({ formData, onChange }: Props) => {
+  const form = useFormContext<ShortAnswerQuestionForm>();
+  const {
+    errors: { answerSettingForm: errors },
+  } = form.formState;
+  const { answers } = formData;
   const handleSettingChange = (data: ShortAnswerQuestionAnswerForm) => {
     if (onChange) onChange(data);
   };
@@ -56,8 +39,7 @@ const ShortAnswerQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
   const handleAnswerChange = (index: number, answer: ShortAnswer) => {
     const newAnswers = [...answers];
     newAnswers[index] = answer;
-    setValue("answers", newAnswers);
-    handleSettingChange({ ...getValues(), answers: newAnswers });
+    handleSettingChange({ ...formData, answers: newAnswers });
   };
 
   const handleAddAnswer = () => {
@@ -65,27 +47,30 @@ const ShortAnswerQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
       ...answers,
       { text: "", gradePercent: 100, feedback: "" },
     ];
-    setValue("answers", newAnswers);
-    handleSettingChange({ ...getValues(), answers: newAnswers });
+    handleSettingChange({ ...formData, answers: newAnswers });
   };
 
   const handleRemoveAnswer = () => {
     const newAnswers = answers.slice(0, answers.length - 1);
-    setValue("answers", newAnswers);
-    handleSettingChange({ ...getValues(), answers: newAnswers });
+    handleSettingChange({ ...formData, answers: newAnswers });
   };
 
+  useEffect(() => {
+    if (errors?.answers) {
+      if (!errors.answers.findIndex) return;
+      const errorChoiceIndex = errors.answers.findIndex((answer) => answer);
+      scrollTo(`answer-${errorChoiceIndex + 1}`, 60);
+    }
+  }, [errors]);
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col p-4 gap-8"
-    >
+    <div className="w-full flex flex-col p-4 gap-8">
       {answers.map((answer, index) => (
         <AnswerRowSetting
           key={index}
           rowIndex={index}
           shortAnswer={answer}
-          textError={errors.answers?.[index]?.text?.message}
+          textError={errors?.answers?.[index]?.text?.message}
           onAnswerChange={handleAnswerChange}
         />
       ))}
@@ -112,11 +97,8 @@ const ShortAnswerQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
             Remove last answer
           </Button>
         )}
-        <Button type="submit" size="sm">
-          Save
-        </Button>
       </div>
-    </form>
+    </div>
   );
 };
 
@@ -125,13 +107,27 @@ interface RowProps {
   htmlFor?: string;
   children?: React.ReactNode[] | React.ReactNode;
   className?: string;
+  errorMessage?: string;
 }
-const RowSetting = ({ title, children, htmlFor, className }: RowProps) => {
+const RowSetting = ({
+  title,
+  children,
+  htmlFor,
+  className,
+  errorMessage,
+}: RowProps) => {
   return (
     <div className={cn("flex flex-row items-center gap-2", className)}>
-      <label htmlFor={htmlFor} className="w-[252px] font-semibold">
-        {title}
-      </label>
+      <div className="w-[252px] relative">
+        <label htmlFor={htmlFor} className="font-semibold">
+          {title}
+        </label>
+        {errorMessage && (
+          <p className="absolute top-full text-red-500 font-semibold">
+            {errorMessage}
+          </p>
+        )}
+      </div>
       <div className="relative w-full flex flex-col">{children}</div>
     </div>
   );
@@ -143,6 +139,7 @@ interface AnswerRowProps {
   shortAnswer: ShortAnswer;
   textError?: string;
   onAnswerChange?: (index: number, answer: ShortAnswer) => void;
+  errorMessage?: string;
 }
 const AnswerRowSetting = ({
   rowIndex,
@@ -150,6 +147,7 @@ const AnswerRowSetting = ({
   shortAnswer,
   textError,
   onAnswerChange,
+  errorMessage,
 }: AnswerRowProps) => {
   const textHtmlFor = nanoid();
 
@@ -168,12 +166,17 @@ const AnswerRowSetting = ({
 
   return (
     <div
+      id={`answer-${rowIndex + 1}`}
       className={cn(
         "py-6 px-8 rounded-md bg-slate-50 flex flex-col gap-4",
         className
       )}
     >
-      <RowSetting title={`Answer ${rowIndex + 1}`} htmlFor={textHtmlFor}>
+      <RowSetting
+        title={`Answer ${rowIndex + 1}`}
+        htmlFor={textHtmlFor}
+        errorMessage={errorMessage}
+      >
         <div className="flex flex-row items-center gap-4">
           <div>
             <Input

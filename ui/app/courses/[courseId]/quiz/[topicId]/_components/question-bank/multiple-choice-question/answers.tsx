@@ -1,49 +1,31 @@
 "use client";
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
-import { Input } from "@/lib/shadcn/input";
 import TinyEditor from "@/lib/tinymce/editor";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { nanoid } from "@reduxjs/toolkit";
-import { ChevronsUpDown, CirclePlus, Trash } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z, ZodType } from "zod";
-import { gradePercentOptions } from "../../static-data";
+import { cn, scrollTo } from "@/lib/utils";
 import { QuestionChoice } from "@/models/question";
+import { ChevronsUpDown, CirclePlus, Trash } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import { gradePercentOptions } from "../../static-data";
+import { ChoiceQuestionForm } from "../../tab-content/tab-in-tab/choice-question-tab";
+import { useEffect } from "react";
 
 export type ChoiceQuestionAnswerForm = {
   choices: QuestionChoice[];
 };
-const schema: ZodType<ChoiceQuestionAnswerForm> = z.object({
-  choices: z.array(
-    z.object({
-      text: z.string(),
-      gradePercent: z.number(),
-      feedback: z.string(),
-    })
-  ),
-});
 
 interface Props {
-  initValue: ChoiceQuestionAnswerForm;
+  formData: ChoiceQuestionAnswerForm;
   onChange?: (data: ChoiceQuestionAnswerForm) => void;
 }
 
-const ChoiceQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
-  const { choices } = initValue;
-  const form = useForm<ChoiceQuestionAnswerForm>({
-    resolver: zodResolver(schema),
-    defaultValues: initValue,
-  });
-  const { register, setValue, getValues, handleSubmit } = form;
-  const { errors, isValid, isSubmitting } = form.formState;
-  const onSubmit = () => {
-    const toSubmit = getValues();
-    console.log(toSubmit);
+const ChoiceQuestionAnswerSetting = ({ formData, onChange }: Props) => {
+  const form = useFormContext<ChoiceQuestionForm>();
+  const {
+    errors: { answerSettingForm: errors },
+  } = form.formState;
+  const { choices } = formData;
 
-    //Logic to update Answer setting
-  };
   const handleSettingChange = (data: ChoiceQuestionAnswerForm) => {
     if (onChange) onChange(data);
   };
@@ -51,39 +33,42 @@ const ChoiceQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
   const handleChoiceChange = (index: number, choice: QuestionChoice) => {
     const newChoices = [...choices];
     newChoices[index] = choice;
-    setValue("choices", newChoices);
-    handleSettingChange({ ...getValues(), choices: newChoices });
+    handleSettingChange({ ...formData, choices: newChoices });
   };
 
   const handleAddChoice = () => {
-    const newChoices = [
-      ...choices,
-      { text: "", gradePercent: 100, feedback: "" },
-    ];
-    setValue("choices", newChoices);
-    handleSettingChange({ ...getValues(), choices: newChoices });
+    const newChoices = [...choices];
+    newChoices.push({ text: "", gradePercent: 0, feedback: "" });
+    handleSettingChange({ ...formData, choices: newChoices });
   };
 
   const handleRemoveChoice = () => {
     const newChoices = [...choices];
     newChoices.pop();
-    setValue("choices", newChoices);
-    handleSettingChange({ ...getValues(), choices: newChoices });
+    handleSettingChange({ ...formData, choices: newChoices });
   };
 
+  useEffect(() => {
+    if (errors?.choices) {
+      if (!errors.choices.findIndex) return;
+      const errorChoiceIndex = errors.choices.findIndex((choice) => choice);
+      scrollTo(`choice-${errorChoiceIndex + 1}`, 60);
+    }
+  }, [errors]);
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col p-4 gap-8"
-    >
-      {choices.map((choice, index) => (
-        <AnswerRowSetting
-          key={index}
-          rowIndex={index}
-          choice={choice}
-          onChoiceChange={handleChoiceChange}
-        />
-      ))}
+    <div className="w-full flex flex-col p-4 gap-8">
+      {choices.map((choice, index) => {
+        return (
+          <AnswerRowSetting
+            key={index}
+            rowIndex={index}
+            choice={choice}
+            onChoiceChange={handleChoiceChange}
+            errorMessage={errors?.choices?.[index]?.text?.message}
+          />
+        );
+      })}
 
       <div className="flex flex-row justify-center gap-2">
         <Button
@@ -107,11 +92,8 @@ const ChoiceQuestionAnswerSetting = ({ initValue, onChange }: Props) => {
             Remove last choice
           </Button>
         )}
-        <Button type="submit" size="sm">
-          Save
-        </Button>
       </div>
-    </form>
+    </div>
   );
 };
 
@@ -120,13 +102,27 @@ interface RowProps {
   htmlFor?: string;
   children?: React.ReactNode[] | React.ReactNode;
   className?: string;
+  errorMessage?: string;
 }
-const RowSetting = ({ title, children, htmlFor, className }: RowProps) => {
+const RowSetting = ({
+  title,
+  children,
+  htmlFor,
+  className,
+  errorMessage,
+}: RowProps) => {
   return (
     <div className={cn("flex flex-row items-center gap-2", className)}>
-      <label htmlFor={htmlFor} className="w-[252px] font-semibold">
-        {title}
-      </label>
+      <div className="w-[252px] relative">
+        <label htmlFor={htmlFor} className="font-semibold">
+          {title}
+        </label>
+        {errorMessage && (
+          <p className="absolute top-full text-red-500 font-semibold">
+            {errorMessage}
+          </p>
+        )}
+      </div>
       <div className="relative w-full flex flex-col">{children}</div>
     </div>
   );
@@ -136,12 +132,14 @@ interface AnswerRowProps {
   rowIndex: number;
   className?: string;
   choice: QuestionChoice;
+  errorMessage?: string;
   onChoiceChange?: (index: number, choice: QuestionChoice) => void;
 }
 const AnswerRowSetting = ({
   rowIndex,
   className,
   choice,
+  errorMessage,
   onChoiceChange,
 }: AnswerRowProps) => {
   const onEditorChange = (value: string) => {
@@ -154,12 +152,17 @@ const AnswerRowSetting = ({
 
   return (
     <div
+      id={`choice-${rowIndex + 1}`}
       className={cn(
         "py-6 px-8 rounded-md bg-slate-50 flex flex-col gap-4",
         className
       )}
     >
-      <RowSetting title={`Choice ${rowIndex + 1}`} className="items-start">
+      <RowSetting
+        title={`Choice ${rowIndex + 1}`}
+        className="items-start"
+        errorMessage={errorMessage}
+      >
         <TinyEditor
           onChange={(data) => onEditorChange(data)}
           initValue={choice.text}

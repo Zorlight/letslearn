@@ -4,10 +4,11 @@ import { format } from "date-fns";
 import React from "react";
 
 interface Props {
-  quizResult: QuizResponse;
+  responseIndex?: number;
+  quizResponse: QuizResponse;
 }
-const QuizAttemptResult = ({ quizResult }: Props) => {
-  const { startedAt, completedAt, mark, totalMark, status } = quizResult;
+const QuizAttemptResult = ({ quizResponse, responseIndex }: Props) => {
+  const { startedAt, completedAt, mark, totalMark, status } = quizResponse;
 
   const duration = getDurationBySecond(startedAt, completedAt) || 0;
   const formatDetailDate = (date: string) => {
@@ -19,10 +20,15 @@ const QuizAttemptResult = ({ quizResult }: Props) => {
 
   return (
     <div className="flex flex-col border rounded-lg">
+      {responseIndex !== undefined && (
+        <h5 className="text-orange-500 px-4 py-2">{`Attempt ${
+          responseIndex + 1
+        }`}</h5>
+      )}
       <ResultRow title="Status">{status}</ResultRow>
       <ResultRow title="Started">{formatDetailDate(startedAt)}</ResultRow>
       <ResultRow title="Completed">{formatDetailDate(completedAt)}</ResultRow>
-      <ResultRow title="Duration">{`${duration}s`}</ResultRow>
+      <ResultRow title="Duration">{`${duration}`}</ResultRow>
       <ResultRow title="Mark">
         <span
           className={cn(

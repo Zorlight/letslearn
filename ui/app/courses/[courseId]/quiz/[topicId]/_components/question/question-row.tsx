@@ -1,16 +1,19 @@
-import { Question } from "@/models/question";
-import React from "react";
-import { questionIconMap } from "../static-data";
 import { Button } from "@/lib/shadcn/button";
-import { Trash, Trash2 } from "lucide-react";
+import { Question } from "@/models/question";
+import { Trash2 } from "lucide-react";
+import { questionIconMap } from "../static-data";
 
 interface Props {
   rowIndex: number;
   data: Question;
+  onRemove?: (index: number) => void;
 }
-const QuestionRow = ({ data, rowIndex }: Props) => {
+const QuestionRow = ({ data, rowIndex, onRemove }: Props) => {
   const { type, questionName } = data;
 
+  const handleRemove = () => {
+    if (onRemove) onRemove(rowIndex);
+  };
   return (
     <div className="flex-1 px-2">
       <div className="flex flex-row items-center justify-between">
@@ -25,6 +28,7 @@ const QuestionRow = ({ data, rowIndex }: Props) => {
           <Trash2
             size={16}
             className="cursor-pointer hover:text-red-500 transition-all duration-200"
+            onClick={handleRemove}
           />
         </div>
       </div>

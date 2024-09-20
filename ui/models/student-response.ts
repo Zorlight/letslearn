@@ -7,6 +7,7 @@ export enum ResponseType {
 }
 
 export interface BaseStudentResponse {
+  id: string;
   student: User;
 }
 

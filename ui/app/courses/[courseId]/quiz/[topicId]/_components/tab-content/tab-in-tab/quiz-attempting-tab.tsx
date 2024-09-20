@@ -1,36 +1,45 @@
 "use client";
 import { fakeQuestions } from "@/fake-data/question";
+import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import { Card } from "@/lib/shadcn/card";
 import { cn } from "@/lib/utils";
-import { ReactNode, useEffect, useState } from "react";
-import QuestionBlock from "../../quiz-attempting/question-navigation-box/question-block";
-import QuestionDisplay from "../../quiz-attempting/question-display/question-display";
-import { QuestionResult, TabInTab } from "../../static-data";
-import BackwardButtonIconText from "../_components/backward-button-icon-text";
-import {
-  colorAnnotations,
-  symbolAnnotations,
-} from "../_components/static-data";
-import { scrollToQuestion } from "../_components/utils";
-import FinishAttemptDialog from "../../quiz-attempting/finish-attempt-dialog";
-import SymbolAnnotation from "../_components/quiz-attempting-tab/symbol-annotation";
-import ColorAnnotation from "../_components/quiz-attempting-tab/color-annotation";
-import QuizAttemptResult from "../_components/quiz-attempting-tab/quiz-attempt-result";
+import { Question } from "@/models/question";
 import {
   QuizResponse,
   QuizStatus,
   ResponseType,
 } from "@/models/student-response";
-import { fakeUser } from "@/fake-data/user";
-import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import FinishAttemptDialog from "../../quiz-attempting/finish-attempt-dialog";
+import QuestionDisplay from "../../quiz-attempting/question-display/question-display";
+import QuestionBlock from "../../quiz-attempting/question-navigation-box/question-block";
+import { QuestionResult, TabInTab } from "../../static-data";
+import BackwardButtonIconText from "../_components/backward-button-icon-text";
+import ColorAnnotation from "../_components/quiz-attempting-tab/color-annotation";
+import QuizAttemptResult from "../_components/quiz-attempting-tab/quiz-attempt-result";
+import SymbolAnnotation from "../_components/quiz-attempting-tab/symbol-annotation";
+import {
+  colorAnnotations,
+  symbolAnnotations,
+} from "../_components/static-data";
+import { scrollToQuestion } from "../_components/utils";
 
 interface Props {
-  onTabInTabChange?: (tab: TabInTab) => void;
   className?: string;
+  quizResponse: QuizResponse;
+  onQuizResponseChange: (quizResponse: QuizResponse) => void;
+  onTabInTabChange?: (tab: TabInTab) => void;
+  onTabInTabQuestionChange?: (question: Question | undefined) => void;
 }
-const QuizAttemptingTab = ({ className, onTabInTabChange }: Props) => {
+const QuizAttemptingTab = ({
+  className,
+  quizResponse,
+  onQuizResponseChange,
+  onTabInTabChange,
+  onTabInTabQuestionChange,
+}: Props) => {
   const totalQuestions = fakeQuestions.length;
   // const thisUser = useAppSelector((state) => state.profile.value);
 
@@ -45,7 +54,6 @@ const QuizAttemptingTab = ({ className, onTabInTabChange }: Props) => {
   );
   const [marks, setMarks] = useState<number[]>(fakeQuestions.map(() => 0));
   const [questions, setQuestions] = useState(fakeQuestions);
-  const [quizResponse, setQuizResponse] = useState<QuizResponse>();
   const handleFlagChange = (index: number) => {
     const newFlags = [...flags];
     newFlags[index] = !newFlags[index];
@@ -108,34 +116,21 @@ const QuizAttemptingTab = ({ className, onTabInTabChange }: Props) => {
     });
     return totalMark;
   };
-  const initQuizResponse = () => {
-    if (!thisUser) {
-      toast.error("You must login to start the quiz");
-      return;
-    }
+  const startQuiz = () => {
+    if (quizResponse.status !== QuizStatus.NOT_STARTED) return;
     const startTime = new Date().toISOString();
     const fullMark = getFullMarkOfQuiz();
-    let quizResponse: QuizResponse = {
-      type: ResponseType.QUIZ,
+
+    const newQuizResponse = {
+      ...quizResponse,
       status: QuizStatus.NOT_FINISHED,
       startedAt: startTime,
-      completedAt: startTime,
-      mark: 0,
       totalMark: fullMark,
-      student: thisUser,
     };
-    setQuizResponse(quizResponse);
+    if (onQuizResponseChange) onQuizResponseChange(newQuizResponse);
   };
 
   const handleFinishQuizResponse = () => {
-    if (!thisUser) {
-      toast.error("You must login to finish the quiz");
-      return;
-    }
-    if (!quizResponse) {
-      toast.error("You must start the quiz first");
-      return;
-    }
     const completedTime = new Date().toISOString();
     const quizResponseMark = getQuizResponseMark();
     const finishedQuizResponse: QuizResponse = {
@@ -145,16 +140,16 @@ const QuizAttemptingTab = ({ className, onTabInTabChange }: Props) => {
       mark: quizResponseMark,
     };
 
-    setQuizResponse(finishedQuizResponse);
+    if (onQuizResponseChange) onQuizResponseChange(finishedQuizResponse);
+  };
+
+  const handleFinishReview = () => {
+    if (onTabInTabChange) onTabInTabChange(TabInTab.MAIN_TAB);
   };
 
   useEffect(() => {
-    initQuizResponse();
+    startQuiz();
   }, []);
-
-  useEffect(() => {
-    console.log("quizResponse", quizResponse);
-  }, [quizResponse]);
 
   let dialogTitle = "";
   const isMissingAnswer = hasAnswers.includes(false);
@@ -200,7 +195,7 @@ const QuizAttemptingTab = ({ className, onTabInTabChange }: Props) => {
 
       <div className={cn("flex flex-col gap-10 pb-48", className)}>
         {quizResponse && showCorrectAnswer && (
-          <QuizAttemptResult quizResult={quizResponse} />
+          <QuizAttemptResult quizResponse={quizResponse} />
         )}
         {questions.map((question, index) => (
           <QuestionDisplay
@@ -217,6 +212,7 @@ const QuizAttemptingTab = ({ className, onTabInTabChange }: Props) => {
               handleAnswerSelected(index, hasAnswered)
             }
             onMarkChange={(mark) => handleMarkChange(index, mark)}
+            onTabInTabQuestionChange={onTabInTabQuestionChange}
           />
         ))}
         <Button variant="default" onClick={handleShowingCorrectAnswer}>
@@ -239,21 +235,29 @@ const QuizAttemptingTab = ({ className, onTabInTabChange }: Props) => {
             ))}
           </div>
 
-          <FinishAttemptDialog
-            variant={isMissingAnswer ? "warning" : "success"}
-            title={dialogTitle}
-            content={
-              <span>
-                {
-                  "Once you submit your answers, you won’t be able to change them. Are you sure you want to finish the attempt?"
-                }
-              </span>
-            }
-            onYes={handleConfirmFinishAttempt}
-            onCancel={handleCancelFinishAttempt}
-          >
-            <Button variant="default">Finish attempt</Button>
-          </FinishAttemptDialog>
+          {quizResponse?.status === QuizStatus.NOT_FINISHED && (
+            <FinishAttemptDialog
+              variant={isMissingAnswer ? "warning" : "success"}
+              title={dialogTitle}
+              content={
+                <span>
+                  {
+                    "Once you submit your answers, you won’t be able to change them. Are you sure you want to finish the attempt?"
+                  }
+                </span>
+              }
+              onYes={handleConfirmFinishAttempt}
+              onCancel={handleCancelFinishAttempt}
+            >
+              <Button variant="default">Finish attempt</Button>
+            </FinishAttemptDialog>
+          )}
+
+          {quizResponse?.status === QuizStatus.FINISHED && (
+            <Button variant="default" onClick={handleFinishReview}>
+              Finish review
+            </Button>
+          )}
         </Card>
       </div>
     </div>

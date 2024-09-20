@@ -11,7 +11,7 @@ interface BaseQuestion {
   defaultMark: number;
   createdBy: string;
   createdAt: string;
-  updatedAt: string;
+  modifiedAt: string;
   modifiedBy: string;
   usage: number;
 }

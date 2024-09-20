@@ -132,12 +132,17 @@ const questionStatusColumn = (
   return col;
 };
 
-const actionColumn = (): ColumnDef<Question> => {
+interface ActionColumnProps {
+  onEdit?: (questionId: string) => void;
+}
+const actionColumn = ({ onEdit }: ActionColumnProps): ColumnDef<Question> => {
   const col: ColumnDef<Question> = {
     id: "Action",
     cell: ({ row }) => {
       let id: string = row.getValue("id");
-      const handleEdit = () => {};
+      const handleEdit = () => {
+        if (onEdit) onEdit(id);
+      };
 
       return (
         <DropdownMenu>
@@ -166,7 +171,12 @@ const actionColumn = (): ColumnDef<Question> => {
   return col;
 };
 
-const questionTableColumns = (): ColumnDef<Question>[] => {
+interface QuestionTableProps {
+  onEdit?: (questionId: string) => void;
+}
+const questionTableColumns = ({
+  onEdit,
+}: QuestionTableProps): ColumnDef<Question>[] => {
   const columns: ColumnDef<Question>[] = [
     defaultSelectColumn<Question>(),
     defaultIndexColumn<Question>(),
@@ -183,7 +193,7 @@ const questionTableColumns = (): ColumnDef<Question>[] => {
     else col = defaultColumn<Question>(key, questionColumnTitles);
     columns.push(col);
   }
-  columns.push(actionColumn());
+  columns.push(actionColumn({ onEdit }));
 
   return columns;
 };

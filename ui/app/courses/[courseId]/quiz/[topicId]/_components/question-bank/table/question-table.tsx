@@ -12,6 +12,10 @@ import {
   questionTableColumns,
 } from "./columns";
 
+interface OtherFunctions {
+  onEdit?: (id: string) => void;
+}
+
 interface Props {
   data: Question[];
   pagination?: {
@@ -21,8 +25,15 @@ interface Props {
   };
   error?: string;
   buttons?: ReactNode[];
+  otherFunctions: OtherFunctions;
 }
-const QuestionTable = ({ data, error, pagination, buttons }: Props) => {
+const QuestionTable = ({
+  data,
+  error,
+  pagination,
+  buttons,
+  otherFunctions,
+}: Props) => {
   const router = useRouter();
   const [filteredData, setFilteredData] = useState<Question[]>([]);
   const filterOptionKeys = Object.keys(questionColumnTitles).map((key) => key);
@@ -71,7 +82,9 @@ const QuestionTable = ({ data, error, pagination, buttons }: Props) => {
       <CustomDatatable<Question>
         data={filteredData}
         pagination={pagination}
-        columns={questionTableColumns()}
+        columns={questionTableColumns({
+          onEdit: otherFunctions?.onEdit,
+        })}
         columnTitles={questionColumnTitles}
         buttons={buttons}
         config={{

@@ -5,22 +5,32 @@ import CreateQuestionDialog from "../question-bank/create-question-dialog";
 import { QuestionType } from "../static-data";
 import QuestionAddButton from "./question-add-button";
 import QuestionRow from "./question-row";
-import { fakeQuestions } from "@/fake-data/question";
 
 interface Props {
+  questions: Question[];
+  onReorderedQuestion: (data: Question[]) => void;
   onAddNewQuestion?: (type: QuestionType) => void;
+  onRemoveQuestion?: (index: number) => void;
 }
-const QuestionList = ({ onAddNewQuestion }: Props) => {
-  const [data, setData] = React.useState<Question[]>(fakeQuestions);
+const QuestionList = ({
+  questions,
+  onAddNewQuestion,
+  onRemoveQuestion,
+  onReorderedQuestion,
+}: Props) => {
   const [openDialog, setOpenDialog] = React.useState(false);
-
   return (
     <div className="flex flex-col gap-2 bg-gray-50 rounded-md p-4">
       <DraggableContainer
-        data={data}
-        onReordered={setData}
+        data={questions}
+        onReordered={onReorderedQuestion}
         renderItem={(question, index) => (
-          <QuestionRow key={index} data={question} rowIndex={index} />
+          <QuestionRow
+            key={index}
+            data={question}
+            rowIndex={index}
+            onRemove={onRemoveQuestion}
+          />
         )}
       />
       <div className="ml-auto">

@@ -1,0 +1,21 @@
+@keyframes bubble-on-hover {
+  0% {
+    scale: 1;
+  }
+  25% {
+    scale: 1.1;
+  }
+  50% {
+    scale: 0.95;
+  }
+  75% {
+    scale: 1.05;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+.bubble {
+  animation: bubble-on-hover 0.5s ease-in-out forwards;
+}

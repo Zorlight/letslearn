@@ -10,6 +10,7 @@ import TrueFalseChoiceDisplay from "../true-false-answer/true-fale-choice-displa
 import QuestionFancyButton from "./question-fancy-button";
 import { Button } from "@/lib/shadcn/button";
 import { Pen, Settings2 } from "lucide-react";
+import useBubbleAnimation from "@/hooks/useBubbleAnimation/useBubbleAnimation";
 
 interface Props {
   questionIndex: number;
@@ -24,6 +25,7 @@ interface Props {
   onFlagChange?: () => void;
   onAnswerSelected?: (hasAnswered: boolean) => void;
   onMarkChange?: (mark: number) => void;
+  onTabInTabQuestionChange?: (question: Question | undefined) => void;
 }
 const QuestionDisplay = ({
   questionIndex,
@@ -38,8 +40,16 @@ const QuestionDisplay = ({
   onFlagChange,
   onAnswerSelected,
   onMarkChange,
+  onTabInTabQuestionChange,
 }: Props) => {
   const { type, defaultMark } = question;
+
+  const { bubbleClassName, handleMouseEnter, handleMouseOut } =
+    useBubbleAnimation();
+
+  const handleEditQuestion = () => {
+    if (onTabInTabQuestionChange) onTabInTabQuestionChange(question);
+  };
 
   let desc;
   if (description) desc = description;
@@ -65,9 +75,9 @@ const QuestionDisplay = ({
             : ""
         )}
       >
-        <div className="absolute left-5 -top-5 flex flex-row items-center gap-2 text-slate-600 font-semibold">
-          <QuestionFancyButton>
-            <span className="ml-auto cursor-pointer" onClick={onFlagChange}>
+        <div className="absolute left-5 -top-5 flex flex-row items-center gap-2 text-slate-600 font-semibold cursor-pointer">
+          <QuestionFancyButton onClick={onFlagChange}>
+            <span className="ml-auto cursor-pointer">
               <FlagIcon variant={isFlagged ? "active" : "default"} />
             </span>
             <span>Question</span>
@@ -78,15 +88,16 @@ const QuestionDisplay = ({
             </div>
           </QuestionFancyButton>
           {/* Button for edit mode */}
-          <Button className="w-10 h-10 p-0 bg-gradient-to-br from-fuchsia-500 to-indigo-500 text-white hover:shadow-sm group flex items-center justify-center">
-            <Settings2
-              size={16}
-              className="absolute opacity-100 group-hover:-scale-x-100 transition-all duration-100"
-            />
-            {/* <Settings2
-              size={16}
-              className="absolute opacity-0 group-hover:opacity-100 -scale-x-100 transition-all duration-100"
-            /> */}
+          <Button
+            className={cn(
+              "w-10 h-10 p-0 bg-gradient-to-br from-fuchsia-500 to-indigo-500 text-white hover:shadow-sm flex items-center justify-center",
+              bubbleClassName
+            )}
+            onMouseEnter={handleMouseEnter}
+            onMouseOut={handleMouseOut}
+            onClick={handleEditQuestion}
+          >
+            <Settings2 size={16} className="pointer-events-none" />
           </Button>
         </div>
         {/* Question mark here */}

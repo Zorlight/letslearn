@@ -117,15 +117,6 @@ export const gradePercentOptions = [
   "0",
 ];
 
-export enum BulletType {
-  NO_ORDER = "No order",
-  LOWERCASE = "a. b. c., ...",
-  UPPERCASE = "A. B. C., ...",
-  ROMAN_LOWERCASE = "i. ii. iii., ...",
-  ROMAN_UPPERCASE = "I. II. III., ...",
-  NUMBERING = "1. 2. 3., ...",
-}
-
 export const answerKeys = [
   "A",
   "B",

@@ -3,19 +3,25 @@ import QuestionList from "../question/question-list";
 import { QuestionType, TabInTab } from "../static-data";
 import { tabInTabMapper } from "./tab-in-tab/tap-in-tab-mapper";
 import { fakeQuestions } from "@/fake-data/question";
+import { Question } from "@/models/question";
 
 interface Props {
+  questions: Question[];
+  onReorderedQuestion: (data: Question[]) => void;
+  onAddNewQuestion: (type: QuestionType) => void;
+  onRemoveQuestion: (index: number) => void;
   onTabInTabChange: (tab: TabInTab) => void;
 }
-const TabQuestion = ({ onTabInTabChange }: Props) => {
+const TabQuestion = ({
+  questions,
+  onAddNewQuestion,
+  onTabInTabChange,
+  onRemoveQuestion,
+  onReorderedQuestion,
+}: Props) => {
   const attempts = 1;
   const totalMarks = 10;
   const isQuizOpen = true;
-
-  const handleAddNewQuestion = (type: QuestionType) => {
-    const tab = tabInTabMapper[type];
-    onTabInTabChange(tab);
-  };
 
   return (
     <div className="w-full flex flex-col gap-8">
@@ -40,7 +46,12 @@ const TabQuestion = ({ onTabInTabChange }: Props) => {
             {``}
           </p>
         </div>
-        <QuestionList onAddNewQuestion={handleAddNewQuestion} />
+        <QuestionList
+          questions={questions}
+          onAddNewQuestion={onAddNewQuestion}
+          onRemoveQuestion={onRemoveQuestion}
+          onReorderedQuestion={onReorderedQuestion}
+        />
       </div>
     </div>
   );

@@ -22,10 +22,7 @@ const QuestionAddButton = ({
           Add
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="bg-white text-primary-word dark:bg-dark-secondary-bg dark:text-dark-primary-word font-sans z-50"
-      >
+      <DropdownMenuContent align="end" className="bg-white font-sans z-50">
         <DropdownMenuItem
           className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer ease-linear duration-100"
           onClick={onAddNewQuestion}

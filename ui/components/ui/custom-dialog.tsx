@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/lib/shadcn/dialog";
@@ -20,8 +19,12 @@ const iconMap = {
 };
 
 interface Props {
+  control?: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+  };
   variant?: Variant;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   title: string;
   content: React.ReactNode;
   onYes?: () => void;
@@ -29,7 +32,8 @@ interface Props {
   onOk?: () => void;
   onCancel?: () => void;
 }
-const FinishAttemptDialog = ({
+const CustomDialog = ({
+  control,
   variant = "default",
   children,
   title,
@@ -58,7 +62,10 @@ const FinishAttemptDialog = ({
   };
   return (
     <div>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={control ? control.open : open}
+        onOpenChange={control ? control.setOpen : setOpen}
+      >
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
           <DialogTitle>
@@ -124,4 +131,4 @@ const FinishAttemptDialog = ({
   );
 };
 
-export default FinishAttemptDialog;
+export default CustomDialog;

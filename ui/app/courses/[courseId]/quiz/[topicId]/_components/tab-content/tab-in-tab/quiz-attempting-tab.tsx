@@ -12,7 +12,6 @@ import {
   StudentResponse,
 } from "@/models/student-response";
 import { useEffect, useState } from "react";
-import FinishAttemptDialog from "../../quiz-attempting/finish-attempt-dialog";
 import QuestionDisplay from "../../quiz-attempting/question-display/question-display";
 import QuestionBlock from "../../quiz-attempting/question-navigation-box/question-block";
 import { QuestionResult, TabInTab } from "../../static-data";
@@ -25,6 +24,7 @@ import {
   symbolAnnotations,
 } from "../_components/static-data";
 import { scrollToQuestion } from "../_components/utils";
+import CustomDialog from "@/components/ui/custom-dialog";
 
 interface Props {
   className?: string;
@@ -221,7 +221,7 @@ const QuizAttemptingTab = ({
           </div>
 
           {quizResponseData.status === QuizStatus.NOT_FINISHED && (
-            <FinishAttemptDialog
+            <CustomDialog
               variant={isMissingAnswer ? "warning" : "success"}
               title={dialogTitle}
               content={
@@ -235,7 +235,7 @@ const QuizAttemptingTab = ({
               onCancel={handleCancelFinishAttempt}
             >
               <Button variant="default">Finish attempt</Button>
-            </FinishAttemptDialog>
+            </CustomDialog>
           )}
 
           {quizResponseData.status === QuizStatus.FINISHED && (

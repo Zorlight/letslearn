@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { FileDown, FileUp, Filter } from "lucide-react";
+import { FileDown, FileUp, Filter, Trash2 } from "lucide-react";
 import { ReactNode, useRef, useState } from "react";
 
 import CustomDataTableContent from "./custom_datatable_content";
@@ -28,6 +28,7 @@ import {
 import { Input } from "@/lib/shadcn/input";
 import { cn } from "@/lib/utils";
 import { DataTableViewOptions } from "./my_table_column_visibility_toggle";
+import CustomDialog from "../ui/custom-dialog";
 
 export type DatatableConfig<TData> = {
   showDefaultSearchInput?: boolean;
@@ -35,6 +36,7 @@ export type DatatableConfig<TData> = {
   alternativeSearchInput?: JSX.Element;
   showDataTableViewOptions?: boolean;
   showRowSelectedCounter?: boolean;
+  showConfirmDialog?: { title: string; content: string };
   onDeleteRowsBtnClick?: (dataToDelete: TData[]) => Promise<any>; // if null, remove button
   onExportExcelBtnClick?: (table: ReactTable<TData>) => void; // if null, remove button
   onImportExcelBtnClick?: (table: ReactTable<TData>) => void; // if null, remove button
@@ -56,6 +58,10 @@ const defaultConfig: DatatableConfig<any> = {
   alternativeSearchInput: undefined,
   showDataTableViewOptions: true,
   showRowSelectedCounter: true,
+  showConfirmDialog: {
+    title: "Delete selected items",
+    content: "Are you sure you want to delete selected items?",
+  },
   defaultVisibilityState: {},
   onDeleteRowsBtnClick: undefined,
   onExportExcelBtnClick: undefined,
@@ -134,12 +140,35 @@ export function CustomDatatable<TData>({
     meta: meta,
   });
 
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [dialogInfo, setDialogInfo] = useState<{
+    title: string;
+    content: string;
+  }>({ title: "", content: "" });
   const [isDeletingCodes, setIsDeletingCodes] = useState(false);
 
   const handleFilterChange = (filterInput: string, col: string) => {
     setSelectedFilterKey(col);
     if (config && config.onFilterChange)
       config.onFilterChange(filterInput, col);
+  };
+
+  const handleOpenConfirmDialog = (title: string, content: string) => {
+    setOpenConfirmDialog(true);
+    setDialogInfo({ title, content });
+  };
+
+  const handleYes = () => {
+    setIsDeletingCodes(true);
+    config!.onDeleteRowsBtnClick!(
+      table.getSelectedRowModel().rows.map((row) => row.original)
+    )
+      .then(() => table.toggleAllRowsSelected(false))
+      .finally(() => setIsDeletingCodes(false));
+    setOpenConfirmDialog(false);
+  };
+  const handleCancel = () => {
+    setOpenConfirmDialog(false);
   };
 
   return (
@@ -176,7 +205,7 @@ export function CustomDatatable<TData>({
                   {columnTitles[selectedFilterKey] || "Filter"}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="font-sans bg-white text-secondary-word dark:bg-dark-secondary-bg dark:text-dark-primary-word z-50">
+              <DropdownMenuContent className="font-sans bg-white z-50">
                 <DropdownMenuCheckboxItem
                   key="all"
                   checked={selectedFilterKey === ""}
@@ -212,14 +241,13 @@ export function CustomDatatable<TData>({
               className="bg-red-500 hover:bg-red-600 dark:hover:bg-red-600 text-white"
               disabled={isDeletingCodes}
               onClick={() => {
-                setIsDeletingCodes(true);
-                config!.onDeleteRowsBtnClick!(
-                  table.getSelectedRowModel().rows.map((row) => row.original)
-                )
-                  .then(() => table.toggleAllRowsSelected(false))
-                  .finally(() => setIsDeletingCodes(false));
+                handleOpenConfirmDialog(
+                  config.showConfirmDialog!.title,
+                  config.showConfirmDialog!.content
+                );
               }}
             >
+              <Trash2 size={16} />
               Delete
             </Button>
           ) : null}
@@ -254,6 +282,14 @@ export function CustomDatatable<TData>({
               columnHeaders={columnTitles}
             />
           ) : null}
+          <CustomDialog
+            control={{ open: openConfirmDialog, setOpen: setOpenConfirmDialog }}
+            variant="warning"
+            title={dialogInfo.title}
+            content={<span>{dialogInfo.content}</span>}
+            onYes={handleYes}
+            onCancel={handleCancel}
+          />
         </div>
       </div>
 

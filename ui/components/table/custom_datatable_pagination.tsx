@@ -88,8 +88,8 @@ export function CustomDataTablePagination<TData>({
         <div className="flex flex-row gap-2">
           <Button
             className={cn(
-              "hidden h-8 w-8 p-0 lg:flex whitespace-nowrap bg-white text-secondary-word hover:bg-gray-200 border disabled:hover:bg-white",
-              "dark:bg-white/10 dark:hover:bg-white/20 dark:text-dark-primary-word dark:disabled:hover:bg-white/10"
+              "hidden h-8 w-8 p-0 lg:flex whitespace-nowrap bg-white hover:bg-gray-200 border disabled:hover:bg-white",
+              "dark:bg-white/10 dark:hover:bg-white/20 dark:disabled:hover:bg-white/10"
             )}
             onClick={() => handlePageChange(0)}
             disabled={!table.getCanPreviousPage()}
@@ -98,8 +98,8 @@ export function CustomDataTablePagination<TData>({
           </Button>
           <Button
             className={cn(
-              "h-8 w-8 p-0 whitespace-nowrap bg-white text-secondary-word hover:bg-gray-200 border disabled:hover:bg-white",
-              "dark:bg-white/10 dark:hover:bg-white/20 dark:text-dark-primary-word dark:disabled:hover:bg-white/10"
+              "h-8 w-8 p-0 whitespace-nowrap bg-white hover:bg-gray-200 border disabled:hover:bg-white",
+              "dark:bg-white/10 dark:hover:bg-white/20 dark:disabled:hover:bg-white/10"
             )}
             onClick={() =>
               handlePageChange(table.getState().pagination.pageIndex - 1)
@@ -114,8 +114,8 @@ export function CustomDataTablePagination<TData>({
           </div>
           <Button
             className={cn(
-              "h-8 w-8 p-0 whitespace-nowrap bg-white text-secondary-word hover:bg-gray-200 border disabled:hover:bg-white",
-              "dark:bg-white/10 dark:hover:bg-white/20 dark:text-dark-primary-word dark:disabled:hover:bg-white/10"
+              "h-8 w-8 p-0 whitespace-nowrap bg-white hover:bg-gray-200 border disabled:hover:bg-white",
+              "dark:bg-white/10 dark:hover:bg-white/20 dark:disabled:hover:bg-white/10"
             )}
             onClick={() =>
               handlePageChange(table.getState().pagination.pageIndex + 1)
@@ -126,8 +126,8 @@ export function CustomDataTablePagination<TData>({
           </Button>
           <Button
             className={cn(
-              "hidden h-8 w-8 p-0 lg:flex whitespace-nowrap bg-white text-secondary-word hover:bg-gray-200 border disabled:hover:bg-white",
-              "dark:bg-white/10 dark:hover:bg-white/20 dark:text-dark-primary-word dark:disabled:hover:bg-white/10"
+              "hidden h-8 w-8 p-0 lg:flex whitespace-nowrap bg-white hover:bg-gray-200 border disabled:hover:bg-white",
+              "dark:bg-white/10 dark:hover:bg-white/20 dark:disabled:hover:bg-white/10"
             )}
             onClick={() => handlePageChange(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
@@ -146,10 +146,7 @@ export function CustomDataTablePagination<TData>({
             <SelectTrigger className="h-8 w-[70px]">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
-            <SelectContent
-              side="top"
-              className="font-sans bg-white text-primary-word dark:bg-dark-secondary-bg dark:text-dark-primary-word"
-            >
+            <SelectContent side="top" className="font-sans bg-white">
               {[10, 20, 30, 40, 50].map((pageSize) => (
                 <SelectItem
                   key={pageSize}

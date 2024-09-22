@@ -15,7 +15,7 @@ import {
 } from "@/lib/shadcn/dropdown-menu";
 import { Question } from "@/models/question";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronsUpDown, MoreHorizontal, Pen } from "lucide-react";
+import { ChevronsUpDown, MoreHorizontal, Pen, Trash2 } from "lucide-react";
 import { questionIconMap, QuestionStatus } from "../../static-data";
 import QuestionNameColumn from "./question-name-column";
 
@@ -137,14 +137,21 @@ const questionStatusColumn = (
 
 interface ActionColumnProps {
   onEdit?: (questionId: string) => void;
+  onDelete?: (questionId: string) => void;
 }
-const actionColumn = ({ onEdit }: ActionColumnProps): ColumnDef<Question> => {
+const actionColumn = ({
+  onEdit,
+  onDelete,
+}: ActionColumnProps): ColumnDef<Question> => {
   const col: ColumnDef<Question> = {
     id: "Action",
     cell: ({ row }) => {
       let id: string = row.getValue("id");
       const handleEdit = () => {
         if (onEdit) onEdit(id);
+      };
+      const handleDelete = () => {
+        if (onDelete) onDelete(id);
       };
 
       return (
@@ -154,16 +161,20 @@ const actionColumn = ({ onEdit }: ActionColumnProps): ColumnDef<Question> => {
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="bg-white text-primary-word dark:bg-dark-secondary-bg dark:text-dark-primary-word font-sans z-50"
-          >
+          <DropdownMenuContent align="end" className="bg-white font-sans z-50">
             <DropdownMenuItem
               className="flex gap-1 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer ease-linear duration-100"
               onClick={handleEdit}
             >
               <Pen size={14} />
               Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="flex gap-1 text-red-500 focus:bg-red-50 focus:text-red-600 cursor-pointer ease-linear duration-100"
+              onClick={handleDelete}
+            >
+              <Trash2 size={14} />
+              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -176,11 +187,13 @@ const actionColumn = ({ onEdit }: ActionColumnProps): ColumnDef<Question> => {
 
 interface QuestionTableProps {
   onEdit?: (questionId: string) => void;
+  onDelete?: (questionId: string) => void;
   onStatusChange?: (questionId: string, status: string) => void;
   onQuestionNameChange?: (questionId: string, questionName: string) => void;
 }
 const questionTableColumns = ({
   onEdit,
+  onDelete,
   onStatusChange,
   onQuestionNameChange,
 }: QuestionTableProps): ColumnDef<Question>[] => {
@@ -208,7 +221,7 @@ const questionTableColumns = ({
     else col = defaultColumn<Question>(key, questionColumnTitles);
     columns.push(col);
   }
-  columns.push(actionColumn({ onEdit }));
+  columns.push(actionColumn({ onEdit, onDelete }));
 
   return columns;
 };

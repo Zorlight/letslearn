@@ -1,12 +1,13 @@
 import { Button } from "@/lib/shadcn/button";
 import { Question } from "@/models/question";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Hand } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import CreateQuestionDialog from "../question-bank/dialog/create-question-dialog";
 import QuestionTable from "../question-bank/table/question-table";
 import { QuestionStatus, QuestionType, TabInTab } from "../static-data";
 import { tabInTabMapper } from "./tab-in-tab/tap-in-tab-mapper";
+import CustomDialog from "@/components/ui/custom-dialog";
 
 interface Props {
   questions: Question[];
@@ -21,6 +22,18 @@ const TabQuestionBank = ({
   onTabInTabQuestionChange,
 }: Props) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [dialogInfo, setDialogInfo] = useState<{
+    title: string;
+    content: string;
+    variant: string;
+  }>({
+    title: "Delete question",
+    content:
+      "Once you delete this quesstion, you won’t be able to undo your action. Are you sure you want to delete this question?",
+    variant: "warning",
+  });
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
 
   const handleAddQuestion = (type: QuestionType) => {
     const tab = tabInTabMapper[type];
@@ -37,6 +50,43 @@ const TabQuestionBank = ({
     const tab = tabInTabMapper[question.type];
     onTabInTabChange(tab);
     if (onTabInTabQuestionChange) onTabInTabQuestionChange(question);
+  };
+
+  const handleConfirmDeleteQuestions = async (questions: Question[]) => {
+    if (questions.length === 0) {
+      toast.error("No question found");
+      return;
+    }
+    setSelectedQuestions(questions);
+    setOpenConfirmDialog(true);
+  };
+
+  const handleConfirmDeleteQuestion = (id: string) => {
+    const questionToDelete = questions.find((q) => q.id === id);
+    if (!questionToDelete) {
+      toast.error("Question not found");
+      return;
+    }
+    setSelectedQuestions([questionToDelete]);
+    setOpenConfirmDialog(true);
+  };
+
+  const handleDeleteQuestions = async (questions: Question[]) => {
+    handleDeleteQuestionByIds(questions.map((q) => q.id));
+  };
+  const handleDeleteQuestionByIds = async (ids: string[]) => {
+    const newQuestions = questions.filter((q) => !ids.includes(q.id));
+    if (onQuestionsChange) onQuestionsChange(newQuestions);
+  };
+
+  const handleYes = () => {
+    handleDeleteQuestionByIds(selectedQuestions.map((q) => q.id));
+    setSelectedQuestions([]);
+    setOpenConfirmDialog(false);
+  };
+
+  const handleCancel = () => {
+    setOpenConfirmDialog(false);
   };
 
   const handleStatusChange = (id: string, status: string) => {
@@ -88,9 +138,19 @@ const TabQuestionBank = ({
           buttons={buttons}
           otherFunctions={{
             onEdit: handleEditQuestion,
+            onDelete: handleConfirmDeleteQuestion,
+            onDeleteMany: handleDeleteQuestions,
             onStatusChange: handleStatusChange,
             onQuestionNameChange: handleQuestionNameChange,
           }}
+        />
+        <CustomDialog
+          control={{ open: openConfirmDialog, setOpen: setOpenConfirmDialog }}
+          variant="warning"
+          title={dialogInfo.title}
+          content={<span>{dialogInfo.content}</span>}
+          onYes={handleYes}
+          onCancel={handleCancel}
         />
       </div>
     </div>

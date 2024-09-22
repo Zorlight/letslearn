@@ -14,6 +14,8 @@ import {
 
 interface OtherFunctions {
   onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onDeleteMany?: (questions: Question[]) => Promise<any>;
   onStatusChange?: (id: string, status: string) => void;
   onQuestionNameChange?: (id: string, name: string) => void;
 }
@@ -75,10 +77,6 @@ const QuestionTable = ({
     return handleFilterColumn(filterInput, col, data);
   };
 
-  const handleDeleteRowButtonClick = async (data: Question[]): Promise<any> => {
-    return await Promise.resolve();
-  };
-
   return (
     <>
       <CustomDatatable<Question>
@@ -86,6 +84,7 @@ const QuestionTable = ({
         pagination={pagination}
         columns={questionTableColumns({
           onEdit: otherFunctions?.onEdit,
+          onDelete: otherFunctions?.onDelete,
           onStatusChange: otherFunctions?.onStatusChange,
           onQuestionNameChange: otherFunctions?.onQuestionNameChange,
         })}
@@ -98,7 +97,7 @@ const QuestionTable = ({
           showDataTableViewOptions: true,
           showRowSelectedCounter: true,
           onFilterChange: handleFilterChange,
-          onDeleteRowsBtnClick: handleDeleteRowButtonClick,
+          onDeleteRowsBtnClick: otherFunctions?.onDeleteMany,
         }}
       />
     </>

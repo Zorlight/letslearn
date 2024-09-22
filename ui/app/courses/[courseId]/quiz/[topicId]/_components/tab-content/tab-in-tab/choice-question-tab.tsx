@@ -2,7 +2,7 @@ import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/co
 import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import { getTextFromHtml } from "@/lib/utils";
-import { ChoiceQuestion } from "@/models/question";
+import { ChoiceQuestion, Question } from "@/models/question";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
 import { FormProvider, useForm } from "react-hook-form";
@@ -52,24 +52,28 @@ const schema: ZodType<ChoiceQuestionForm> = z.object({
 });
 
 interface Props {
-  question: ChoiceQuestion | undefined;
-  onSubmitQuestion?: (data: ChoiceQuestion) => void;
+  question: Question | undefined;
+  onSubmitQuestion?: (data: Question) => void;
 }
 const ChoiceQuestionTab = ({ question, onSubmitQuestion }: Props) => {
   const thisUser = fakeUser;
-  const handleGetGeneralSetting = (question: ChoiceQuestion) => {
+  const handleGetGeneralSetting = (question: Question) => {
+    const { data } = question;
+    const { multiple } = data as ChoiceQuestion;
     const generalSetting: ChoiceQuestionGeneralForm = {
       questionName: question.questionName,
       questionText: question.questionText,
       questionStatus: question.status,
       defaultMark: question.defaultMark,
-      multipleChoice: question.multiple,
+      multipleChoice: multiple,
     };
     return generalSetting;
   };
-  const handleGetAnswerSetting = (question: ChoiceQuestion) => {
+  const handleGetAnswerSetting = (question: Question) => {
+    const { data } = question;
+    const { choices } = data as ChoiceQuestion;
     const answerSetting: ChoiceQuestionAnswerForm = {
-      choices: question.choices,
+      choices,
     };
     return answerSetting;
   };
@@ -99,40 +103,41 @@ const ChoiceQuestionTab = ({ question, onSubmitQuestion }: Props) => {
   };
 
   const handleCreateQuestion = (data: ChoiceQuestionForm) => {
-    const questionToCreate: ChoiceQuestion = {
+    const questionData: ChoiceQuestion = {
+      multiple: data.generalSettingForm.multipleChoice,
+      choices: data.answerSettingForm.choices,
+    };
+    const questionToCreate: Question = {
       id: nanoid(),
       type: QuestionType.CHOICE,
       questionName: data.generalSettingForm.questionName,
       questionText: data.generalSettingForm.questionText,
       status: data.generalSettingForm.questionStatus,
       defaultMark: data.generalSettingForm.defaultMark,
-      multiple: data.generalSettingForm.multipleChoice,
-      choices: data.answerSettingForm.choices,
       createdAt: new Date().toISOString(),
       createdBy: thisUser.username,
       modifiedAt: new Date().toISOString(),
       modifiedBy: thisUser.username,
       usage: 0,
+      data: questionData,
     };
     return questionToCreate;
   };
 
-  const handleEditQuestion = (
-    question: ChoiceQuestion,
-    data: ChoiceQuestionForm
-  ) => {
-    const questionToEdit: ChoiceQuestion = {
+  const handleEditQuestion = (question: Question, data: ChoiceQuestionForm) => {
+    const questionData: ChoiceQuestion = {
+      multiple: data.generalSettingForm.multipleChoice,
+      choices: data.answerSettingForm.choices,
+    };
+    const questionToEdit: Question = {
       ...question,
       questionName: data.generalSettingForm.questionName,
       questionText: data.generalSettingForm.questionText,
       status: data.generalSettingForm.questionStatus,
       defaultMark: data.generalSettingForm.defaultMark,
-      multiple: data.generalSettingForm.multipleChoice,
-      choices: data.answerSettingForm.choices,
-      createdAt: new Date().toISOString(),
-      createdBy: thisUser.username,
       modifiedAt: new Date().toISOString(),
       modifiedBy: thisUser.username,
+      data: questionData,
     };
     return questionToEdit;
   };

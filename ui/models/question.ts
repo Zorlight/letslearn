@@ -3,25 +3,26 @@ import {
   QuestionType,
 } from "@/app/courses/[courseId]/quiz/[topicId]/_components/static-data";
 
-interface BaseQuestion {
+export type Question = {
   id: string;
   questionName: string;
   questionText: string;
   status: QuestionStatus;
+  type: QuestionType;
   defaultMark: number;
   createdBy: string;
   createdAt: string;
   modifiedAt: string;
   modifiedBy: string;
   usage: number;
-}
+  data: TrueFalseQuestion | ChoiceQuestion | ShortAnswerQuestion;
+};
 
-export interface TrueFalseQuestion extends BaseQuestion {
-  type: QuestionType.TRUE_FALSE;
+export type TrueFalseQuestion = {
   correctAnswer: boolean;
   feedbackOfTrue: string;
   feedbackOfFalse: string;
-}
+};
 
 export type QuestionChoice = {
   text: string;
@@ -29,15 +30,11 @@ export type QuestionChoice = {
   feedback: string;
 };
 
-export interface ChoiceQuestion extends BaseQuestion {
-  type: QuestionType.CHOICE;
+export type ChoiceQuestion = {
   multiple: boolean;
   choices: QuestionChoice[];
-}
+};
 
-export interface ShortAnswerQuestion extends BaseQuestion {
-  type: QuestionType.SHORT_ANSWER;
+export type ShortAnswerQuestion = {
   choices: QuestionChoice[];
-}
-
-export type Question = TrueFalseQuestion | ChoiceQuestion | ShortAnswerQuestion;
+};

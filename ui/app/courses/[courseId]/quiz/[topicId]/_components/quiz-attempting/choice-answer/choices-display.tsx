@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
-import { ChoiceQuestion } from "@/models/question";
+import { ChoiceQuestion, Question } from "@/models/question";
 import { useEffect, useMemo, useState } from "react";
 import MultipleChoiceAnswer from "./multiple-choice-answer";
 import SingleChoiceAnswer from "./single-choice-answer";
 import { QuizAnswer } from "@/models/student-response";
 
 interface Props {
-  question: ChoiceQuestion;
+  question: Question;
   showCorrectAnswer?: boolean;
   studentAnswer?: string;
   onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
@@ -25,7 +25,8 @@ const ChoicesDisplay = ({
     return selectedIndexes;
   };
 
-  const { choices, multiple, defaultMark } = question;
+  const { defaultMark, data } = question;
+  const { choices, multiple } = data as ChoiceQuestion;
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>(
     studentAnswer ? handleGetAnswer(studentAnswer) : []
   );

@@ -1,7 +1,7 @@
 import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/collapsible-list";
 import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
-import { TrueFalseQuestion } from "@/models/question";
+import { Question, TrueFalseQuestion } from "@/models/question";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
 import { FormProvider, useForm } from "react-hook-form";
@@ -31,20 +31,23 @@ const schema: ZodType<TrueFalseQuestionForm> = z.object({
 });
 
 interface Props {
-  question: TrueFalseQuestion | undefined;
-  onSubmitQuestion?: (data: TrueFalseQuestion) => void;
+  question: Question | undefined;
+  onSubmitQuestion?: (data: Question) => void;
 }
 const TrueFalseQuestionTab = ({ question, onSubmitQuestion }: Props) => {
   const thisUser = fakeUser;
-  const handleGetGeneralSetting = (question: TrueFalseQuestion) => {
+  const handleGetGeneralSetting = (question: Question) => {
+    const { questionName, questionText, status, defaultMark, data } = question;
+    const { correctAnswer, feedbackOfTrue, feedbackOfFalse } =
+      data as TrueFalseQuestion;
     const generalSetting: TrueFalseQuestionGeneralForm = {
-      questionName: question.questionName,
-      questionText: question.questionText,
-      questionStatus: question.status,
-      defaultMark: question.defaultMark,
-      correctAnswer: question.correctAnswer,
-      feedbackOfTrue: question.feedbackOfTrue,
-      feedbackOfFalse: question.feedbackOfFalse,
+      questionName: questionName,
+      questionText: questionText,
+      questionStatus: status,
+      defaultMark: defaultMark,
+      correctAnswer: correctAnswer,
+      feedbackOfTrue: feedbackOfTrue,
+      feedbackOfFalse: feedbackOfFalse,
     };
     return generalSetting;
   };
@@ -62,40 +65,46 @@ const TrueFalseQuestionTab = ({ question, onSubmitQuestion }: Props) => {
   const { setValue, watch } = form;
 
   const handleCreateQuestion = (data: TrueFalseQuestionForm) => {
-    const questionToCreate: TrueFalseQuestion = {
+    const questionData: TrueFalseQuestion = {
+      correctAnswer: data.generalSettingForm.correctAnswer,
+      feedbackOfTrue: data.generalSettingForm.feedbackOfTrue,
+      feedbackOfFalse: data.generalSettingForm.feedbackOfFalse,
+    };
+    const questionToCreate: Question = {
       id: nanoid(),
       type: QuestionType.TRUE_FALSE,
       questionName: data.generalSettingForm.questionName,
       questionText: data.generalSettingForm.questionText,
       status: data.generalSettingForm.questionStatus,
       defaultMark: data.generalSettingForm.defaultMark,
-      correctAnswer: data.generalSettingForm.correctAnswer,
-      feedbackOfTrue: data.generalSettingForm.feedbackOfTrue,
-      feedbackOfFalse: data.generalSettingForm.feedbackOfFalse,
       createdBy: thisUser.username,
       createdAt: new Date().toISOString(),
       modifiedAt: new Date().toISOString(),
       modifiedBy: thisUser.username,
       usage: 0,
+      data: questionData,
     };
     return questionToCreate;
   };
 
   const handleEditQuestion = (
-    question: TrueFalseQuestion,
+    question: Question,
     data: TrueFalseQuestionForm
   ) => {
-    const questionToEdit: TrueFalseQuestion = {
+    const questionData: TrueFalseQuestion = {
+      correctAnswer: data.generalSettingForm.correctAnswer,
+      feedbackOfTrue: data.generalSettingForm.feedbackOfTrue,
+      feedbackOfFalse: data.generalSettingForm.feedbackOfFalse,
+    };
+    const questionToEdit: Question = {
       ...question,
       questionName: data.generalSettingForm.questionName,
       questionText: data.generalSettingForm.questionText,
       status: data.generalSettingForm.questionStatus,
       defaultMark: data.generalSettingForm.defaultMark,
-      correctAnswer: data.generalSettingForm.correctAnswer,
-      feedbackOfTrue: data.generalSettingForm.feedbackOfTrue,
-      feedbackOfFalse: data.generalSettingForm.feedbackOfFalse,
       modifiedAt: new Date().toISOString(),
       modifiedBy: thisUser.username,
+      data: questionData,
     };
     return questionToEdit;
   };

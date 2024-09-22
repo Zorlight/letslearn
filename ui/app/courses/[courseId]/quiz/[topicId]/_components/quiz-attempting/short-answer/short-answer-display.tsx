@@ -1,11 +1,11 @@
 "use client";
-import { ShortAnswerQuestion } from "@/models/question";
+import { Question, ShortAnswerQuestion } from "@/models/question";
 import React, { useEffect, useState } from "react";
 import ShortAnswer from "./short-answer";
 import { QuizAnswer } from "@/models/student-response";
 
 interface Props {
-  question: ShortAnswerQuestion;
+  question: Question;
   showCorrectAnswer?: boolean;
   studentAnswer?: string;
   onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
@@ -16,8 +16,9 @@ const ShortAnswerDisplay = ({
   studentAnswer,
   onQuizAnswerChange,
 }: Props) => {
-  const { choices, defaultMark } = question;
-  const correctAnswers = question.choices.map((choice) => choice.text);
+  const { defaultMark, data } = question;
+  const { choices } = data as ShortAnswerQuestion;
+  const correctAnswers = choices.map((choice) => choice.text);
   const [answer, setAnswer] = useState<string>(studentAnswer || "");
   const handleAnswerChange = (value: string) => {
     setAnswer(value);

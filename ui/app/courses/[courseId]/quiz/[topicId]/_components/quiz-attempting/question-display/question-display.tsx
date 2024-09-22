@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Question } from "@/models/question";
+import { ChoiceQuestion, Question } from "@/models/question";
 import { QuestionType, QuestionResult } from "../../static-data";
 import { FlagIcon } from "../../tab-content/_components/icons";
 import ChoicesDisplay from "../choice-answer/choices-display";
@@ -42,7 +42,7 @@ const QuestionDisplay = ({
   onQuizAnswerChange,
   onTabInTabQuestionChange,
 }: Props) => {
-  const { type, defaultMark } = question;
+  const { type, defaultMark, data } = question;
   const { mark, answer } = studentAnswer;
 
   const { bubbleClassName, handleMouseEnter, handleMouseOut } =
@@ -55,7 +55,8 @@ const QuestionDisplay = ({
   let desc;
   if (description) desc = description;
   else if (type === QuestionType.CHOICE) {
-    if (question.multiple) desc = questionDescription.MultipleChoice;
+    const { multiple } = data as ChoiceQuestion;
+    if (multiple) desc = questionDescription.MultipleChoice;
     else desc = questionDescription.SingleChoice;
   } else desc = questionDescription[type];
   const questionId = `question-${questionIndex + 1}`;

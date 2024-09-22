@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import FalseAnswer from "./false-answer";
 import TrueAnswer from "./true-answer";
-import { TrueFalseQuestion } from "@/models/question";
+import { Question, TrueFalseQuestion } from "@/models/question";
 import { QuizAnswer } from "@/models/student-response";
 
 interface Props {
-  question: TrueFalseQuestion;
+  question: Question;
   showCorrectAnswer?: boolean;
   studentAnswer?: string;
   onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
@@ -16,7 +16,8 @@ const TrueFalseChoiceDisplay = ({
   studentAnswer,
   onQuizAnswerChange,
 }: Props) => {
-  const { correctAnswer, defaultMark } = question;
+  const { data, defaultMark } = question;
+  const { correctAnswer } = data as TrueFalseQuestion;
   const [selected, setSelected] = useState<boolean | undefined>(
     studentAnswer ? studentAnswer === "1" : undefined
   );

@@ -60,7 +60,7 @@ const TabInTabContent = ({ tab, tabInTab, tabProps }: Props) => {
       return (
         <div className="mx-20">
           <TrueFalseQuestionTab
-            question={tabProps.tabInTabQuestion as TrueFalseQuestion}
+            question={tabProps.tabInTabQuestion}
             onSubmitQuestion={tabProps.onSubmitQuestion}
           />
         </div>
@@ -70,7 +70,7 @@ const TabInTabContent = ({ tab, tabInTab, tabProps }: Props) => {
       return (
         <div className="mx-20">
           <ShortAnswerQuestionTab
-            question={tabProps.tabInTabQuestion as ShortAnswerQuestion}
+            question={tabProps.tabInTabQuestion}
             onSubmitQuestion={tabProps.onSubmitQuestion}
           />
         </div>
@@ -80,7 +80,7 @@ const TabInTabContent = ({ tab, tabInTab, tabProps }: Props) => {
       return (
         <div className="mx-20">
           <ChoiceQuestionTab
-            question={tabProps.tabInTabQuestion as ChoiceQuestion}
+            question={tabProps.tabInTabQuestion}
             onSubmitQuestion={tabProps.onSubmitQuestion}
           />
         </div>

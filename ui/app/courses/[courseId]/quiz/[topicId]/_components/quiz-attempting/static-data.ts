@@ -5,4 +5,5 @@ export const questionDescription = {
   SingleChoice: "Select the correct answer: ",
   [QuestionType.TRUE_FALSE]: "Select the correct answer: ",
   [QuestionType.SHORT_ANSWER]: "Enter your answer: ",
+  [QuestionType.ESSAY]: "Enter your answer: ",
 };

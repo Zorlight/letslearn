@@ -1,7 +1,7 @@
 import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/collapsible-list";
 import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
-import { ShortAnswerQuestion } from "@/models/question";
+import { Question, ShortAnswerQuestion } from "@/models/question";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
 import { FormProvider, useForm } from "react-hook-form";
@@ -50,23 +50,26 @@ const schema: ZodType<ShortAnswerQuestionForm> = z.object({
 });
 
 interface Props {
-  question: ShortAnswerQuestion | undefined;
-  onSubmitQuestion?: (data: ShortAnswerQuestion) => void;
+  question: Question | undefined;
+  onSubmitQuestion?: (data: Question) => void;
 }
 const ShortAnswerQuestionTab = ({ question, onSubmitQuestion }: Props) => {
   const thisUser = fakeUser;
-  const handleGetGeneralSetting = (question: ShortAnswerQuestion) => {
+  const handleGetGeneralSetting = (question: Question) => {
+    const { questionName, questionText, status, defaultMark } = question;
     const generalSetting: ShortAnswerQuestionGeneralForm = {
-      questionName: question.questionName,
-      questionText: question.questionText,
-      questionStatus: question.status,
-      defaultMark: question.defaultMark,
+      questionName: questionName,
+      questionText: questionText,
+      questionStatus: status,
+      defaultMark: defaultMark,
     };
     return generalSetting;
   };
-  const handleGetAnswerSetting = (question: ShortAnswerQuestion) => {
+  const handleGetAnswerSetting = (question: Question) => {
+    const { data } = question;
+    const { choices } = data as ShortAnswerQuestion;
     const answerSetting: ShortAnswerQuestionAnswerForm = {
-      answers: question.choices,
+      answers: choices,
     };
     return answerSetting;
   };
@@ -96,38 +99,42 @@ const ShortAnswerQuestionTab = ({ question, onSubmitQuestion }: Props) => {
   };
 
   const handleCreateQuestion = (data: ShortAnswerQuestionForm) => {
-    const questionToCreate: ShortAnswerQuestion = {
+    const questionData: ShortAnswerQuestion = {
+      choices: data.answerSettingForm.answers,
+    };
+    const questionToCreate: Question = {
       id: nanoid(),
       type: QuestionType.SHORT_ANSWER,
       questionName: data.generalSettingForm.questionName,
       questionText: data.generalSettingForm.questionText,
       status: data.generalSettingForm.questionStatus,
       defaultMark: data.generalSettingForm.defaultMark,
-      choices: data.answerSettingForm.answers,
       createdAt: new Date().toISOString(),
       createdBy: thisUser.username,
       modifiedAt: new Date().toISOString(),
       modifiedBy: thisUser.username,
       usage: 0,
+      data: questionData,
     };
     return questionToCreate;
   };
 
   const handleEditQuestion = (
-    question: ShortAnswerQuestion,
+    question: Question,
     data: ShortAnswerQuestionForm
   ) => {
-    const questionToEdit: ShortAnswerQuestion = {
+    const questionData: ShortAnswerQuestion = {
+      choices: data.answerSettingForm.answers,
+    };
+    const questionToEdit: Question = {
       ...question,
       questionName: data.generalSettingForm.questionName,
       questionText: data.generalSettingForm.questionText,
       status: data.generalSettingForm.questionStatus,
       defaultMark: data.generalSettingForm.defaultMark,
-      choices: data.answerSettingForm.answers,
-      createdAt: new Date().toISOString(),
-      createdBy: thisUser.username,
       modifiedAt: new Date().toISOString(),
       modifiedBy: thisUser.username,
+      data: questionData,
     };
     return questionToEdit;
   };

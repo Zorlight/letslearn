@@ -2,29 +2,30 @@
 import { ShortAnswerQuestion } from "@/models/question";
 import React, { useEffect, useState } from "react";
 import ShortAnswer from "./short-answer";
+import { QuizAnswer } from "@/models/student-response";
 
 interface Props {
   question: ShortAnswerQuestion;
   showCorrectAnswer?: boolean;
-  onMarkChange?: (mark: number) => void;
-  onAnswerSelected?: (hasAnswered: boolean) => void;
+  studentAnswer?: string;
+  onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
 }
 const ShortAnswerDisplay = ({
   question,
   showCorrectAnswer,
-  onMarkChange,
-  onAnswerSelected,
+  studentAnswer,
+  onQuizAnswerChange,
 }: Props) => {
   const { choices, defaultMark } = question;
   const correctAnswers = question.choices.map((choice) => choice.text);
-  const [answer, setAnswer] = useState<string>("");
+  const [answer, setAnswer] = useState<string>(studentAnswer || "");
   const handleAnswerChange = (value: string) => {
     setAnswer(value);
 
     // Calculate mark
     const mark = calculateMark(value);
-    if (onMarkChange) onMarkChange(mark);
-    if (onAnswerSelected) onAnswerSelected(value.length > 0);
+    const quizAnswer: QuizAnswer = { answer: value, mark, question };
+    if (onQuizAnswerChange) onQuizAnswerChange(quizAnswer);
   };
 
   const calculateMark = (answer: string) => {

@@ -10,8 +10,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { colorMap, iconMap } from "../../_components/topic-map";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
-import { Quiz } from "@/models/quiz";
-import { fakeQuiz } from "@/fake-data/quiz";
+import { Test } from "@/models/quiz";
+import { fakeQuizTest } from "@/fake-data/test";
 
 interface Props {
   params: {
@@ -22,11 +22,7 @@ interface Props {
 
 const QuizIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
-  const [quiz, setQuiz] = useState<Quiz>(fakeQuiz);
-
-  useEffect(() => {
-    console.log("quiz", quiz);
-  }, [quiz]);
+  const [quiz, setQuiz] = useState<Test>(fakeQuizTest);
 
   //get course by id
   const course = useMemo(() => {
@@ -44,7 +40,7 @@ const QuizIdPage = ({ params }: Props) => {
   const section = course.sections.find((section) => section.id === sectionId);
   if (!section) return notFound();
 
-  const handleQuizChange = (quiz: Quiz) => {
+  const handleQuizChange = (quiz: Test) => {
     setQuiz(quiz);
   };
 

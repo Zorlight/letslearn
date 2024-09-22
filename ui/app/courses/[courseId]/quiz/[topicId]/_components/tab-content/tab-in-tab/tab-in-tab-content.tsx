@@ -1,5 +1,5 @@
 import React from "react";
-import { TabInTab } from "../../static-data";
+import { Tab, TabInTab } from "../../static-data";
 import TrueFalseQuestionTab from "./true-false-question-tab";
 import ShortAnswerQuestionTab from "./short-answer-question-tab";
 import ChoiceQuestionTab from "./choice-question-tab";
@@ -10,7 +10,8 @@ import {
   TrueFalseQuestion,
 } from "@/models/question";
 import QuizAttemptingTab from "./quiz-attempting-tab";
-import { QuizResponse } from "@/models/student-response";
+import { QuizAnswer, StudentResponse } from "@/models/student-response";
+import { Test } from "@/models/quiz";
 
 interface BaseTabProps {
   tabInTabQuestion: Question | undefined;
@@ -18,11 +19,13 @@ interface BaseTabProps {
 }
 
 interface TabQuizProps extends BaseTabProps {
-  quizResponse: QuizResponse;
+  quiz: Test;
+  quizResponse: StudentResponse;
   className?: string;
   onTabInTabChange: (tab: TabInTab) => void;
   onTabInTabQuestionChange: (question: Question | undefined) => void;
-  onQuizResponseChange: (quizResponse: QuizResponse) => void;
+  onQuizResponseChange: (quizResponse: StudentResponse) => void;
+  onQuizAnswerChange: (quizAnswer: QuizAnswer) => void;
 }
 interface TabQuestionProps extends BaseTabProps {}
 interface TabQuestionBankProps extends BaseTabProps {}
@@ -30,14 +33,17 @@ interface TabQuestionBankProps extends BaseTabProps {}
 type TabProps = TabQuizProps | TabQuestionProps | TabQuestionBankProps;
 
 interface Props {
+  tab: Tab;
   tabInTab: TabInTab;
   tabProps: TabProps;
 }
-const TabInTabContent = ({ tabInTab, tabProps }: Props) => {
+const TabInTabContent = ({ tab, tabInTab, tabProps }: Props) => {
   switch (tabInTab) {
     case TabInTab.QUIZ_ATTEMPTING_TAB:
+      if (tab !== Tab.QUIZ) return null;
       return (
         <QuizAttemptingTab
+          quiz={(tabProps as TabQuizProps).quiz}
           className={(tabProps as TabQuizProps).className}
           onTabInTabChange={(tabProps as TabQuizProps).onTabInTabChange}
           onTabInTabQuestionChange={
@@ -45,9 +51,12 @@ const TabInTabContent = ({ tabInTab, tabProps }: Props) => {
           }
           quizResponse={(tabProps as TabQuizProps).quizResponse}
           onQuizResponseChange={(tabProps as TabQuizProps).onQuizResponseChange}
+          onQuizAnswerChange={(tabProps as TabQuizProps).onQuizAnswerChange}
         />
       );
     case TabInTab.TRUE_FALSE_QUESTION_TAB:
+      if (tab !== Tab.QUESTION && tab !== Tab.QUESTION_BANK) return null;
+
       return (
         <div className="mx-20">
           <TrueFalseQuestionTab
@@ -57,6 +66,7 @@ const TabInTabContent = ({ tabInTab, tabProps }: Props) => {
         </div>
       );
     case TabInTab.SHORT_ANSWER_QUESTION_TAB:
+      if (tab !== Tab.QUESTION && tab !== Tab.QUESTION_BANK) return null;
       return (
         <div className="mx-20">
           <ShortAnswerQuestionTab
@@ -66,6 +76,7 @@ const TabInTabContent = ({ tabInTab, tabProps }: Props) => {
         </div>
       );
     case TabInTab.CHOICE_QUESTION_TAB:
+      if (tab !== Tab.QUESTION && tab !== Tab.QUESTION_BANK) return null;
       return (
         <div className="mx-20">
           <ChoiceQuestionTab

@@ -1,28 +1,26 @@
-import { ResponsesData } from "@/app/courses/[courseId]/choice/[topicId]/_components/tab-content/tab-responses";
-import { fakeResponses } from "@/fake-data/student-response";
 import { Button } from "@/lib/shadcn/button";
+import { Question } from "@/models/question";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import CreateQuestionDialog from "../question-bank/dialog/create-question-dialog";
 import QuestionTable from "../question-bank/table/question-table";
-import { QuestionType, TabInTab } from "../static-data";
+import { QuestionStatus, QuestionType, TabInTab } from "../static-data";
 import { tabInTabMapper } from "./tab-in-tab/tap-in-tab-mapper";
-import { fakeQuestions } from "@/fake-data/question";
-import { toast } from "react-toastify";
-import { Question } from "@/models/question";
 
 interface Props {
   questions: Question[];
+  onQuestionsChange?: (questions: Question[]) => void;
   onTabInTabChange: (tab: TabInTab) => void;
   onTabInTabQuestionChange?: (question: Question | undefined) => void;
 }
 const TabQuestionBank = ({
   questions,
+  onQuestionsChange,
   onTabInTabChange,
   onTabInTabQuestionChange,
 }: Props) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [responses, setResponses] = useState<ResponsesData[]>(fakeResponses);
 
   const handleAddQuestion = (type: QuestionType) => {
     const tab = tabInTabMapper[type];
@@ -39,6 +37,32 @@ const TabQuestionBank = ({
     const tab = tabInTabMapper[question.type];
     onTabInTabChange(tab);
     if (onTabInTabQuestionChange) onTabInTabQuestionChange(question);
+  };
+
+  const handleStatusChange = (id: string, status: string) => {
+    const questionToChange = questions.find((q) => q.id === id);
+    if (!questionToChange) {
+      toast.error("Question not found");
+      return;
+    }
+    questionToChange.status = status as QuestionStatus;
+    const newQuestions = questions.map((q) =>
+      q.id === id ? questionToChange : q
+    );
+    if (onQuestionsChange) onQuestionsChange(newQuestions);
+  };
+
+  const handleQuestionNameChange = (id: string, name: string) => {
+    const questionToChange = questions.find((q) => q.id === id);
+    if (!questionToChange) {
+      toast.error("Question not found");
+      return;
+    }
+    questionToChange.questionName = name;
+    const newQuestions = questions.map((q) =>
+      q.id === id ? questionToChange : q
+    );
+    if (onQuestionsChange) onQuestionsChange(newQuestions);
   };
 
   const buttons = [
@@ -64,6 +88,8 @@ const TabQuestionBank = ({
           buttons={buttons}
           otherFunctions={{
             onEdit: handleEditQuestion,
+            onStatusChange: handleStatusChange,
+            onQuestionNameChange: handleQuestionNameChange,
           }}
         />
       </div>

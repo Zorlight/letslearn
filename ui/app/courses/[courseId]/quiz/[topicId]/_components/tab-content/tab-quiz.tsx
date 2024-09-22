@@ -6,21 +6,22 @@ import { SearchCheck } from "lucide-react";
 import React, { useMemo } from "react";
 import { GradingMethod, TabInTab } from "../static-data";
 import {
-  QuizResponse,
+  getQuizResponseMark,
+  QuizResponseData,
   QuizStatus,
-  ResponseType,
+  StudentResponse,
 } from "@/models/student-response";
 import { fakeUser } from "@/fake-data/user";
 import { toast } from "react-toastify";
-import { nanoid } from "@reduxjs/toolkit";
-import { Quiz } from "@/models/quiz";
 import QuizAttemptResult from "./_components/quiz-attempting-tab/quiz-attempt-result";
+import { QuizData, Test } from "@/models/quiz";
+import { nanoid } from "@reduxjs/toolkit";
 
 interface Props {
-  quiz: Quiz;
-  quizResponses: QuizResponse[];
-  onSelectQuizResponse?: (quizResponse: QuizResponse) => void;
-  onQuizResponsesChange?: (quizResponses: QuizResponse[]) => void;
+  quiz: Test;
+  quizResponses: StudentResponse[];
+  onSelectQuizResponse?: (quizResponse: StudentResponse) => void;
+  onQuizResponsesChange?: (quizResponses: StudentResponse[]) => void;
   onTabInTabChange: (tab: TabInTab) => void;
   className?: string;
 }
@@ -33,10 +34,19 @@ const TabQuiz = ({
   onSelectQuizResponse,
 }: Props) => {
   const thisUser = fakeUser;
-  const { questions } = quiz;
+  const { data } = quiz;
+  const { questions } = data as QuizData;
 
   const handlePreviewQuiz = () => {
     initQuizResponse();
+    onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
+  };
+
+  const handleFinishLastPreview = () => {
+    //get last quiz response
+    const lastIndex = quizResponses.length - 1;
+    const lastQuizResponse = quizResponses[lastIndex];
+    if (onSelectQuizResponse) onSelectQuizResponse(lastQuizResponse);
     onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
   };
 
@@ -46,15 +56,22 @@ const TabQuiz = ({
       return;
     }
     const startTime = new Date().toISOString();
-    let newQuizResponse: QuizResponse = {
-      id: nanoid(),
-      type: ResponseType.QUIZ,
+
+    let quizResponseData: QuizResponseData = {
       status: QuizStatus.NOT_STARTED,
       startedAt: startTime,
       completedAt: startTime,
-      mark: 0,
-      totalMark: 0,
+      answers: questions.map((question) => ({
+        question: question,
+        answer: "",
+        mark: 0,
+      })),
+    };
+    const newQuizResponse: StudentResponse = {
+      id: nanoid(),
       student: thisUser,
+      test: quiz,
+      data: quizResponseData,
     };
     if (onQuizResponsesChange)
       onQuizResponsesChange([...quizResponses, newQuizResponse]);
@@ -69,7 +86,8 @@ const TabQuiz = ({
 
   const highestGrade = useMemo(() => {
     return quizResponses.reduce((cur, quizResponse) => {
-      return Math.max(cur, quizResponse.mark);
+      const { data } = quizResponse;
+      return Math.max(cur, getQuizResponseMark(data as QuizResponseData));
     }, 0);
   }, [quizResponses]);
   const isExellent = highestGrade >= maxGrade * 0.8;
@@ -77,10 +95,26 @@ const TabQuiz = ({
     highestGrade >= maxGrade * 0.4 && highestGrade < maxGrade * 0.8;
   const isBad = highestGrade < maxGrade * 0.4;
   const hasFinishedQuiz = useMemo(() => {
-    return quizResponses.some(
-      (quizResponse) => quizResponse.status === QuizStatus.FINISHED
+    const quizResponseDatas = quizResponses.map(
+      (quizResponse) => quizResponse.data as QuizResponseData
+    );
+    return quizResponseDatas.some(
+      (quizResponseData) => quizResponseData.status === QuizStatus.FINISHED
     );
   }, [quizResponses]);
+
+  const hasLastReviewQuiz = useMemo(() => {
+    if (quizResponses.length === 0) return false;
+    const lastIndex = quizResponses.length - 1;
+    const quizResponseData = quizResponses[lastIndex].data as QuizResponseData;
+    return quizResponseData.status === QuizStatus.NOT_FINISHED;
+  }, [quizResponses]);
+
+  const handleReviewQuiz = (index: number) => {
+    const quizToReview = quizResponses[index];
+    if (onSelectQuizResponse) onSelectQuizResponse(quizToReview);
+    onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
+  };
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -95,10 +129,26 @@ const TabQuiz = ({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Button variant="default" className="w-fit" onClick={handlePreviewQuiz}>
-          <SearchCheck size={16} />
-          Preview quiz
-        </Button>
+        {!hasLastReviewQuiz && (
+          <Button
+            variant="default"
+            className="w-fit"
+            onClick={handlePreviewQuiz}
+          >
+            <SearchCheck size={16} />
+            Preview quiz
+          </Button>
+        )}
+        {hasLastReviewQuiz && (
+          <Button
+            variant="default"
+            className="w-fit"
+            onClick={handleFinishLastPreview}
+          >
+            <SearchCheck size={16} />
+            Continue last review
+          </Button>
+        )}
         <p className="text-sm text-slate-600">
           {`Attempts allowed: ${attemptsAllowed}`}
         </p>
@@ -123,6 +173,7 @@ const TabQuiz = ({
                 key={index}
                 responseIndex={index}
                 quizResponse={quizResponse}
+                onReview={() => handleReviewQuiz(index)}
               />
             ))}
           </div>

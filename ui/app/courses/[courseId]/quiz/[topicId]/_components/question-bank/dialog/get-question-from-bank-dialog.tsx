@@ -17,14 +17,14 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children?: React.ReactNode;
-  onAddQuestionFromBank?: (question: Question[]) => void;
+  onAddQuestionsFromBank?: (question: Question[]) => void;
 }
 const GetQuestionFromBankDialog = ({
   open,
   questions,
   questionsBank,
   onOpenChange,
-  onAddQuestionFromBank,
+  onAddQuestionsFromBank,
   children,
 }: Props) => {
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
@@ -35,9 +35,9 @@ const GetQuestionFromBankDialog = ({
   }, [questions, questionsBank]);
 
   const handleAddQuestion = () => {
+    if (onAddQuestionsFromBank) onAddQuestionsFromBank(selectedQuestions);
     setSelectedQuestions([]);
     onOpenChange(false);
-    if (onAddQuestionFromBank) onAddQuestionFromBank(selectedQuestions);
   };
   const handleCancel = () => {
     setSelectedQuestions([]);

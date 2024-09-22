@@ -1,17 +1,17 @@
 "use client";
-import { fakeQuestions } from "@/fake-data/question";
 import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import { Card } from "@/lib/shadcn/card";
 import { cn } from "@/lib/utils";
 import { Question } from "@/models/question";
+import { QuizData, Test } from "@/models/quiz";
 import {
-  QuizResponse,
+  QuizAnswer,
+  QuizResponseData,
   QuizStatus,
-  ResponseType,
+  StudentResponse,
 } from "@/models/student-response";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import FinishAttemptDialog from "../../quiz-attempting/finish-attempt-dialog";
 import QuestionDisplay from "../../quiz-attempting/question-display/question-display";
 import QuestionBlock from "../../quiz-attempting/question-navigation-box/question-block";
@@ -28,51 +28,47 @@ import { scrollToQuestion } from "../_components/utils";
 
 interface Props {
   className?: string;
-  quizResponse: QuizResponse;
-  onQuizResponseChange: (quizResponse: QuizResponse) => void;
+  quizResponse: StudentResponse;
+  quiz: Test;
+  onQuizResponseChange: (quizResponse: StudentResponse) => void;
+  onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
   onTabInTabChange?: (tab: TabInTab) => void;
   onTabInTabQuestionChange?: (question: Question | undefined) => void;
 }
 const QuizAttemptingTab = ({
   className,
   quizResponse,
+  quiz,
   onQuizResponseChange,
+  onQuizAnswerChange,
   onTabInTabChange,
   onTabInTabQuestionChange,
 }: Props) => {
-  const totalQuestions = fakeQuestions.length;
+  const quizResponseData = quizResponse.data as QuizResponseData;
+  const { answers: studentAnswers } = quizResponseData;
+  const { data: quizData } = quiz;
+  const { questions } = quizData as QuizData;
+  const totalQuestions = questions.length;
   // const thisUser = useAppSelector((state) => state.profile.value);
 
   const thisUser = fakeUser;
-  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
-  const [flags, setFlags] = useState<boolean[]>(fakeQuestions.map(() => false));
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(
+    quizResponseData.status === QuizStatus.FINISHED
+  );
+  const [flags, setFlags] = useState<boolean[]>(questions.map(() => false));
+
+  // Track if each question has been answered
   const [hasAnswers, setHasAnswers] = useState<boolean[]>(
-    fakeQuestions.map(() => false)
+    questions.map(() => false)
   );
   const [questionResults, setQuestionResults] = useState(
-    fakeQuestions.map(() => QuestionResult.NOT_SHOW)
+    questions.map(() => QuestionResult.NOT_SHOW)
   );
-  const [marks, setMarks] = useState<number[]>(fakeQuestions.map(() => 0));
-  const [questions, setQuestions] = useState(fakeQuestions);
+
   const handleFlagChange = (index: number) => {
     const newFlags = [...flags];
     newFlags[index] = !newFlags[index];
     setFlags(newFlags);
-  };
-
-  const handleAnswerSelected = (index: number, value: boolean = true) => {
-    const newHasAnswers = [...hasAnswers];
-    newHasAnswers[index] = value;
-    setHasAnswers(newHasAnswers);
-  };
-  const handleShowingCorrectAnswer = () => {
-    setShowCorrectAnswer(!showCorrectAnswer);
-  };
-
-  const handleMarkChange = (index: number, mark: number) => {
-    const newMarks = [...marks];
-    newMarks[index] = mark;
-    setMarks(newMarks);
   };
 
   useEffect(() => {
@@ -87,11 +83,13 @@ const QuizAttemptingTab = ({
 
         return result;
       };
-      newResults = marks.map((mark, index) => getResultByMark(index, mark));
-    } else newResults = fakeQuestions.map(() => QuestionResult.NOT_SHOW);
+      newResults = studentAnswers.map((ans, index) =>
+        getResultByMark(index, ans.mark)
+      );
+    } else newResults = questions.map(() => QuestionResult.NOT_SHOW);
 
     setQuestionResults(newResults);
-  }, [showCorrectAnswer, marks, questions]);
+  }, [showCorrectAnswer, studentAnswers, questions]);
 
   const handleGoBack = () => {
     if (onTabInTabChange) onTabInTabChange(TabInTab.MAIN_TAB);
@@ -102,42 +100,35 @@ const QuizAttemptingTab = ({
     setShowCorrectAnswer(true);
     handleFinishQuizResponse();
   };
-  const getFullMarkOfQuiz = () => {
-    let totalMark = 0;
-    questions.forEach((question) => {
-      totalMark += question.defaultMark;
-    });
-    return totalMark;
-  };
-  const getQuizResponseMark = () => {
-    let totalMark = 0;
-    marks.forEach((mark) => {
-      totalMark += mark;
-    });
-    return totalMark;
-  };
-  const startQuiz = () => {
-    if (quizResponse.status !== QuizStatus.NOT_STARTED) return;
-    const startTime = new Date().toISOString();
-    const fullMark = getFullMarkOfQuiz();
 
-    const newQuizResponse = {
-      ...quizResponse,
+  const startQuiz = () => {
+    const data = quizResponse.data as QuizResponseData;
+    if (data.status !== QuizStatus.NOT_STARTED) return;
+    const startTime = new Date().toISOString();
+
+    const startQuizResponseData: QuizResponseData = {
+      ...data,
       status: QuizStatus.NOT_FINISHED,
       startedAt: startTime,
-      totalMark: fullMark,
     };
-    if (onQuizResponseChange) onQuizResponseChange(newQuizResponse);
+    const startQuizResponse: StudentResponse = {
+      ...quizResponse,
+      data: startQuizResponseData,
+    };
+    if (onQuizResponseChange) onQuizResponseChange(startQuizResponse);
   };
 
   const handleFinishQuizResponse = () => {
     const completedTime = new Date().toISOString();
-    const quizResponseMark = getQuizResponseMark();
-    const finishedQuizResponse: QuizResponse = {
-      ...quizResponse,
+    const finishQuizResponseData: QuizResponseData = {
+      ...quizResponseData,
       status: QuizStatus.FINISHED,
       completedAt: completedTime,
-      mark: quizResponseMark,
+    };
+
+    const finishedQuizResponse: StudentResponse = {
+      ...quizResponse,
+      data: finishQuizResponseData,
     };
 
     if (onQuizResponseChange) onQuizResponseChange(finishedQuizResponse);
@@ -148,7 +139,7 @@ const QuizAttemptingTab = ({
   };
 
   useEffect(() => {
-    startQuiz();
+    if (quizResponseData.status === QuizStatus.NOT_STARTED) startQuiz();
   }, []);
 
   let dialogTitle = "";
@@ -204,20 +195,14 @@ const QuizAttemptingTab = ({
             totalQuestions={totalQuestions}
             question={question}
             showCorrectAnswer={showCorrectAnswer}
+            studentAnswer={studentAnswers[index]}
             isFlagged={flags[index]}
-            onFlagChange={() => handleFlagChange(index)}
             result={questionResults[index]}
-            mark={marks[index]}
-            onAnswerSelected={(hasAnswered) =>
-              handleAnswerSelected(index, hasAnswered)
-            }
-            onMarkChange={(mark) => handleMarkChange(index, mark)}
+            onFlagChange={() => handleFlagChange(index)}
+            onQuizAnswerChange={onQuizAnswerChange}
             onTabInTabQuestionChange={onTabInTabQuestionChange}
           />
         ))}
-        <Button variant="default" onClick={handleShowingCorrectAnswer}>
-          {showCorrectAnswer ? "Hide" : "Show"} correct answer
-        </Button>
       </div>
       <div className="absolute right-0 top-0 h-full max-w-[320px] w-1/3 ">
         <Card className="sticky top-24 p-4 space-y-4">
@@ -235,7 +220,7 @@ const QuizAttemptingTab = ({
             ))}
           </div>
 
-          {quizResponse?.status === QuizStatus.NOT_FINISHED && (
+          {quizResponseData.status === QuizStatus.NOT_FINISHED && (
             <FinishAttemptDialog
               variant={isMissingAnswer ? "warning" : "success"}
               title={dialogTitle}
@@ -253,7 +238,7 @@ const QuizAttemptingTab = ({
             </FinishAttemptDialog>
           )}
 
-          {quizResponse?.status === QuizStatus.FINISHED && (
+          {quizResponseData.status === QuizStatus.FINISHED && (
             <Button variant="default" onClick={handleFinishReview}>
               Finish review
             </Button>

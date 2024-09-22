@@ -98,7 +98,8 @@ const questionNameColumn = (
 
 const questionStatusColumn = (
   accessorKey: string,
-  title: string
+  title: string,
+  onStatusChange?: (questionId: string, status: string) => void
 ): ColumnDef<Question> => {
   const col: ColumnDef<Question> = {
     accessorKey: accessorKey,
@@ -109,7 +110,7 @@ const questionStatusColumn = (
       let questionStatus: string = row.getValue(accessorKey);
 
       const handleComboboxChange = (value: string) => {
-        console.log("handleComboboxChange", value);
+        if (onStatusChange) onStatusChange(row.getValue("id"), value);
       };
 
       const questionStatusOptions = Object.values(QuestionStatus);
@@ -175,9 +176,13 @@ const actionColumn = ({ onEdit }: ActionColumnProps): ColumnDef<Question> => {
 
 interface QuestionTableProps {
   onEdit?: (questionId: string) => void;
+  onStatusChange?: (questionId: string, status: string) => void;
+  onQuestionNameChange?: (questionId: string, questionName: string) => void;
 }
 const questionTableColumns = ({
   onEdit,
+  onStatusChange,
+  onQuestionNameChange,
 }: QuestionTableProps): ColumnDef<Question>[] => {
   const columns: ColumnDef<Question>[] = [
     defaultSelectColumn<Question>(),
@@ -189,9 +194,17 @@ const questionTableColumns = ({
     if (key === "type")
       col = questionTypeColumn(key, questionColumnTitles[key]);
     else if (key === "questionName")
-      col = questionNameColumn(key, questionColumnTitles[key]);
+      col = questionNameColumn(
+        key,
+        questionColumnTitles[key],
+        onQuestionNameChange
+      );
     else if (key === "status")
-      col = questionStatusColumn(key, questionColumnTitles[key]);
+      col = questionStatusColumn(
+        key,
+        questionColumnTitles[key],
+        onStatusChange
+      );
     else col = defaultColumn<Question>(key, questionColumnTitles);
     columns.push(col);
   }

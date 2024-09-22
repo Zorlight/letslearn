@@ -8,14 +8,13 @@ export const fakeQuestions: Question[] = [
   {
     id: "1",
     questionName: "What is your name ?",
-    questionText:
-      "What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ? What is your name ?",
+    questionText: "<b>What is your name ?</b>",
     type: QuestionType.CHOICE,
     multiple: false,
     status: QuestionStatus.READY,
     defaultMark: 10,
     createdBy: "John Doe",
-    createdAt: "2021-10-01",
+    createdAt: new Date(2024, 0, 1).toISOString(),
     modifiedAt: "2021-10-01",
     modifiedBy: "John Doe",
     usage: 10,

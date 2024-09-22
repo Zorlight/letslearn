@@ -1,23 +1,23 @@
 import Banner from "@/components/ui/banner";
+import { cn } from "@/lib/utils";
 import { Question } from "@/models/question";
-import { Quiz } from "@/models/quiz";
-import { QuizResponse } from "@/models/student-response";
+import { QuizData, Test } from "@/models/quiz";
+import { StudentResponse } from "@/models/student-response";
+import { format } from "date-fns";
 import { useMemo } from "react";
 import QuestionList from "../question/question-list";
 import { QuestionType, TabInTab } from "../static-data";
-import { cn } from "@/lib/utils";
 import { QuizOpenCloseState } from "./_components/static-data";
-import { format } from "date-fns";
 
 interface Props {
-  quiz: Quiz;
+  quiz: Test;
   questionsBank: Question[];
-  quizResponses: QuizResponse[];
+  quizResponses: StudentResponse[];
   onReorderedQuestion: (data: Question[]) => void;
   onAddNewQuestion: (type: QuestionType) => void;
   onRemoveQuestion: (index: number) => void;
   onTabInTabChange: (tab: TabInTab) => void;
-  onAddQuestionFromBank?: (question: Question[]) => void;
+  onAddQuestionsFromBank?: (question: Question[]) => void;
 }
 const TabQuestion = ({
   quiz,
@@ -27,9 +27,10 @@ const TabQuestion = ({
   onTabInTabChange,
   onRemoveQuestion,
   onReorderedQuestion,
-  onAddQuestionFromBank,
+  onAddQuestionsFromBank,
 }: Props) => {
-  const { questions, open, close } = quiz;
+  const { open, close } = quiz;
+  const { questions } = quiz.data as QuizData;
 
   const quizOpenCloseState: QuizOpenCloseState = useMemo(() => {
     const timeOpen = Math.floor(new Date(open.value).getTime() / 1000);
@@ -100,7 +101,7 @@ const TabQuestion = ({
           onAddNewQuestion={onAddNewQuestion}
           onRemoveQuestion={onRemoveQuestion}
           onReorderedQuestion={onReorderedQuestion}
-          onAddQuestionFromBank={onAddQuestionFromBank}
+          onAddQuestionsFromBank={onAddQuestionsFromBank}
         />
       </div>
     </div>

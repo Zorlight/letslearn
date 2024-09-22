@@ -1,6 +1,6 @@
-import { ChoiceResponseData } from "@/models/student-response";
+import { ChoiceResponse } from "@/models/student-response";
 
-export const fakeResponses: ChoiceResponseData[] = [
+export const fakeResponses: ChoiceResponse[] = [
   {
     option: "Option 1",
     studentResponses: ["Student 1", "Student 2", "Student 3"],

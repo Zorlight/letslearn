@@ -1,7 +1,11 @@
 import TabContentLayout from "@/components/ui/tab-content-layout";
 import { useTab } from "@/hooks/useTab";
 import { Question } from "@/models/question";
-import { QuizResponse } from "@/models/student-response";
+import {
+  QuizAnswer,
+  QuizResponseData,
+  StudentResponse,
+} from "@/models/student-response";
 import { notFound } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { QuestionType, Tab, TabInTab } from "../static-data";
@@ -12,27 +16,28 @@ import TabQuestion from "./tab-question";
 import TabQuestionBank from "./tab-question-bank";
 import TabQuiz from "./tab-quiz";
 import TabSetting from "./tab-setting";
-import { Quiz } from "@/models/quiz";
 import { fakeQuestions } from "@/fake-data/question";
+import { QuizData, Test } from "@/models/quiz";
 
 interface Props {
   className?: string;
-  quiz: Quiz;
-  onQuizChange?: (quiz: Quiz) => void;
+  quiz: Test;
+  onQuizChange?: (quiz: Test) => void;
 }
 
 const TabContent = ({ className, quiz, onQuizChange }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
-  const { questions } = quiz;
+  const { data } = quiz;
+  const { questions } = data as QuizData;
   const [questionsBank, setQuestionsBank] = useState<Question[]>(fakeQuestions);
   const [tabInTab, setTabInTab] = useState<TabInTab>(TabInTab.MAIN_TAB);
   const [tabInTabQuestion, setTabInTabQuestion] = useState<
     Question | undefined
   >();
-  const [quizResponses, setQuizResponses] = useState<QuizResponse[]>([]);
+  const [quizResponses, setQuizResponses] = useState<StudentResponse[]>([]);
   const [selectedQuizResponse, setSelectedQuizResponse] = useState<
-    QuizResponse | undefined
+    StudentResponse | undefined
   >();
 
   // Reset tabInTab to MAIN_TAB when selectedTab changes
@@ -50,7 +55,7 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
     if (question) setTabInTab(tabInTabMapper[question.type]);
   };
 
-  const handleQuizResponseChange = (quizResponse: QuizResponse) => {
+  const handleQuizResponseChange = (quizResponse: StudentResponse) => {
     const newQuizResponses = quizResponses.map((response) =>
       response.id === quizResponse.id ? quizResponse : response
     );
@@ -61,30 +66,55 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
       setSelectedQuizResponse(quizResponse);
   };
 
+  const handleQuizAnswerChange = (quizAnswer: QuizAnswer) => {
+    if (!selectedQuizResponse) return;
+    const newQuizResponse = { ...selectedQuizResponse };
+    const quizResponseData = newQuizResponse.data as QuizResponseData;
+    const { answers } = quizResponseData;
+
+    //find the index of the answer
+    const index = answers.findIndex(
+      (answer) => answer.question.id === quizAnswer.question.id
+    );
+    if (index === -1) return;
+    answers[index] = quizAnswer;
+
+    //update quiz responses
+    handleQuizResponseChange(newQuizResponse);
+  };
+
   const handleAddNewQuestion = (type: QuestionType) => {
     const tab = tabInTabMapper[type];
     handleTabInTabChange(tab);
   };
 
-  const handleSubmitQuestion = (question: Question) => {
-    console.log("submit question", question);
-    const newQuestions = [...questions];
-    const index = newQuestions.findIndex((q) => q.id === question.id);
-    if (index === -1) newQuestions.push(question);
-    else newQuestions[index] = question;
+  const handleAddQuestionToQuestionBank = (question: Question) => {
+    const newQuestionBank = [...questionsBank];
+    const index = questionsBank.findIndex((q) => q.id === question.id);
+    if (index === -1) newQuestionBank.push(question);
+    else newQuestionBank[index] = question;
 
-    if (onQuizChange) onQuizChange({ ...quiz, questions: newQuestions });
+    setQuestionsBank(newQuestionBank);
+  };
+
+  const handleSubmitQuestion = (question: Question) => {
+    if (selectedTab === Tab.QUESTION)
+      handleAddQuestionsToQuizQuestions([question]);
+
+    handleAddQuestionToQuestionBank(question);
     handleTabInTabChange(TabInTab.MAIN_TAB);
   };
 
   const handleRemoveQuestion = (index: number) => {
     const newQuestions = [...questions];
     newQuestions.splice(index, 1);
-    if (onQuizChange) onQuizChange({ ...quiz, questions: newQuestions });
+    const newData = { ...data, questions: newQuestions };
+    if (onQuizChange) onQuizChange({ ...quiz, data: newData });
   };
 
   const handleReorderedQuestion = (questions: Question[]) => {
-    if (onQuizChange) onQuizChange({ ...quiz, questions });
+    const newData = { ...data, questions };
+    if (onQuizChange) onQuizChange({ ...quiz, data: newData });
   };
 
   const hasExistingQuestion = (
@@ -94,19 +124,24 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
     return questionList.find((q) => q.id === question.id);
   };
 
-  const handleAddQuestionFromBank = (comingQuestions: Question[]) => {
+  const handleAddQuestionsToQuizQuestions = (comingQuestions: Question[]) => {
     const newQuestions = [...questions];
     //add if not exist
     comingQuestions.forEach((question) => {
       if (!hasExistingQuestion(question, newQuestions))
         newQuestions.push(question);
     });
+    const newData = { ...data, questions: newQuestions };
 
-    if (onQuizChange) onQuizChange({ ...quiz, questions: newQuestions });
+    if (onQuizChange) onQuizChange({ ...quiz, data: newData });
   };
 
-  console.log("questionsBank", questionsBank);
-  console.log("questions", questions);
+  useEffect(() => {
+    console.log("quizResponses", quizResponses);
+  }, [quizResponses]);
+  useEffect(() => {
+    console.log("selected quiz response", selectedQuizResponse);
+  }, [selectedQuizResponse]);
 
   switch (selectedTab) {
     case Tab.QUIZ:
@@ -130,14 +165,17 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
               />
             )}
           <TabInTabContent
+            tab={selectedTab}
             tabInTab={tabInTab}
             tabProps={{
+              quiz: quiz,
               tabInTabQuestion: tabInTabQuestion,
               quizResponse: selectedQuizResponse,
               className: className,
               onTabInTabChange: handleTabInTabChange,
               onTabInTabQuestionChange: handleTabInTabQuestionChange,
               onQuizResponseChange: handleQuizResponseChange,
+              onQuizAnswerChange: handleQuizAnswerChange,
               onSubmitQuestion: handleSubmitQuestion,
             }}
           />
@@ -168,11 +206,12 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
                 onRemoveQuestion={handleRemoveQuestion}
                 onReorderedQuestion={handleReorderedQuestion}
                 onTabInTabChange={handleTabInTabChange}
-                onAddQuestionFromBank={handleAddQuestionFromBank}
+                onAddQuestionsFromBank={handleAddQuestionsToQuizQuestions}
               />
             </div>
           )}
           <TabInTabContent
+            tab={selectedTab}
             tabInTab={tabInTab}
             tabProps={{
               tabInTabQuestion: tabInTabQuestion,
@@ -194,6 +233,7 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
             <div className="mx-20">
               <TabQuestionBank
                 questions={questionsBank}
+                onQuestionsChange={setQuestionsBank}
                 onTabInTabChange={handleTabInTabChange}
                 onTabInTabQuestionChange={handleTabInTabQuestionChange}
               />
@@ -201,6 +241,7 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
           )}
           <div className="mx-20">
             <TabInTabContent
+              tab={selectedTab}
               tabInTab={tabInTab}
               tabProps={{
                 tabInTabQuestion: tabInTabQuestion,

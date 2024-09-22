@@ -2,10 +2,10 @@ import {
   GradingMethod,
   TimeLimitType,
 } from "@/app/courses/[courseId]/quiz/[topicId]/_components/static-data";
-import { Quiz } from "@/models/quiz";
 import { fakeQuestions } from "./question";
+import { Test, TestType } from "@/models/quiz";
 
-export const fakeQuiz: Quiz = {
+export const fakeQuizTest: Test = {
   id: "1",
   name: "Quiz 1",
   description: "This is a test quiz",
@@ -22,8 +22,11 @@ export const fakeQuiz: Quiz = {
     value: 1,
     unit: TimeLimitType.HOURS,
   },
-  gradeToPass: 5,
-  gradingMethod: GradingMethod.HIGHEST_GRADE,
-  attemptAllowed: "Unlimited",
-  questions: fakeQuestions.slice(0, 6),
+  type: TestType.QUIZ,
+  data: {
+    gradeToPass: 5,
+    gradingMethod: GradingMethod.HIGHEST_GRADE,
+    attemptAllowed: "Unlimited",
+    questions: fakeQuestions.slice(0, 6),
+  },
 };

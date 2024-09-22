@@ -12,14 +12,14 @@ interface Props {
   questionsBank: Question[];
   onReorderedQuestion: (data: Question[]) => void;
   onAddNewQuestion?: (type: QuestionType) => void;
-  onAddQuestionFromBank?: (question: Question[]) => void;
+  onAddQuestionsFromBank?: (question: Question[]) => void;
   onRemoveQuestion?: (index: number) => void;
 }
 const QuestionList = ({
   questions,
   questionsBank,
   onAddNewQuestion,
-  onAddQuestionFromBank,
+  onAddQuestionsFromBank,
   onRemoveQuestion,
   onReorderedQuestion,
 }: Props) => {
@@ -58,7 +58,7 @@ const QuestionList = ({
           questionsBank={questionsBank}
           open={openAddQuestionFromBankDialog}
           onOpenChange={setOpenAddQuestionFromBankDialog}
-          onAddQuestionFromBank={onAddQuestionFromBank}
+          onAddQuestionsFromBank={onAddQuestionsFromBank}
         />
       </div>
     </div>

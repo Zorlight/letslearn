@@ -27,7 +27,7 @@ function defaultColumn<T>(
     cell: ({ row }) => {
       const value: ReactNode = row.getValue(accessorKey);
       let formatedValue: ReactNode = "";
-      const columnDisplayDate = ["createdAt"];
+      const columnDisplayDate = ["createdAt", "modifiedAt"];
       const columnDisplayPrice = [
         "price",
         "total",
@@ -35,11 +35,11 @@ function defaultColumn<T>(
         "costPrice",
         "profit",
       ];
+
       if (value instanceof Date) formatedValue = formatDate(value, "datetime");
       else if (
+        value &&
         columnDisplayDate.includes(accessorKey) &&
-        value !== null &&
-        value !== undefined &&
         new Date(String(value)) instanceof Date
       ) {
         formatedValue = formatDate(new Date(String(value)), "date");

@@ -1,14 +1,28 @@
+import { Button } from "@/lib/shadcn/button";
 import { cn, formatDate, getDurationBySecond } from "@/lib/utils";
-import { QuizResponse } from "@/models/student-response";
+import {
+  getQuizResponseMark,
+  getQuizResponseTotalMark,
+  QuizResponseData,
+  StudentResponse,
+} from "@/models/student-response";
 import { format } from "date-fns";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface Props {
   responseIndex?: number;
-  quizResponse: QuizResponse;
+  quizResponse: StudentResponse;
+  onReview?: () => void;
 }
-const QuizAttemptResult = ({ quizResponse, responseIndex }: Props) => {
-  const { startedAt, completedAt, mark, totalMark, status } = quizResponse;
+const QuizAttemptResult = ({
+  quizResponse,
+  responseIndex,
+  onReview,
+}: Props) => {
+  const data = quizResponse.data as QuizResponseData;
+  const { startedAt, completedAt, status } = data;
+  const mark = useMemo(() => getQuizResponseMark(data), [data]);
+  const totalMark = useMemo(() => getQuizResponseTotalMark(data), [data]);
 
   const duration = getDurationBySecond(startedAt, completedAt) || 0;
   const formatDetailDate = (date: string) => {
@@ -18,13 +32,22 @@ const QuizAttemptResult = ({ quizResponse, responseIndex }: Props) => {
   const isGoodMark = mark >= totalMark * 0.4 && mark < totalMark * 0.8;
   const isBadMark = mark < totalMark * 0.4;
 
+  console.log("on review", onReview);
+
   return (
     <div className="flex flex-col border rounded-lg">
-      {responseIndex !== undefined && (
-        <h5 className="text-orange-500 px-4 py-2">{`Attempt ${
-          responseIndex + 1
-        }`}</h5>
-      )}
+      <div className="flex flex-row items-center">
+        {responseIndex !== undefined && (
+          <h5 className="text-orange-500 px-4 py-2">{`Attempt ${
+            responseIndex + 1
+          }`}</h5>
+        )}
+        {onReview && (
+          <Button variant="link" className="ml-auto" onClick={onReview}>
+            Review
+          </Button>
+        )}
+      </div>
       <ResultRow title="Status">{status}</ResultRow>
       <ResultRow title="Started">{formatDetailDate(startedAt)}</ResultRow>
       <ResultRow title="Completed">{formatDetailDate(completedAt)}</ResultRow>

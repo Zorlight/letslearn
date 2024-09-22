@@ -3,21 +3,32 @@ import { ChoiceQuestion } from "@/models/question";
 import { useEffect, useMemo, useState } from "react";
 import MultipleChoiceAnswer from "./multiple-choice-answer";
 import SingleChoiceAnswer from "./single-choice-answer";
+import { QuizAnswer } from "@/models/student-response";
 
 interface Props {
   question: ChoiceQuestion;
   showCorrectAnswer?: boolean;
-  onMarkChange?: (mark: number) => void;
-  onAnswerSelected?: (hasAnswered: boolean) => void;
+  studentAnswer?: string;
+  onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
 }
 const ChoicesDisplay = ({
   question,
-  onMarkChange,
   showCorrectAnswer,
-  onAnswerSelected,
+  studentAnswer,
+  onQuizAnswerChange,
 }: Props) => {
+  //e.g: answer = "1010" -> muliple choice and A and C are selected
+  //e.g: answer = "1" -> single choice and B is selected (0 -> A, 1 -> B, 2 -> C, 3 -> D)
+  const handleGetAnswer = (answer: string) => {
+    const answerArray = answer.split("");
+    const selectedIndexes = answerArray.map((answer) => parseInt(answer));
+    return selectedIndexes;
+  };
+
   const { choices, multiple, defaultMark } = question;
-  const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
+  const [selectedIndexes, setSelectedIndexes] = useState<number[]>(
+    studentAnswer ? handleGetAnswer(studentAnswer) : []
+  );
   const correctAnswerIndexes = useMemo(() => {
     return choices
       .filter((choice) => choice.gradePercent > 0)
@@ -59,10 +70,14 @@ const ChoicesDisplay = ({
 
     //Calculate the mark when the user answers the question
     let mark = calculateSingleChoiceMark(newSelectedIndexes);
-    if (onMarkChange) onMarkChange(mark);
-
     //Let the navigation know that the user has answered the question or not
-    if (onAnswerSelected) onAnswerSelected(true);
+    const answer = answerIndex.toString();
+    const updatedQuizAnswer: QuizAnswer = {
+      answer,
+      mark,
+      question,
+    };
+    if (onQuizAnswerChange) onQuizAnswerChange(updatedQuizAnswer);
   };
 
   const handleSelectMultipleAnswer = (answerIndex: number) => {
@@ -75,10 +90,25 @@ const ChoicesDisplay = ({
     setSelectedIndexes(newSelectedIndexes);
 
     let mark = calcullateMultipleChoiceMark(newSelectedIndexes);
-    if (onMarkChange) onMarkChange(mark);
 
     //Let the navigation know that the user has answered the question or not
-    if (onAnswerSelected) onAnswerSelected(newSelectedIndexes.length > 0);
+    //the answer is A , B and C -> "1110"
+    //the answer is A and C -> "1010"
+    //the answer is B and D -> "0101"
+    //the answer is A -> "1000"
+    let answer = "";
+    if (newSelectedIndexes.length !== 0) {
+      choices.forEach((_, index) => {
+        if (newSelectedIndexes.includes(index)) answer += "1";
+        else answer += "0";
+      });
+    }
+    const updatedQuizAnswer: QuizAnswer = {
+      answer,
+      mark,
+      question,
+    };
+    if (onQuizAnswerChange) onQuizAnswerChange(updatedQuizAnswer);
   };
 
   const grid2 = "grid grid-cols-2";

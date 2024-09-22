@@ -14,6 +14,8 @@ import {
 
 interface OtherFunctions {
   onEdit?: (id: string) => void;
+  onStatusChange?: (id: string, status: string) => void;
+  onQuestionNameChange?: (id: string, name: string) => void;
 }
 
 interface Props {
@@ -84,6 +86,8 @@ const QuestionTable = ({
         pagination={pagination}
         columns={questionTableColumns({
           onEdit: otherFunctions?.onEdit,
+          onStatusChange: otherFunctions?.onStatusChange,
+          onQuestionNameChange: otherFunctions?.onQuestionNameChange,
         })}
         columnTitles={questionColumnTitles}
         buttons={buttons}

@@ -1,8 +1,9 @@
 "use client";
 import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/collapsible-list";
 import { Button } from "@/lib/shadcn/button";
-import { Quiz } from "@/models/quiz";
+import { QuizData, Test } from "@/models/quiz";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
@@ -15,7 +16,6 @@ import {
   defaultGradeSetting,
   defaultTimingSetting,
 } from "./static-data";
-import { useMemo } from "react";
 
 const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
   name: z.string().min(1, "Name is required"),
@@ -60,11 +60,11 @@ const schema: ZodType<QuizSettingForm> = z.object({
 });
 
 interface Props {
-  quiz: Quiz;
-  onSubmitQuizSetting?: (data: Quiz) => void;
+  quiz: Test;
+  onSubmitQuizSetting?: (data: Test) => void;
 }
 const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
-  const handleGetGeneralSetting = (quiz: Quiz) => {
+  const handleGetGeneralSetting = (quiz: Test) => {
     const generalSetting: GeneralSettingForm = {
       name: quiz.name,
       description: quiz.description,
@@ -72,7 +72,7 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
     return generalSetting;
   };
 
-  const handleGetTimingSetting = (quiz: Quiz) => {
+  const handleGetTimingSetting = (quiz: Test) => {
     const timingSetting: TimingSettingForm = {
       open: {
         enabled: quiz.open.enabled,
@@ -91,11 +91,12 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
     return timingSetting;
   };
 
-  const handleGetGradeSetting = (quiz: Quiz) => {
+  const handleGetGradeSetting = (quiz: Test) => {
+    const data = quiz.data as QuizData;
     const gradeSetting: GradeSettingForm = {
-      gradeToPass: quiz.gradeToPass,
-      gradingMethod: quiz.gradingMethod as GradingMethod,
-      attemptAllowed: quiz.attemptAllowed,
+      gradeToPass: data.gradeToPass,
+      gradingMethod: data.gradingMethod as GradingMethod,
+      attemptAllowed: data.attemptAllowed,
     };
     return gradeSetting;
   };
@@ -149,7 +150,7 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
     return quizToUpdate;
   };
 
-  const compareQuiz = (quiz1: Quiz, quiz2: Quiz) => {
+  const compareQuiz = (quiz1: Test, quiz2: Test) => {
     return JSON.stringify(quiz1) === JSON.stringify(quiz2);
   };
 

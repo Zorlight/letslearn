@@ -2,28 +2,32 @@ import { useEffect, useState } from "react";
 import FalseAnswer from "./false-answer";
 import TrueAnswer from "./true-answer";
 import { TrueFalseQuestion } from "@/models/question";
+import { QuizAnswer } from "@/models/student-response";
 
 interface Props {
   question: TrueFalseQuestion;
   showCorrectAnswer?: boolean;
-  onMarkChange?: (mark: number) => void;
-  onAnswerSelected?: (hasAnswered: boolean) => void;
+  studentAnswer?: string;
+  onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
 }
 const TrueFalseChoiceDisplay = ({
   question,
   showCorrectAnswer,
-  onMarkChange,
-  onAnswerSelected,
+  studentAnswer,
+  onQuizAnswerChange,
 }: Props) => {
   const { correctAnswer, defaultMark } = question;
-  const [selected, setSelected] = useState<boolean>();
+  const [selected, setSelected] = useState<boolean | undefined>(
+    studentAnswer ? studentAnswer === "1" : undefined
+  );
   const handleSelectAnswer = (answer: boolean) => {
     setSelected(answer);
 
     // Calculate mark
     const mark = calculateMark(answer);
-    if (onMarkChange) onMarkChange(mark);
-    if (onAnswerSelected) onAnswerSelected(true);
+    const ans = answer ? "1" : "0";
+    const quizAnswer: QuizAnswer = { answer: ans, mark, question };
+    if (onQuizAnswerChange) onQuizAnswerChange(quizAnswer);
   };
 
   const calculateMark = (selected: boolean) => {

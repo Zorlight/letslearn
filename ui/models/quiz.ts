@@ -1,9 +1,16 @@
 import { Question } from "./question";
 
-export type Quiz = {
+export enum TestType {
+  QUIZ = "quiz",
+  ASSIGNMENT = "assignment",
+  CHOICE = "choice",
+}
+
+export interface Test {
   id: string;
   name: string;
   description: string;
+  type: TestType;
   open: {
     enabled: boolean;
     value: string;
@@ -17,8 +24,14 @@ export type Quiz = {
     value: number;
     unit: string;
   };
+  data: QuizData | AssignmentData;
+}
+
+export type QuizData = {
   gradeToPass: number;
   gradingMethod: string;
   attemptAllowed: string;
   questions: Question[];
 };
+
+export type AssignmentData = {};

@@ -1,9 +1,9 @@
-import { Quiz } from "@/models/quiz";
+import { Test } from "@/models/quiz";
 import SettingList from "../settings/setting-list";
 
 interface Props {
-  quiz: Quiz;
-  onQuizChange?: (data: Quiz) => void;
+  quiz: Test;
+  onQuizChange?: (data: Test) => void;
 }
 const TabSetting = ({ quiz, onQuizChange }: Props) => {
   return (

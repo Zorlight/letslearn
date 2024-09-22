@@ -3,6 +3,7 @@ import { Question } from "@/models/question";
 import React from "react";
 import { questionIconMap } from "../../../static-data";
 import { SearchCheck } from "lucide-react";
+import EditorDisplay from "@/lib/tinymce/editor-display";
 
 interface Props {
   question: Question;
@@ -25,7 +26,7 @@ const QuestionBankRow = ({
       <Checkbox checked={checked} onCheckedChange={handleCheckedChange} />
       <span>{questionIconMap[type]}</span>
       <span className="truncate w-[250px]">{questionName}</span>
-      <span className="truncate w-[250px]">{questionText}</span>
+      <EditorDisplay htmlString={questionText} className="truncate w-[250px]" />
       <SearchCheck
         className="ml-auto cursor-pointer text-cyan-600 hover:text-cyan-500"
         size={20}

@@ -37,7 +37,7 @@ const CollapsibleList = ({
   return (
     <div>
       <div className="w-full flex justify-end">
-        <Button variant="link" onClick={collapseAll}>
+        <Button type="button" variant="link" onClick={collapseAll}>
           Collapse all
         </Button>
       </div>

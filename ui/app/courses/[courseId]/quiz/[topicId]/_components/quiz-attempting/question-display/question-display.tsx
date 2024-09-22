@@ -11,6 +11,8 @@ import QuestionFancyButton from "./question-fancy-button";
 import { Button } from "@/lib/shadcn/button";
 import { Pen, Settings2 } from "lucide-react";
 import useBubbleAnimation from "@/hooks/useBubbleAnimation/useBubbleAnimation";
+import EditorDisplay from "@/lib/tinymce/editor-display";
+import { QuizAnswer } from "@/models/student-response";
 
 interface Props {
   questionIndex: number;
@@ -20,11 +22,10 @@ interface Props {
   showCorrectAnswer?: boolean;
   isFlagged?: boolean;
   result?: QuestionResult;
-  mark?: number;
+  studentAnswer: QuizAnswer;
   editMode?: boolean;
   onFlagChange?: () => void;
-  onAnswerSelected?: (hasAnswered: boolean) => void;
-  onMarkChange?: (mark: number) => void;
+  onQuizAnswerChange?: (quizAnswer: QuizAnswer) => void;
   onTabInTabQuestionChange?: (question: Question | undefined) => void;
 }
 const QuestionDisplay = ({
@@ -34,15 +35,15 @@ const QuestionDisplay = ({
   description,
   showCorrectAnswer,
   isFlagged,
-  mark,
+  studentAnswer,
   result = QuestionResult.NOT_SHOW,
   editMode,
   onFlagChange,
-  onAnswerSelected,
-  onMarkChange,
+  onQuizAnswerChange,
   onTabInTabQuestionChange,
 }: Props) => {
   const { type, defaultMark } = question;
+  const { mark, answer } = studentAnswer;
 
   const { bubbleClassName, handleMouseEnter, handleMouseOut } =
     useBubbleAnimation();
@@ -118,7 +119,10 @@ const QuestionDisplay = ({
           </div>
         )}
 
-        <p className="font-semibold">{question.questionText}</p>
+        <EditorDisplay
+          htmlString={question.questionText}
+          className="font-semibold"
+        />
       </div>
       {/* Description here */}
       <p className="text-slate-600 text-sm">{desc}</p>
@@ -126,25 +130,25 @@ const QuestionDisplay = ({
       {question.type === QuestionType.CHOICE && (
         <ChoicesDisplay
           question={question}
+          studentAnswer={answer}
           showCorrectAnswer={showCorrectAnswer}
-          onMarkChange={onMarkChange}
-          onAnswerSelected={onAnswerSelected}
+          onQuizAnswerChange={onQuizAnswerChange}
         />
       )}
       {question.type === QuestionType.TRUE_FALSE && (
         <TrueFalseChoiceDisplay
           question={question}
+          studentAnswer={answer}
           showCorrectAnswer={showCorrectAnswer}
-          onMarkChange={onMarkChange}
-          onAnswerSelected={onAnswerSelected}
+          onQuizAnswerChange={onQuizAnswerChange}
         />
       )}
       {question.type === QuestionType.SHORT_ANSWER && (
         <ShortAnswerDisplay
           question={question}
+          studentAnswer={answer}
           showCorrectAnswer={showCorrectAnswer}
-          onMarkChange={onMarkChange}
-          onAnswerSelected={onAnswerSelected}
+          onQuizAnswerChange={onQuizAnswerChange}
         />
       )}
     </div>

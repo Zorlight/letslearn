@@ -1,21 +1,20 @@
+import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import { Separator } from "@/lib/shadcn/separator";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { SearchCheck } from "lucide-react";
-import React, { useMemo } from "react";
-import { GradingMethod, TabInTab } from "../static-data";
+import { QuizData, Test } from "@/models/quiz";
 import {
   getQuizResponseMark,
   QuizResponseData,
   QuizStatus,
   StudentResponse,
 } from "@/models/student-response";
-import { fakeUser } from "@/fake-data/user";
-import { toast } from "react-toastify";
-import QuizAttemptResult from "./_components/quiz-attempting-tab/quiz-attempt-result";
-import { QuizData, Test } from "@/models/quiz";
 import { nanoid } from "@reduxjs/toolkit";
+import { SearchCheck } from "lucide-react";
+import { useMemo } from "react";
+import { toast } from "react-toastify";
+import { attemptsAllowedOptions, TabInTab } from "../static-data";
+import QuizAttemptResult from "./_components/quiz-attempting-tab/quiz-attempt-result";
 
 interface Props {
   quiz: Test;
@@ -34,8 +33,8 @@ const TabQuiz = ({
   onSelectQuizResponse,
 }: Props) => {
   const thisUser = fakeUser;
-  const { data } = quiz;
-  const { questions } = data as QuizData;
+  const { data, name } = quiz;
+  const { questions, attemptAllowed, gradingMethod } = data as QuizData;
 
   const handlePreviewQuiz = () => {
     initQuizResponse();
@@ -78,8 +77,6 @@ const TabQuiz = ({
     if (onSelectQuizResponse) onSelectQuizResponse(newQuizResponse);
   };
 
-  const attemptsAllowed = 3;
-  const gradingMethod = GradingMethod.HIGHEST_GRADE;
   const maxGrade = useMemo(() => {
     return questions.reduce((cur, question) => cur + question.defaultMark, 0);
   }, [questions]);
@@ -103,6 +100,7 @@ const TabQuiz = ({
     );
   }, [quizResponses]);
 
+  //has the last quiz response not finished
   const hasLastReviewQuiz = useMemo(() => {
     if (quizResponses.length === 0) return false;
     const lastIndex = quizResponses.length - 1;
@@ -119,7 +117,7 @@ const TabQuiz = ({
   return (
     <div className={cn("space-y-6", className)}>
       <div className="bg-slate-50 rounded-md p-6 space-y-2">
-        <h5 className="font-medium">Quiz - 20/2/2022!</h5>
+        <h5 className="font-medium">{name}</h5>
         <Separator />
         <p className="text-sm text-slate-600">
           This quiz contains a variety of questions to test your knowledge of
@@ -149,9 +147,11 @@ const TabQuiz = ({
             Continue last review
           </Button>
         )}
-        <p className="text-sm text-slate-600">
-          {`Attempts allowed: ${attemptsAllowed}`}
-        </p>
+        {attemptAllowed !== attemptsAllowedOptions[0] && (
+          <p className="text-sm text-slate-600">
+            {`Attempts allowed: ${attemptAllowed}`}
+          </p>
+        )}
         <p className="text-sm text-slate-600">
           {`Grading method: ${gradingMethod}`}
         </p>

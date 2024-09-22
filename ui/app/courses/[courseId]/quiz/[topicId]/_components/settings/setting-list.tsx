@@ -3,7 +3,7 @@ import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/co
 import { Button } from "@/lib/shadcn/button";
 import { QuizData, Test } from "@/models/quiz";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
@@ -92,24 +92,25 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
   };
 
   const handleGetGradeSetting = (quiz: Test) => {
-    const data = quiz.data as QuizData;
+    const { data } = quiz;
+    const { gradeToPass, gradingMethod, attemptAllowed } = data as QuizData;
     const gradeSetting: GradeSettingForm = {
-      gradeToPass: data.gradeToPass,
-      gradingMethod: data.gradingMethod as GradingMethod,
-      attemptAllowed: data.attemptAllowed,
+      gradeToPass: gradeToPass,
+      gradingMethod: gradingMethod as GradingMethod,
+      attemptAllowed: attemptAllowed,
     };
     return gradeSetting;
   };
 
-  const initGeneralSetting = quiz
-    ? handleGetGeneralSetting(quiz)
-    : defaultGeneralSetting;
-  const initTimingSetting = quiz
-    ? handleGetTimingSetting(quiz)
-    : defaultTimingSetting;
-  const initGradeSetting = quiz
-    ? handleGetGradeSetting(quiz)
-    : defaultGradeSetting;
+  const initGeneralSetting = useMemo(() => {
+    return quiz ? handleGetGeneralSetting(quiz) : defaultGeneralSetting;
+  }, [quiz]);
+  const initTimingSetting = useMemo(() => {
+    return quiz ? handleGetTimingSetting(quiz) : defaultTimingSetting;
+  }, [quiz]);
+  const initGradeSetting = useMemo(() => {
+    return quiz ? handleGetGradeSetting(quiz) : defaultGradeSetting;
+  }, [quiz]);
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -134,28 +135,33 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
     setValue("gradeSettingForm", data);
   };
 
-  const handleUpdateQuiz = (data: QuizSettingForm) => {
-    const quizToUpdate = {
+  const handleGetQuizToUpdate = (data: QuizSettingForm) => {
+    const quizToUpdate: Test = {
       ...quiz,
       name: data.generalSettingForm.name,
       description: data.generalSettingForm.description,
       open: data.timingSettingForm.open,
       close: data.timingSettingForm.close,
       timeLimit: data.timingSettingForm.timeLimit,
-      gradeToPass: data.gradeSettingForm.gradeToPass,
-      gradingMethod: data.gradeSettingForm.gradingMethod,
-      attemptAllowed: data.gradeSettingForm.attemptAllowed,
+      data: {
+        ...quiz.data,
+        gradeToPass: data.gradeSettingForm.gradeToPass,
+        gradingMethod: data.gradeSettingForm.gradingMethod,
+        attemptAllowed: data.gradeSettingForm.attemptAllowed,
+      },
     };
 
     return quizToUpdate;
   };
 
   const compareQuiz = (quiz1: Test, quiz2: Test) => {
-    return JSON.stringify(quiz1) === JSON.stringify(quiz2);
+    const quiz1JSON = JSON.stringify(quiz1);
+    const quiz2JSON = JSON.stringify(quiz2);
+    return quiz1JSON === quiz2JSON;
   };
 
   const onSubmit = (data: QuizSettingForm) => {
-    const quizToSubmit = handleUpdateQuiz(data);
+    const quizToSubmit = handleGetQuizToUpdate(data);
     if (compareQuiz(quiz, quizToSubmit)) {
       toast.info("No changes to submit");
       return;
@@ -165,7 +171,7 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
 
   const titles = ["General", "Timing", "Grade"];
   const isQuizSettingChange = useMemo(() => {
-    return !compareQuiz(quiz, handleUpdateQuiz(form.getValues()));
+    return !compareQuiz(quiz, handleGetQuizToUpdate(form.getValues()));
   }, [quiz, form.getValues()]);
 
   return (
@@ -191,7 +197,7 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
             disabled={!isQuizSettingChange}
             variant="default"
           >
-            Submit
+            Save
           </Button>
         </div>
       </form>

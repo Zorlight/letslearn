@@ -12,7 +12,7 @@ import { fakeCourses } from "@/fake-data/course";
 import { Course } from "@/models/course";
 import { fakeTopics } from "@/fake-data/topic";
 import { FileTopic, TopicType } from "@/models/topic";
-import { TabProvider } from "@/provider/TabProvider";
+import { TabProvider } from "@/provider/tab-provider";
 
 interface Props {
   params: {

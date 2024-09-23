@@ -23,11 +23,12 @@ const useCountdown = ({ step = 1, countdown }: Props) => {
     countDownRef.current = interval;
   };
 
-  const stopCountdown = () => {
+  const stopCountdown = (callback?: () => void) => {
     if (countDownRef.current) {
       setCountdownTimer(0);
       setStatus(CountdownStatus.STOPPED);
       clearInterval(countDownRef.current);
+      if (callback) callback();
     }
   };
 

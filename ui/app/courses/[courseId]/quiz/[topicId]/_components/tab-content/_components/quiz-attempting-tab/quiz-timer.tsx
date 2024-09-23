@@ -2,7 +2,7 @@
 import { format } from "date-fns";
 import React, { useEffect, useRef } from "react";
 import styles from "./quiz-timer.module.css";
-import { cn, getDurationBySecond } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export enum TimerStatus {
   RUNNING = "running",
@@ -39,7 +39,6 @@ const QuizTimer = ({
       <div
         className={cn(
           styles["timer-runner"],
-          "transition-all duration-1000",
           status === TimerStatus.STOPPED && "opacity-0"
         )}
       />
@@ -47,7 +46,7 @@ const QuizTimer = ({
       <div
         className={cn(
           styles["front-clock"],
-          "w-20 h-20 rounded-full flex items-center justify-center bg-green-50 text-green-500"
+          "w-20 h-20 rounded-full flex items-center justify-center bg-green-50 hover:bg-green-50 text-green-500"
         )}
       >
         <span className="text-sm">{format(timerDate, "HH:mm:ss")}</span>

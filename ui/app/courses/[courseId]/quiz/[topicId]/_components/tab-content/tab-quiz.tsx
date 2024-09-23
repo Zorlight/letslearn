@@ -1,19 +1,25 @@
 import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import { Separator } from "@/lib/shadcn/separator";
-import { cn } from "@/lib/utils";
+import { cn, getTextFromHtml, getTimeStringByDuration } from "@/lib/utils";
 import { QuizData, Test } from "@/models/quiz";
 import {
   getQuizResponseMark,
   QuizResponseData,
   QuizStatus,
+  sortQuizResponsesByCompletedDate,
   StudentResponse,
 } from "@/models/student-response";
 import { nanoid } from "@reduxjs/toolkit";
 import { SearchCheck } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
-import { attemptsAllowedOptions, TabInTab } from "../static-data";
+import {
+  attemptsAllowedOptions,
+  getSecondFromTimeLimitType,
+  GradingMethod,
+  TabInTab,
+} from "../static-data";
 import QuizAttemptResult from "./_components/quiz-attempting-tab/quiz-attempt-result";
 
 interface Props {
@@ -33,7 +39,7 @@ const TabQuiz = ({
   onSelectQuizResponse,
 }: Props) => {
   const thisUser = fakeUser;
-  const { data, name } = quiz;
+  const { data, name, description, timeLimit } = quiz;
   const { questions, attemptAllowed, gradingMethod } = data as QuizData;
 
   const handlePreviewQuiz = () => {
@@ -47,6 +53,17 @@ const TabQuiz = ({
     const lastQuizResponse = quizResponses[lastIndex];
     if (onSelectQuizResponse) onSelectQuizResponse(lastQuizResponse);
     onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
+  };
+
+  const handleReviewQuiz = (index: number) => {
+    const quizToReview = quizResponses[index];
+    if (onSelectQuizResponse) onSelectQuizResponse(quizToReview);
+    onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
+  };
+
+  const handleRemoveQuizResponse = (index: number) => {
+    const newQuizResponses = quizResponses.filter((_, i) => i !== index);
+    if (onQuizResponsesChange) onQuizResponsesChange(newQuizResponses);
   };
 
   const initQuizResponse = () => {
@@ -77,20 +94,68 @@ const TabQuiz = ({
     if (onSelectQuizResponse) onSelectQuizResponse(newQuizResponse);
   };
 
-  const maxGrade = useMemo(() => {
-    return questions.reduce((cur, question) => cur + question.defaultMark, 0);
-  }, [questions]);
-
-  const highestGrade = useMemo(() => {
+  const handleGetHighestGrade = (quizResponses: StudentResponse[]) => {
     return quizResponses.reduce((cur, quizResponse) => {
       const { data } = quizResponse;
       return Math.max(cur, getQuizResponseMark(data as QuizResponseData));
     }, 0);
-  }, [quizResponses]);
-  const isExellent = highestGrade >= maxGrade * 0.8;
+  };
+
+  const handleGetAverageGrade = (quizResponses: StudentResponse[]) => {
+    const grade =
+      quizResponses.reduce((cur, quizResponse) => {
+        const { data } = quizResponse;
+        return cur + getQuizResponseMark(data as QuizResponseData);
+      }, 0) / quizResponses.length;
+    return grade;
+  };
+
+  const handleGetFirstAttemptGrade = (quizResponses: StudentResponse[]) => {
+    const sortedByCompletedDate =
+      sortQuizResponsesByCompletedDate(quizResponses);
+    if (sortedByCompletedDate.length === 0) return 0;
+    const firstAttempt = sortedByCompletedDate[0];
+    const { data } = firstAttempt;
+    return getQuizResponseMark(data as QuizResponseData);
+  };
+
+  const handleGetLastAttemptGrade = (quizResponses: StudentResponse[]) => {
+    const sortedByCompletedDate = sortQuizResponsesByCompletedDate(
+      quizResponses,
+      false
+    );
+    if (sortedByCompletedDate.length === 0) return 0;
+    const lastAttempt = sortedByCompletedDate[0];
+    const { data } = lastAttempt;
+    return getQuizResponseMark(data as QuizResponseData);
+  };
+
+  const fullMarkOfQuiz = useMemo(() => {
+    return questions.reduce((cur, question) => cur + question.defaultMark, 0);
+  }, [questions]);
+
+  const gradeToShow = useMemo(() => {
+    if (gradingMethod === GradingMethod.HIGHEST_GRADE)
+      return handleGetHighestGrade(quizResponses);
+    if (gradingMethod === GradingMethod.AVERAGE_GRADE)
+      return handleGetAverageGrade(quizResponses);
+    if (gradingMethod === GradingMethod.FIRST_GRADE)
+      return handleGetFirstAttemptGrade(quizResponses);
+    if (gradingMethod === GradingMethod.LAST_GRADE)
+      return handleGetLastAttemptGrade(quizResponses);
+    return 0;
+  }, [quizResponses, gradingMethod]);
+  const gradeTitle = useMemo(() => {
+    if (gradingMethod === GradingMethod.HIGHEST_GRADE) return "Highest grade:";
+    if (gradingMethod === GradingMethod.AVERAGE_GRADE) return "Average grade:";
+    if (gradingMethod === GradingMethod.FIRST_GRADE) return "First grade:";
+    if (gradingMethod === GradingMethod.LAST_GRADE) return "Last grade:";
+    return "Grade";
+  }, [gradingMethod]);
+  const isExellent = gradeToShow >= fullMarkOfQuiz * 0.8;
   const isGood =
-    highestGrade >= maxGrade * 0.4 && highestGrade < maxGrade * 0.8;
-  const isBad = highestGrade < maxGrade * 0.4;
+    gradeToShow >= fullMarkOfQuiz * 0.4 && gradeToShow < fullMarkOfQuiz * 0.8;
+  const isBad = gradeToShow < fullMarkOfQuiz * 0.4;
   const hasFinishedQuiz = useMemo(() => {
     const quizResponseDatas = quizResponses.map(
       (quizResponse) => quizResponse.data as QuizResponseData
@@ -108,27 +173,31 @@ const TabQuiz = ({
     return quizResponseData.status === QuizStatus.NOT_FINISHED;
   }, [quizResponses]);
 
-  const handleReviewQuiz = (index: number) => {
-    const quizToReview = quizResponses[index];
-    if (onSelectQuizResponse) onSelectQuizResponse(quizToReview);
-    onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
-  };
+  const quizResponsesToShow = useMemo(() => {
+    const filteredQuizResponses = quizResponses.filter(
+      (quizResponse) =>
+        (quizResponse.data as QuizResponseData).status === QuizStatus.FINISHED
+    );
+    return sortQuizResponsesByCompletedDate(filteredQuizResponses);
+  }, [quizResponses]);
 
-  const handleRemoveQuizResponse = (index: number) => {
-    const newQuizResponses = quizResponses.filter((_, i) => i !== index);
-    if (onQuizResponsesChange) onQuizResponsesChange(newQuizResponses);
-  };
+  const timeLimitString = useMemo(() => {
+    if (!timeLimit.enabled) return "No time limit";
+    const duration = getSecondFromTimeLimitType(
+      timeLimit.value,
+      timeLimit.unit
+    );
+    return getTimeStringByDuration(duration);
+  }, [timeLimit]);
 
   return (
     <div className={cn("space-y-6", className)}>
       <div className="bg-slate-50 rounded-md p-6 space-y-2">
         <h5 className="font-medium">{name}</h5>
-        <Separator />
-        <p className="text-sm text-slate-600">
-          This quiz contains a variety of questions to test your knowledge of
-          Alpine mountaineering. At the end of the quiz you will be given your
-          score with suggestions for improvement.
-        </p>
+        {getTextFromHtml(description) && <Separator />}
+        {getTextFromHtml(description) && (
+          <p className="text-sm text-slate-600">{description}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -152,6 +221,12 @@ const TabQuiz = ({
             Continue last review
           </Button>
         )}
+
+        {timeLimit.enabled && (
+          <p className="text-sm text-slate-600">
+            {`Time limit: ${timeLimitString}`}
+          </p>
+        )}
         {attemptAllowed !== attemptsAllowedOptions[0] && (
           <p className="text-sm text-slate-600">
             {`Attempts allowed: ${attemptAllowed}`}
@@ -169,14 +244,14 @@ const TabQuiz = ({
               isGood && "text-yellow-500",
               isBad && "text-red-500"
             )}
-          >{`Highest grade: ${highestGrade} / ${maxGrade}`}</h5>
+          >{`${gradeTitle} ${gradeToShow} / ${fullMarkOfQuiz}`}</h5>
           <h5 className="text-orange-500">Your attempt</h5>
 
           <div className="flex flex-col gap-4">
-            {quizResponses.map((quizResponse, index) => (
+            {quizResponsesToShow.map((quizResponse, index) => (
               <QuizAttemptResult
                 key={index}
-                responseIndex={index}
+                responseIndex={quizResponses.length - index - 1}
                 quizResponse={quizResponse}
                 onReview={() => handleReviewQuiz(index)}
                 onRemove={() => handleRemoveQuizResponse(index)}

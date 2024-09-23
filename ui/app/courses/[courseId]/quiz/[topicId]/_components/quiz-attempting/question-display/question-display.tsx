@@ -62,7 +62,7 @@ const QuestionDisplay = ({
   const questionId = `question-${questionIndex + 1}`;
 
   return (
-    <div id={questionId} className="flex flex-col gap-2 pt-6">
+    <div id={questionId} className="flex flex-col gap-2 pt-5">
       {/* Question here */}
       <div
         className={cn(

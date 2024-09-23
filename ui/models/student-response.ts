@@ -57,3 +57,22 @@ export const getQuizResponseTotalMark = (quizResponse: QuizResponseData) => {
   });
   return totalMark;
 };
+
+export const sortQuizResponsesByCompletedDate = (
+  quizResponses: StudentResponse[],
+  ascending = true
+) => {
+  return quizResponses.sort((a, b) => {
+    const aData = a.data as QuizResponseData;
+    const bData = b.data as QuizResponseData;
+    if (ascending)
+      return (
+        new Date(aData.completedAt).getTime() -
+        new Date(bData.completedAt).getTime()
+      );
+    return (
+      new Date(bData.completedAt).getTime() -
+      new Date(aData.completedAt).getTime()
+    );
+  });
+};

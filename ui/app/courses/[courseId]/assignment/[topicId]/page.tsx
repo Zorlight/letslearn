@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { colorMap, iconMap } from "../../_components/topic-map";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
-import { TabProvider } from "@/provider/TabProvider";
+import { TabProvider } from "@/provider/tab-provider";
 
 interface Props {
   params: {

@@ -23,9 +23,15 @@ interface Props {
   className?: string;
   quiz: Test;
   onQuizChange?: (quiz: Test) => void;
+  onQuizModeChange?: (quizMode: boolean) => void;
 }
 
-const TabContent = ({ className, quiz, onQuizChange }: Props) => {
+const TabContent = ({
+  className,
+  quiz,
+  onQuizChange,
+  onQuizModeChange,
+}: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
   const { data } = quiz;
@@ -45,11 +51,16 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
     setTabInTab(TabInTab.MAIN_TAB);
   }, [selectedTab]);
 
+  useEffect(() => {
+    if (onQuizModeChange)
+      onQuizModeChange(tabInTab === TabInTab.QUIZ_ATTEMPTING_TAB);
+  }, [tabInTab]);
+
   const handleTabInTabChange = (tab: TabInTab) => {
     setTabInTab(tab);
     setTabInTabQuestion(undefined);
   };
-  //TODO: add function to handle tabInTabQuestion change
+
   const handleTabInTabQuestionChange = (question: Question | undefined) => {
     setTabInTabQuestion(question);
     if (question) setTabInTab(tabInTabMapper[question.type]);
@@ -136,17 +147,14 @@ const TabContent = ({ className, quiz, onQuizChange }: Props) => {
     if (onQuizChange) onQuizChange({ ...quiz, data: newData });
   };
 
-  useEffect(() => {
-    console.log("quizResponses", quizResponses);
-  }, [quizResponses]);
-  useEffect(() => {
-    console.log("selected quiz response", selectedQuizResponse);
-  }, [selectedQuizResponse]);
-
   switch (selectedTab) {
     case Tab.QUIZ:
       return (
-        <TabContentLayout className={className} fullWidth>
+        <TabContentLayout
+          className={className}
+          fullWidth={tabInTab !== TabInTab.MAIN_TAB}
+          hasSeparator={tabInTab !== TabInTab.QUIZ_ATTEMPTING_TAB}
+        >
           {tabInTab === TabInTab.MAIN_TAB && (
             <TabQuiz
               quiz={quiz}

@@ -1,8 +1,8 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import React, { useEffect, useRef } from "react";
 import styles from "./quiz-timer.module.css";
-import { cn, getDurationBySecond } from "@/lib/utils";
 
 export enum CountdownStatus {
   RUNNING = "running",
@@ -60,7 +60,6 @@ const QuizCountdown = ({
         ref={ref}
         className={cn(
           styles["countdown-runner"],
-          "transition-all duration-1000",
           status === CountdownStatus.STOPPED && "opacity-0"
         )}
       />

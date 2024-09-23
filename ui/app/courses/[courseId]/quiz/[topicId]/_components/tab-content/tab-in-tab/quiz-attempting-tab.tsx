@@ -1,8 +1,11 @@
 "use client";
+import CustomDialog from "@/components/ui/custom-dialog";
 import { fakeUser } from "@/fake-data/user";
+import useCountdown from "@/hooks/useCountDown";
+import useTimer from "@/hooks/useTimer";
 import { Button } from "@/lib/shadcn/button";
 import { Card } from "@/lib/shadcn/card";
-import { cn } from "@/lib/utils";
+import { cn, scrollTo } from "@/lib/utils";
 import { Question } from "@/models/question";
 import { QuizData, Test } from "@/models/quiz";
 import {
@@ -12,24 +15,25 @@ import {
   StudentResponse,
 } from "@/models/student-response";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import QuestionDisplay from "../../quiz-attempting/question-display/question-display";
 import QuestionBlock from "../../quiz-attempting/question-navigation-box/question-block";
-import { QuestionResult, TabInTab, TimeLimitType } from "../../static-data";
-import BackwardButtonIconText from "../_components/backward-button-icon-text";
+import {
+  getSecondFromTimeLimitType,
+  QuestionResult,
+  TabInTab,
+  TimeLimitType,
+} from "../../static-data";
 import ColorAnnotation from "../_components/quiz-attempting-tab/color-annotation";
 import QuizAttemptResult from "../_components/quiz-attempting-tab/quiz-attempt-result";
+import QuizCountdown from "../_components/quiz-attempting-tab/quiz-countdown";
+import QuizTimer from "../_components/quiz-attempting-tab/quiz-timer";
 import SymbolAnnotation from "../_components/quiz-attempting-tab/symbol-annotation";
 import {
   colorAnnotations,
   symbolAnnotations,
 } from "../_components/static-data";
 import { scrollToQuestion } from "../_components/utils";
-import CustomDialog from "@/components/ui/custom-dialog";
-import QuizTimer from "../_components/quiz-attempting-tab/quiz-timer";
-import useTimer from "@/hooks/useTimer";
-import useCountdown from "@/hooks/useCountDown";
-import QuizCountdown from "../_components/quiz-attempting-tab/quiz-countdown";
-import { toast } from "react-toastify";
 
 interface Props {
   className?: string;
@@ -58,42 +62,26 @@ const QuizAttemptingTab = ({
   const thisUser = fakeUser;
   const { startTimer, stopTimer, timer, status: timerStatus } = useTimer({});
 
-  const handleGetSecondToCountdown = (value: number, unit: TimeLimitType) => {
-    let second = 0;
-    switch (unit) {
-      case TimeLimitType.SECONDS:
-        second = value;
-        break;
-      case TimeLimitType.MINUTES:
-        second = value * 60;
-        break;
-      case TimeLimitType.HOURS:
-        second = value * 60 * 60;
-        break;
-      case TimeLimitType.DAYS:
-        second = value * 60 * 60 * 24;
-        break;
-      case TimeLimitType.WEEKS:
-        second = value * 60 * 60 * 24 * 7;
-        break;
-      default:
-        toast.error("Invalid time limit unit");
-        break;
-    }
-    return second;
-  };
-
   const {
     status: countdownStatus,
     countdownTimer,
     startCountdown,
     stopCountdown,
   } = useCountdown({
-    countdown: handleGetSecondToCountdown(
+    countdown: getSecondFromTimeLimitType(
       timeLimit.value,
       timeLimit.unit as TimeLimitType
     ),
   });
+
+  const handleCountdownEnd = () => {
+    setShowCorrectAnswer(true);
+    handleFinishQuizResponse();
+  };
+
+  useEffect(() => {
+    if (countdownTimer <= 0) stopCountdown(handleCountdownEnd);
+  }, [countdownTimer]);
 
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(
     quizResponseData.status === QuizStatus.FINISHED
@@ -134,10 +122,6 @@ const QuizAttemptingTab = ({
     setQuestionResults(newResults);
   }, [showCorrectAnswer, studentAnswers, questions]);
 
-  const handleGoBack = () => {
-    if (onTabInTabChange) onTabInTabChange(TabInTab.MAIN_TAB);
-  };
-
   const handleCancelFinishAttempt = () => {};
   const handleConfirmFinishAttempt = () => {
     setShowCorrectAnswer(true);
@@ -167,6 +151,7 @@ const QuizAttemptingTab = ({
   };
 
   const handleFinishQuizResponse = () => {
+    console.log("Finish quiz response");
     const completedTime = new Date().toISOString();
     const finishQuizResponseData: QuizResponseData = {
       ...quizResponseData,
@@ -208,6 +193,10 @@ const QuizAttemptingTab = ({
     if (quizResponseData.status === QuizStatus.NOT_STARTED) startQuiz();
   }, []);
 
+  const handleScrollToQuestion = (index: number) => {
+    scrollTo(`question-${index + 1}`, 20);
+  };
+
   let dialogTitle = "";
   const isMissingAnswer = hasAnswers.includes(false);
   if (isMissingAnswer) dialogTitle = "Some questions have not been answered";
@@ -217,7 +206,6 @@ const QuizAttemptingTab = ({
     <div className="relative">
       <div className="absolute left-0 top-0 h-full max-w-[320px] w-1/3">
         <div className="sticky top-24">
-          <BackwardButtonIconText onClick={handleGoBack} />
           <Card className="p-4 space-y-4">
             <h5 className="text-orange-600">Annotation table</h5>
             <div className="flex flex-row justify-center">
@@ -294,7 +282,7 @@ const QuizAttemptingTab = ({
                 isFlagged={flags[index]}
                 hasAnswered={hasAnswers[index]}
                 questionResult={questionResults[index]}
-                onClick={() => scrollToQuestion(index)}
+                onClick={() => handleScrollToQuestion(index)}
               />
             ))}
           </div>

@@ -1,17 +1,17 @@
 "use client";
 import TabList from "@/components/ui/tab-list";
 import { fakeCourses } from "@/fake-data/course";
+import { fakeQuizTest } from "@/fake-data/test";
 import { fakeTopics } from "@/fake-data/topic";
 import { cn } from "@/lib/utils";
-import { TabProvider } from "@/provider/TabProvider";
+import { Test } from "@/models/quiz";
+import { TabProvider } from "@/provider/tab-provider";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { colorMap, iconMap } from "../../_components/topic-map";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
-import { Test } from "@/models/quiz";
-import { fakeQuizTest } from "@/fake-data/test";
 
 interface Props {
   params: {
@@ -23,6 +23,7 @@ interface Props {
 const QuizIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
   const [quiz, setQuiz] = useState<Test>(fakeQuizTest);
+  const [isQuizMode, setIsQuizMode] = useState<boolean>(false);
 
   //get course by id
   const course = useMemo(() => {
@@ -51,26 +52,29 @@ const QuizIdPage = ({ params }: Props) => {
   return (
     <TabProvider initTab={Tab.QUIZ}>
       <div className="p-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex flex-row items-center gap-2 mb-4">
-            <MiniLink href={`/courses/${course.id}`}>{course.title}</MiniLink>
-            <span className="text-slate-600">/</span>
-            <MiniLink href={`/courses/${course.id}#section-${section.id}`}>
-              {section.title}
-            </MiniLink>
-            <span className="text-slate-600">/</span>
-            <MiniLink>{topic.title}</MiniLink>
+        {!isQuizMode && (
+          <div className="max-w-3xl mx-auto">
+            <div className="flex flex-row items-center gap-2 mb-4">
+              <MiniLink href={`/courses/${course.id}`}>{course.title}</MiniLink>
+              <span className="text-slate-600">/</span>
+              <MiniLink href={`/courses/${course.id}#section-${section.id}`}>
+                {section.title}
+              </MiniLink>
+              <span className="text-slate-600">/</span>
+              <MiniLink>{topic.title}</MiniLink>
+            </div>
+            <div className={cn("flex flex-row items-center gap-4", color)}>
+              <Icon size={24} />
+              <h1 className="text-2xl font-bold">{topic.title}</h1>
+            </div>
+            <TabList tabs={tabs} className="mt-4" />
           </div>
-          <div className={cn("flex flex-row items-center gap-4", color)}>
-            <Icon size={24} />
-            <h1 className="text-2xl font-bold">{topic.title}</h1>
-          </div>
-          <TabList tabs={tabs} className="mt-4" />
-        </div>
+        )}
         <TabContent
-          className="max-w-3xl mx-auto"
+          className="w-full max-w-3xl mx-auto"
           quiz={quiz}
           onQuizChange={handleQuizChange}
+          onQuizModeChange={setIsQuizMode}
         />
       </div>
     </TabProvider>

@@ -87,7 +87,7 @@ function handleFilterColumn<T>(
 }
 
 // 3680s -> 1 hour 1 minute 20 second
-const getDurationBySecond = (startTime: any, endTime: any) => {
+const getDurationText = (startTime: any, endTime: any) => {
   if (!startTime || !endTime) return 0;
 
   try {
@@ -98,6 +98,10 @@ const getDurationBySecond = (startTime: any, endTime: any) => {
   }
 
   const duration = Math.floor(endTime / 1000) - Math.floor(startTime / 1000);
+  return getTimeStringByDuration(duration);
+};
+
+const getTimeStringByDuration = (duration: number) => {
   const years = Math.floor(duration / 31536000);
   const months = Math.floor(duration / 2628000);
   const days = Math.floor(duration / 86400);
@@ -120,6 +124,7 @@ const getDurationBySecond = (startTime: any, endTime: any) => {
 };
 
 const getTextFromHtml = (html: string) => {
+  if (DOMParser === undefined) return "";
   const doc = new DOMParser().parseFromString(html, "text/html");
   return doc.body.textContent || "";
 };
@@ -145,7 +150,8 @@ export {
   getByteFromSize,
   getPublicIdFromCloudinaryUrl,
   handleFilterColumn,
-  getDurationBySecond,
+  getDurationText,
+  getTimeStringByDuration,
   getTextFromHtml,
   scrollTo,
 };

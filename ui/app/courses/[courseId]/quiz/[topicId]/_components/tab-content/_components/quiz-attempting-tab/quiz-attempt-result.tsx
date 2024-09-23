@@ -1,6 +1,6 @@
 import CustomDialog from "@/components/ui/custom-dialog";
 import { Button } from "@/lib/shadcn/button";
-import { cn, formatDate, getDurationBySecond } from "@/lib/utils";
+import { cn, formatDate, getDurationText } from "@/lib/utils";
 import {
   getQuizResponseMark,
   getQuizResponseTotalMark,
@@ -27,7 +27,7 @@ const QuizAttemptResult = ({
   const mark = useMemo(() => getQuizResponseMark(data), [data]);
   const totalMark = useMemo(() => getQuizResponseTotalMark(data), [data]);
 
-  const duration = getDurationBySecond(startedAt, completedAt) || 0;
+  const duration = getDurationText(startedAt, completedAt) || 0;
   const formatDetailDate = (date: string) => {
     return format(new Date(date), "EEEE, dd MMMM yyyy, h:mm:ss a");
   };

@@ -114,6 +114,11 @@ const TabQuiz = ({
     onTabInTabChange(TabInTab.QUIZ_ATTEMPTING_TAB);
   };
 
+  const handleRemoveQuizResponse = (index: number) => {
+    const newQuizResponses = quizResponses.filter((_, i) => i !== index);
+    if (onQuizResponsesChange) onQuizResponsesChange(newQuizResponses);
+  };
+
   return (
     <div className={cn("space-y-6", className)}>
       <div className="bg-slate-50 rounded-md p-6 space-y-2">
@@ -174,6 +179,7 @@ const TabQuiz = ({
                 responseIndex={index}
                 quizResponse={quizResponse}
                 onReview={() => handleReviewQuiz(index)}
+                onRemove={() => handleRemoveQuizResponse(index)}
               />
             ))}
           </div>

@@ -1,17 +1,15 @@
 "use client";
+import { Combobox } from "@/components/ui/combobox";
 import { dateToZonedDateTime, zonedDateTimeToDate } from "@/lib/nextui/utils";
 import { Button } from "@/lib/shadcn/button";
 import { Checkbox } from "@/lib/shadcn/checkbox";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/lib/shadcn/input";
 import { getLocalTimeZone, now, ZonedDateTime } from "@internationalized/date";
 import { DatePicker } from "@nextui-org/date-picker";
 import { nanoid } from "@reduxjs/toolkit";
-import { useForm, useFormContext } from "react-hook-form";
-import { unknown, z, ZodType } from "zod";
-import { TimeLimitType } from "../../static-data";
-import { Input } from "@/lib/shadcn/input";
-import { Combobox } from "@/components/ui/combobox";
 import { ChevronsUpDown } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import { TimeLimitType } from "../../static-data";
 import { QuizSettingForm } from "../setting-list";
 
 export type TimingSettingForm = {
@@ -39,7 +37,7 @@ const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
   const form = useFormContext<QuizSettingForm>();
   const { register } = form;
   const {
-    errors: { gradeSettingForm: errors },
+    errors: { timingSettingForm: errors },
   } = form.formState;
   const { open, close, timeLimit } = formData;
   const handleSettingChange = (data: TimingSettingForm) => {
@@ -129,6 +127,7 @@ const RowSettingWithDatePicker = ({
   handleDatePickerChange,
 }: RowSettingWithDatePickerProps) => {
   const htmlFor = nanoid();
+
   return (
     <div className="flex flex-row items-center gap-2">
       <label className="w-[180px] font-semibold">{title}</label>
@@ -218,7 +217,8 @@ const RowSettingWithCombobox = ({
         <Combobox
           name="Unit"
           options={options}
-          initialValue={options[0]}
+          showSearch={false}
+          initialValue={unit}
           onChange={(value) => handleComboboxChange(keyProp, value)}
           popoverClassName="w-[150px]"
         >

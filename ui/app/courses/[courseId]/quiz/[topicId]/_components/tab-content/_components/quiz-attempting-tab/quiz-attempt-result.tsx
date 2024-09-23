@@ -1,3 +1,4 @@
+import CustomDialog from "@/components/ui/custom-dialog";
 import { Button } from "@/lib/shadcn/button";
 import { cn, formatDate, getDurationBySecond } from "@/lib/utils";
 import {
@@ -13,11 +14,13 @@ interface Props {
   responseIndex?: number;
   quizResponse: StudentResponse;
   onReview?: () => void;
+  onRemove?: () => void;
 }
 const QuizAttemptResult = ({
   quizResponse,
   responseIndex,
   onReview,
+  onRemove,
 }: Props) => {
   const data = quizResponse.data as QuizResponseData;
   const { startedAt, completedAt, status } = data;
@@ -32,21 +35,45 @@ const QuizAttemptResult = ({
   const isGoodMark = mark >= totalMark * 0.4 && mark < totalMark * 0.8;
   const isBadMark = mark < totalMark * 0.4;
 
-  console.log("on review", onReview);
+  const handleCancel = () => {};
 
   return (
     <div className="flex flex-col border rounded-lg">
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center justify-between px-4">
         {responseIndex !== undefined && (
-          <h5 className="text-orange-500 px-4 py-2">{`Attempt ${
+          <h5 className="text-orange-500 py-2">{`Attempt ${
             responseIndex + 1
           }`}</h5>
         )}
-        {onReview && (
-          <Button variant="link" className="ml-auto" onClick={onReview}>
-            Review
-          </Button>
-        )}
+        <div className="flex flex-row items-center gap-4">
+          {onRemove && (
+            <CustomDialog
+              variant="warning"
+              title={`Remove Attempt ${
+                responseIndex !== undefined && responseIndex + 1
+              }`}
+              content={
+                <span>{`Are you sure you want to remove this attempt ${
+                  responseIndex !== undefined && responseIndex + 1
+                }?`}</span>
+              }
+              onYes={onRemove}
+              onCancel={handleCancel}
+            >
+              <Button
+                variant="link"
+                className="p-0 h-fit text-red-500 hover:text-red-600"
+              >
+                Remove
+              </Button>
+            </CustomDialog>
+          )}
+          {onReview && (
+            <Button variant="link" className="p-0 h-fit" onClick={onReview}>
+              Review
+            </Button>
+          )}
+        </div>
       </div>
       <ResultRow title="Status">{status}</ResultRow>
       <ResultRow title="Started">{formatDetailDate(startedAt)}</ResultRow>

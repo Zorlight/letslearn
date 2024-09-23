@@ -8,7 +8,11 @@ function dateToZonedDateTime(date: Date): ZonedDateTime {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  const offset = date.getTimezoneOffset();
+  //25200000 is the offset of the local time zone
+  //25200000 in milliseconds means 7 hours -> Vietnam time zone is UTC+7
+  //offset = 0 -> UTC time zone
+  //offset = 25200000 -> UTC+7 time zone -> VIETNAM
+  const offset = 25200000;
   const hour = date.getHours();
   const minute = date.getMinutes();
   const second = date.getSeconds();

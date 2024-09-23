@@ -86,7 +86,7 @@ const TabQuestion = ({
               quizOpenCloseState === QuizOpenCloseState.OPEN &&
                 "bg-green-50 text-green-500",
               quizOpenCloseState === QuizOpenCloseState.ENDED &&
-                "bg-red-50 text-orange-500",
+                "bg-red-50 text-red-500",
               quizOpenCloseState === QuizOpenCloseState.NOT_OPEN &&
                 "bg-yellow-50 text-yellow-500"
             )}
@@ -98,6 +98,7 @@ const TabQuestion = ({
         <QuestionList
           questions={questions}
           questionsBank={questionsBank}
+          canAddOrRemoveQuestion={attempts === 0}
           onAddNewQuestion={onAddNewQuestion}
           onRemoveQuestion={onRemoveQuestion}
           onReorderedQuestion={onReorderedQuestion}

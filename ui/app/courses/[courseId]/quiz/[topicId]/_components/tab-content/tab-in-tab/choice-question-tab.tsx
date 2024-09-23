@@ -176,7 +176,7 @@ const ChoiceQuestionTab = ({ question, onSubmitQuestion }: Props) => {
         </CollapsibleList>
         <div className="w-full flex flex-row justify-center">
           <Button type="submit" variant="default">
-            Submit
+            Save
           </Button>
         </div>
       </form>

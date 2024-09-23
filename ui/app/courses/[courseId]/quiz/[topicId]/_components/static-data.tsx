@@ -11,10 +11,11 @@ export enum Tab {
 }
 
 export enum TimeLimitType {
+  SECONDS = "Seconds",
   MINUTES = "Minutes",
   HOURS = "Hours",
   DAYS = "Days",
-  WEEKs = "Weeks",
+  WEEKS = "Weeks",
 }
 
 export enum GradingMethod {

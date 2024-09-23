@@ -10,6 +10,7 @@ import {
 import { Question } from "@/models/question";
 import { useMemo, useState } from "react";
 import QuestionBankList from "./get-question-from-bank/question-bank-list";
+import { QuestionStatus } from "../../static-data";
 
 interface Props {
   questions: Question[];
@@ -30,7 +31,9 @@ const GetQuestionFromBankDialog = ({
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const questionToShowInBankList = useMemo(() => {
     return questionsBank.filter(
-      (q) => !questions.some((question) => question.id === q.id)
+      (q) =>
+        !questions.some((question) => question.id === q.id) &&
+        q.status === QuestionStatus.READY
     );
   }, [questions, questionsBank]);
 

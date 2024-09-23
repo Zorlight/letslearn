@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import QuestionDisplay from "../../quiz-attempting/question-display/question-display";
 import QuestionBlock from "../../quiz-attempting/question-navigation-box/question-block";
-import { QuestionResult, TabInTab } from "../../static-data";
+import { QuestionResult, TabInTab, TimeLimitType } from "../../static-data";
 import BackwardButtonIconText from "../_components/backward-button-icon-text";
 import ColorAnnotation from "../_components/quiz-attempting-tab/color-annotation";
 import QuizAttemptResult from "../_components/quiz-attempting-tab/quiz-attempt-result";
@@ -25,6 +25,11 @@ import {
 } from "../_components/static-data";
 import { scrollToQuestion } from "../_components/utils";
 import CustomDialog from "@/components/ui/custom-dialog";
+import QuizTimer from "../_components/quiz-attempting-tab/quiz-timer";
+import useTimer from "@/hooks/useTimer";
+import useCountdown from "@/hooks/useCountDown";
+import QuizCountdown from "../_components/quiz-attempting-tab/quiz-countdown";
+import { toast } from "react-toastify";
 
 interface Props {
   className?: string;
@@ -46,12 +51,50 @@ const QuizAttemptingTab = ({
 }: Props) => {
   const quizResponseData = quizResponse.data as QuizResponseData;
   const { answers: studentAnswers } = quizResponseData;
-  const { data: quizData } = quiz;
+  const { data: quizData, timeLimit } = quiz;
   const { questions } = quizData as QuizData;
   const totalQuestions = questions.length;
   // const thisUser = useAppSelector((state) => state.profile.value);
-
   const thisUser = fakeUser;
+  const { startTimer, stopTimer, timer, status: timerStatus } = useTimer({});
+
+  const handleGetSecondToCountdown = (value: number, unit: TimeLimitType) => {
+    let second = 0;
+    switch (unit) {
+      case TimeLimitType.SECONDS:
+        second = value;
+        break;
+      case TimeLimitType.MINUTES:
+        second = value * 60;
+        break;
+      case TimeLimitType.HOURS:
+        second = value * 60 * 60;
+        break;
+      case TimeLimitType.DAYS:
+        second = value * 60 * 60 * 24;
+        break;
+      case TimeLimitType.WEEKS:
+        second = value * 60 * 60 * 24 * 7;
+        break;
+      default:
+        toast.error("Invalid time limit unit");
+        break;
+    }
+    return second;
+  };
+
+  const {
+    status: countdownStatus,
+    countdownTimer,
+    startCountdown,
+    stopCountdown,
+  } = useCountdown({
+    countdown: handleGetSecondToCountdown(
+      timeLimit.value,
+      timeLimit.unit as TimeLimitType
+    ),
+  });
+
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(
     quizResponseData.status === QuizStatus.FINISHED
   );
@@ -115,7 +158,12 @@ const QuizAttemptingTab = ({
       ...quizResponse,
       data: startQuizResponseData,
     };
+
     if (onQuizResponseChange) onQuizResponseChange(startQuizResponse);
+
+    // Start timer
+    if (timeLimit.enabled) startCountdown();
+    else startTimer();
   };
 
   const handleFinishQuizResponse = () => {
@@ -132,10 +180,28 @@ const QuizAttemptingTab = ({
     };
 
     if (onQuizResponseChange) onQuizResponseChange(finishedQuizResponse);
+
+    // Stop timer
+    if (timeLimit.enabled) stopCountdown();
+    else stopTimer(new Date(completedTime));
   };
 
   const handleFinishReview = () => {
     if (onTabInTabChange) onTabInTabChange(TabInTab.MAIN_TAB);
+  };
+
+  const handleQuizAnswerChange = (answer: QuizAnswer) => {
+    //find the question index
+    const index = questions.findIndex((q) => q.id === answer.question.id);
+    if (index === -1) return;
+
+    // update hasAnswers
+    const newHasAnswers = [...hasAnswers];
+    newHasAnswers[index] = answer.answer !== "";
+    setHasAnswers(newHasAnswers);
+
+    // update studentAnswers
+    if (onQuizAnswerChange) onQuizAnswerChange(answer);
   };
 
   useEffect(() => {
@@ -184,13 +250,14 @@ const QuizAttemptingTab = ({
         </div>
       </div>
 
-      <div className={cn("flex flex-col gap-10 pb-48", className)}>
+      <div className={cn("relative flex flex-col gap-10 pb-48", className)}>
         {quizResponse && showCorrectAnswer && (
           <QuizAttemptResult quizResponse={quizResponse} />
         )}
         {questions.map((question, index) => (
           <QuestionDisplay
             key={index}
+            editMode={true}
             questionIndex={index}
             totalQuestions={totalQuestions}
             question={question}
@@ -199,10 +266,22 @@ const QuizAttemptingTab = ({
             isFlagged={flags[index]}
             result={questionResults[index]}
             onFlagChange={() => handleFlagChange(index)}
-            onQuizAnswerChange={onQuizAnswerChange}
+            onQuizAnswerChange={handleQuizAnswerChange}
             onTabInTabQuestionChange={onTabInTabQuestionChange}
           />
         ))}
+      </div>
+      <div className="absolute right-32 top-0 h-full max-w-[320px] w-1/3">
+        <div className="sticky top-24">
+          {timeLimit.enabled ? (
+            <QuizCountdown
+              countdown={countdownTimer}
+              status={countdownStatus}
+            />
+          ) : (
+            <QuizTimer timer={timer} status={timerStatus} />
+          )}
+        </div>
       </div>
       <div className="absolute right-0 top-0 h-full max-w-[320px] w-1/3 ">
         <Card className="sticky top-24 p-4 space-y-4">

@@ -37,7 +37,7 @@ const QuestionDisplay = ({
   isFlagged,
   studentAnswer,
   result = QuestionResult.NOT_SHOW,
-  editMode,
+  editMode = false,
   onFlagChange,
   onQuizAnswerChange,
   onTabInTabQuestionChange,
@@ -90,17 +90,19 @@ const QuestionDisplay = ({
             </div>
           </QuestionFancyButton>
           {/* Button for edit mode */}
-          <Button
-            className={cn(
-              "w-10 h-10 p-0 bg-gradient-to-br from-fuchsia-500 to-indigo-500 text-white hover:shadow-sm flex items-center justify-center",
-              bubbleClassName
-            )}
-            onMouseEnter={handleMouseEnter}
-            onMouseOut={handleMouseOut}
-            onClick={handleEditQuestion}
-          >
-            <Settings2 size={16} className="pointer-events-none" />
-          </Button>
+          {editMode && (
+            <Button
+              className={cn(
+                "w-10 h-10 p-0 bg-gradient-to-br from-fuchsia-500 to-indigo-500 text-white hover:shadow-sm flex items-center justify-center",
+                bubbleClassName
+              )}
+              onMouseEnter={handleMouseEnter}
+              onMouseOut={handleMouseOut}
+              onClick={handleEditQuestion}
+            >
+              <Settings2 size={16} className="pointer-events-none" />
+            </Button>
+          )}
         </div>
         {/* Question mark here */}
         {showCorrectAnswer && (

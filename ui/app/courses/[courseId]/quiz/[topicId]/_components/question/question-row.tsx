@@ -6,9 +6,10 @@ import { questionIconMap } from "../static-data";
 interface Props {
   rowIndex: number;
   data: Question;
+  canRemove?: boolean;
   onRemove?: (index: number) => void;
 }
-const QuestionRow = ({ data, rowIndex, onRemove }: Props) => {
+const QuestionRow = ({ data, rowIndex, canRemove, onRemove }: Props) => {
   const { type, questionName } = data;
 
   const handleRemove = () => {
@@ -24,13 +25,15 @@ const QuestionRow = ({ data, rowIndex, onRemove }: Props) => {
             {questionName}
           </Button>
         </div>
-        <div className="flex flex-row items-center">
-          <Trash2
-            size={16}
-            className="cursor-pointer hover:text-red-500 transition-all duration-200"
-            onClick={handleRemove}
-          />
-        </div>
+        {canRemove && (
+          <div className="flex flex-row items-center">
+            <Trash2
+              size={16}
+              className="cursor-pointer hover:text-red-500 transition-all duration-200"
+              onClick={handleRemove}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

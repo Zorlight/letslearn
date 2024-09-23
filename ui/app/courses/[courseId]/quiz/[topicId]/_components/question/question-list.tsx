@@ -10,6 +10,7 @@ import GetQuestionFromBankDialog from "../question-bank/dialog/get-question-from
 interface Props {
   questions: Question[];
   questionsBank: Question[];
+  canAddOrRemoveQuestion?: boolean;
   onReorderedQuestion: (data: Question[]) => void;
   onAddNewQuestion?: (type: QuestionType) => void;
   onAddQuestionsFromBank?: (question: Question[]) => void;
@@ -18,6 +19,7 @@ interface Props {
 const QuestionList = ({
   questions,
   questionsBank,
+  canAddOrRemoveQuestion = true,
   onAddNewQuestion,
   onAddQuestionsFromBank,
   onRemoveQuestion,
@@ -39,28 +41,31 @@ const QuestionList = ({
             key={index}
             data={question}
             rowIndex={index}
+            canRemove={canAddOrRemoveQuestion}
             onRemove={onRemoveQuestion}
           />
         )}
       />
-      <div className="ml-auto">
-        <QuestionAddButton
-          onAddNewQuestion={() => setOpenAddNewQuestionDialog(true)}
-          onAddQuestionFromBank={() => setOpenAddQuestionFromBankDialog(true)}
-        />
-        <CreateQuestionDialog
-          open={openAddNewQuestionDialog}
-          onOpenChange={setOpenAddNewQuestionDialog}
-          onAddQuestion={onAddNewQuestion}
-        />
-        <GetQuestionFromBankDialog
-          questions={questions}
-          questionsBank={questionsBank}
-          open={openAddQuestionFromBankDialog}
-          onOpenChange={setOpenAddQuestionFromBankDialog}
-          onAddQuestionsFromBank={onAddQuestionsFromBank}
-        />
-      </div>
+      {canAddOrRemoveQuestion && (
+        <div className="ml-auto">
+          <QuestionAddButton
+            onAddNewQuestion={() => setOpenAddNewQuestionDialog(true)}
+            onAddQuestionFromBank={() => setOpenAddQuestionFromBankDialog(true)}
+          />
+          <CreateQuestionDialog
+            open={openAddNewQuestionDialog}
+            onOpenChange={setOpenAddNewQuestionDialog}
+            onAddQuestion={onAddNewQuestion}
+          />
+          <GetQuestionFromBankDialog
+            questions={questions}
+            questionsBank={questionsBank}
+            open={openAddQuestionFromBankDialog}
+            onOpenChange={setOpenAddQuestionFromBankDialog}
+            onAddQuestionsFromBank={onAddQuestionsFromBank}
+          />
+        </div>
+      )}
     </div>
   );
 };

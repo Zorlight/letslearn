@@ -61,73 +61,71 @@ const CustomDialog = ({
     if (onCancel) onCancel();
   };
   return (
-    <div>
-      <Dialog
-        open={control ? control.open : open}
-        onOpenChange={control ? control.setOpen : setOpen}
-      >
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent>
-          <DialogTitle>
-            <div className="flex flex-row items-center gap-2">
-              {iconMap[variant]}
-              <span className="font-semibold">{title}</span>
-            </div>
-          </DialogTitle>
-          {content}
-          <DialogFooter>
-            {onYes && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={handleYes}
-                className={cn(
-                  variant === "success" && "bg-green-500 hover:bg-green-600",
-                  variant === "error" && "bg-red-500 hover:bg-red-600",
-                  variant === "warning" && "bg-yellow-500 hover:bg-yellow-600"
-                )}
-              >
-                Yes
-              </Button>
-            )}
-            {onOk && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={handleOk}
-                className={cn(
-                  variant === "success" && "bg-green-500 hover:bg-green-600",
-                  variant === "error" && "bg-red-500 hover:bg-red-600",
-                  variant === "warning" && "bg-yellow-500 hover:bg-yellow-600"
-                )}
-              >
-                OK
-              </Button>
-            )}
-            {onNo && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleNo}
-                className="hover:bg-gray-100"
-              >
-                No
-              </Button>
-            )}
-            {onCancel && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCancel}
-                className="hover:bg-gray-100"
-              >
-                Cancel
-              </Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+    <Dialog
+      open={control ? control.open : open}
+      onOpenChange={control ? control.setOpen : setOpen}
+    >
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent>
+        <DialogTitle>
+          <div className="flex flex-row items-center gap-2">
+            {iconMap[variant]}
+            <span className="font-semibold">{title}</span>
+          </div>
+        </DialogTitle>
+        {content}
+        <DialogFooter>
+          {onYes && (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleYes}
+              className={cn(
+                variant === "success" && "bg-green-500 hover:bg-green-600",
+                variant === "error" && "bg-red-500 hover:bg-red-600",
+                variant === "warning" && "bg-yellow-500 hover:bg-yellow-600"
+              )}
+            >
+              Yes
+            </Button>
+          )}
+          {onOk && (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleOk}
+              className={cn(
+                variant === "success" && "bg-green-500 hover:bg-green-600",
+                variant === "error" && "bg-red-500 hover:bg-red-600",
+                variant === "warning" && "bg-yellow-500 hover:bg-yellow-600"
+              )}
+            >
+              OK
+            </Button>
+          )}
+          {onNo && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleNo}
+              className="hover:bg-gray-100"
+            >
+              No
+            </Button>
+          )}
+          {onCancel && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCancel}
+              className="hover:bg-gray-100"
+            >
+              Cancel
+            </Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

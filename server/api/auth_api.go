@@ -22,9 +22,10 @@ type userLogInForm struct {
 }
 
 type signUpForm struct {
-	Username string `validate:"required,gte=6,lte=50"`
-	Email    string `validate:"required,email"`
-	Password string `validate:"required,gte=8,lte=72"`
+	Username  string `validate:"required,gte=6,lte=50"`
+	Email     string `validate:"required,email"`
+	Password  string `validate:"required,gte=8,lte=72"`
+	IsTeacher bool   `validate:"required"`
 }
 
 func (a *api) LogInHandler(w http.ResponseWriter, r *http.Request) {
@@ -68,6 +69,8 @@ func (a *api) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	var userForm signUpForm
 	json.NewDecoder(r.Body).Decode(&userForm)
 
+	log.Printf("user: %v", userForm)
+
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	err := validate.Struct(&userForm)
 	if err != nil {
@@ -93,6 +96,7 @@ func (a *api) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 		Username:     userForm.Username,
 		Email:        userForm.Email,
 		PasswordHash: string(hashedPassword),
+		IsTeacher:    userForm.IsTeacher,
 	}
 
 	if err := a.userRepo.Create(*user); err != nil {

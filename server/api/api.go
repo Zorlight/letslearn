@@ -62,6 +62,18 @@ func (a *api) ListenAndServeTLS() {
 	log.Panic("server ends: ", server.ListenAndServeTLS(config.SERVER_CRT_FILE, config.SERVER_KEY_FILE))
 }
 
+func (a *api) ListenAndServe() {
+	server := &http.Server{
+		Addr:         ":8000",
+		Handler:      a.Routes(),
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	log.Println("server url is http://localhost:8000")
+	log.Panic("server ends: ", server.ListenAndServe())
+}
+
 func (a *api) Routes() *mux.Router {
 	router := mux.NewRouter()
 

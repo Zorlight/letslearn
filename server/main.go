@@ -17,7 +17,7 @@ func main() {
 	dbConn := GetDatabaseConnection()
 	hack.AutoMigrateAllTables(*dbConn)
 	api := api.NewApi(*dbConn)
-	go api.ListenAndServeTLS()
+	go api.ListenAndServe()
 
 	select {}
 }
@@ -31,7 +31,7 @@ func GetDatabaseConnection() *gorm.DB {
 
 	var dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Saigon", host, user, password, dbname, port)
 	var db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-		DryRun: true,
+		DryRun: false,
 	})
 	if err != nil {
 		log.Panic(err)

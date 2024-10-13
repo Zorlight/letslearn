@@ -87,9 +87,9 @@ func (a *api) Routes() *mux.Router {
 	router.HandleFunc("/v1/auth/facebook/callback", a.OAuthFacebookCallBack).Methods("GET")
 	router.HandleFunc("/v1/auth/verify", a.verifyEmailHandler).Methods("GET")
 
-	router.HandleFunc("/v1/meeting", a.LiveKitGetJoinConnectionDetails).Methods("GET")
-	router.HandleFunc("/v1/meeting", a.LiveKitCreateRoom).Methods("POST")
-	router.HandleFunc("/v1/meeting/{roomName}", a.LiveKitDeleteRoom).Methods("DELETE")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitGetJoinConnectionDetails).Methods("GET")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitCreateSession).Methods("POST")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitDeleteRoom).Methods("DELETE")
 
 	router.PathPrefix("/").HandlerFunc(a.RouteNotFound)
 

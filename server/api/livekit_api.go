@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/gofrs/uuid/v5"
+	"github.com/gorilla/mux"
 	auth "github.com/livekit/protocol/auth"
 	livekit "github.com/livekit/protocol/livekit"
 	lksdk "github.com/livekit/server-sdk-go"
@@ -18,16 +19,19 @@ var livekitHost = os.Getenv("LIVEKIT_HOST")
 var livekitServerUrl = os.Getenv("LIVEKIT_URL")
 var roomClient = lksdk.NewRoomServiceClient(livekitHost, os.Getenv("LIVEKIT_API_KEY"), os.Getenv("LIVEKIT_API_SECRET"))
 
-func (a *api) LiveKitCreateRoom(w http.ResponseWriter, r *http.Request) {
-	newRoomID, err := uuid.NewGen().NewV4()
-	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, err)
+// start the live meeting
+func (a *api) LiveKitCreateSession(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	meetingID, ok := params["meetingID"]
+
+	if !ok {
+		a.errorResponse(w, http.StatusBadRequest, errors.New("missing meeting ID"))
 		return
 	}
 
-	_, err = roomClient.CreateRoom(context.Background(), &livekit.CreateRoomRequest{
-		Name:            newRoomID.String(),
-		EmptyTimeout:    1 * 60,
+	_, err := roomClient.CreateRoom(context.Background(), &livekit.CreateRoomRequest{
+		Name:            meetingID,
+		EmptyTimeout:    10 * 60,
 		MaxParticipants: 100,
 	})
 
@@ -36,15 +40,20 @@ func (a *api) LiveKitCreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "plain/text")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(newRoomID.String()))
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (a *api) LiveKitDeleteRoom(w http.ResponseWriter, r *http.Request) {
-	roomName := r.URL.Query().Get("roomName")
+	params := mux.Vars(r)
+	meetingID, ok := params["meetingID"]
+
+	if !ok {
+		a.errorResponse(w, http.StatusBadRequest, errors.New("missing meeting ID"))
+		return
+	}
+
 	_, err := roomClient.DeleteRoom(context.Background(), &livekit.DeleteRoomRequest{
-		Room: roomName,
+		Room: meetingID,
 	})
 
 	if err != nil {
@@ -56,18 +65,22 @@ func (a *api) LiveKitDeleteRoom(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Request) {
-	roomName, rOk := r.URL.Query()["roomName"]
-	username, uOk := r.URL.Query()["participantName"]
+	params := mux.Vars(r)
+	meetingID, mOk := params["meetingID"]
+	username := r.URL.Query().Get("name")
 
-	if !uOk || !rOk {
+	if len(username) == 0 || !mOk {
 		a.errorResponse(w, http.StatusBadRequest, errors.New("missing information"))
 		return
 	}
 
 	var existRoom = false
 	listRoomsResponse, err := roomClient.ListRooms(context.Background(), &livekit.ListRoomsRequest{})
+	log.Printf("ROOM REPONSES: %s", listRoomsResponse.String())
+
 	for _, room := range listRoomsResponse.Rooms {
-		if room.Name == roomName[0] {
+		log.Printf("ROOM NAME: %s", room.Name)
+		if room.Name == meetingID {
 			existRoom = true
 		}
 	}
@@ -83,12 +96,12 @@ func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Req
 	at := auth.NewAccessToken(apiKey, apiSecret)
 
 	grant := &auth.VideoGrant{
-		Room:     roomName[0],
+		Room:     meetingID,
 		RoomJoin: true,
 	}
 
 	at.AddGrant(grant).
-		SetIdentity(username[0]).
+		SetIdentity(username).
 		SetValidFor(24 * time.Hour)
 
 	token, err := at.ToJWT()
@@ -104,9 +117,9 @@ func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Req
 		RoomName         string `json:"roomName"`
 	}{
 		ParticipantToken: token,
-		ParticipantName:  username[0],
+		ParticipantName:  username,
 		ServerUrl:        livekitServerUrl,
-		RoomName:         roomName[0],
+		RoomName:         meetingID,
 	}
 
 	//jRes, err := json.Marshal(response)

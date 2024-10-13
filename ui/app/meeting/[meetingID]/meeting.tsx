@@ -1,5 +1,5 @@
 'use client';
-import { ConnectionDetails } from '@/app/meeting/[roomName]/types';
+import { ConnectionDetails } from '@/app/meeting/[meetingID]/types';
 import { RecordingIndicator } from '@/components/meeting/RecordingIndicator';
 import { SettingsMenu } from '@/components/meeting/SettingsMenu';
 import GLOBAL from '@/global';
@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export function MeetingPageComponent(props: {
-  roomName: string;
+    meetingID: string;
 }) {
   const [preJoinChoices, setPreJoinChoices] = React.useState<LocalUserChoices | undefined>(
     undefined,
@@ -39,9 +39,8 @@ export function MeetingPageComponent(props: {
 
   const handlePreJoinSubmit = React.useCallback(async (values: LocalUserChoices) => {
     setPreJoinChoices(values);
-    const url = new URL("/v1/meeting", GLOBAL.API_URL);
-    url.searchParams.append('roomName', props.roomName);
-    url.searchParams.append('participantName', values.username);
+    const url = new URL(`/v1/meeting/${props.meetingID}`, GLOBAL.API_URL);
+    url.searchParams.append('name', values.username);
     const connectionDetailsResp = await fetch(url.toString());
     const connectionDetailsData = await connectionDetailsResp.json();
     setConnectionDetails(connectionDetailsData);

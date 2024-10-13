@@ -8,7 +8,5 @@ export default function MeetingPage({
 }: {
   params: { meetingID: string };
 }) {
-  return (
-    <MeetingPageComponent meetingID={params.meetingID}/>
-  );
+  return <MeetingPageComponent meetingID={params.meetingID}/>;
 }

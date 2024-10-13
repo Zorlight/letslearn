@@ -1,15 +1,7 @@
 'use client';
 import { ConnectionDetails } from '@/app/meeting/[meetingID]/types';
-import { RecordingIndicator } from '@/components/meeting/RecordingIndicator';
-import { SettingsMenu } from '@/components/meeting/SettingsMenu';
+import { formatChatMessageLinks, LiveKitRoom, LocalUserChoices, PreJoin, VideoConference } from '@/components/meeting/livekit';
 import GLOBAL from '@/global';
-import {
-  formatChatMessageLinks,
-  LiveKitRoom,
-  LocalUserChoices,
-  PreJoin,
-  VideoConference,
-} from '@livekit/components-react';
 import {
   RoomOptions,
   VideoCodec,
@@ -61,6 +53,7 @@ export function MeetingPageComponent(props: {
         <VideoConferenceComponent
           connectionDetails={connectionDetails}
           userChoices={preJoinChoices}
+            meetingID={props.meetingID}
         />
       )}
     </main>
@@ -70,6 +63,7 @@ export function MeetingPageComponent(props: {
 function VideoConferenceComponent(props: {
   userChoices: LocalUserChoices;
   connectionDetails: ConnectionDetails;
+  meetingID: string;
 }) {
   const roomOptions = React.useMemo((): RoomOptions => {
     let videoCodec: VideoCodec = "h264";
@@ -107,7 +101,7 @@ function VideoConferenceComponent(props: {
   const handleOnLeave = React.useCallback(() => router.push('/'), [router]);
 
   return (
-    <>
+    <div className='h-screen w-screen'>
       <LiveKitRoom
         room={room}
         token={props.connectionDetails.participantToken}
@@ -119,10 +113,9 @@ function VideoConferenceComponent(props: {
       >
         <VideoConference
           chatMessageFormatter={formatChatMessageLinks}
-          SettingsComponent={SettingsMenu}
+          MeetingID={props.meetingID}
         />
-        <RecordingIndicator />
       </LiveKitRoom>
-    </>
+    </div>
   );
 }

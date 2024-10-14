@@ -7,6 +7,7 @@ import (
 
 	"github.com/sen1or/lets-learn/api"
 	"github.com/sen1or/lets-learn/hack"
+	"github.com/stripe/stripe-go/v80"
 
 	_ "github.com/joho/godotenv/autoload"
 	"gorm.io/driver/postgres"
@@ -14,6 +15,8 @@ import (
 )
 
 func main() {
+	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
+
 	dbConn := GetDatabaseConnection()
 	hack.AutoMigrateAllTables(*dbConn)
 	api := api.NewApi(*dbConn)

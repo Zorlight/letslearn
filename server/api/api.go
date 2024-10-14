@@ -91,6 +91,9 @@ func (a *api) Routes() *mux.Router {
 	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitCreateSession).Methods("POST")
 	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitDeleteRoom).Methods("DELETE")
 
+	router.HandleFunc("/v1/stripe/payment", a.CreateStripePaymentIntentHandler).Methods(http.MethodPost)
+	router.HandleFunc("/v1/stripe/webhook", a.StripeWebhookHandler).Methods(http.MethodPost)
+
 	router.PathPrefix("/").HandlerFunc(a.RouteNotFound)
 
 	router.Use(a.loggingMiddleware)

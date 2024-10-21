@@ -81,6 +81,7 @@ require (
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/redis/go-redis/v9 v9.4.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/stripe/stripe-go/v80 v80.2.0 // indirect
 	github.com/thoas/go-funk v0.9.3 // indirect
 	github.com/twitchtv/twirp v8.1.3+incompatible // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect

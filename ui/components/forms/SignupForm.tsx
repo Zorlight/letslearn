@@ -7,24 +7,34 @@ import { IconPasswordOutline } from "@/components/icons/password";
 import { IconUserOutline } from "@/components/icons/user";
 import GLOBAL from "@/global";
 import { useState } from "react";
+import * as React from "react"
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
+import { Check } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export default function SignUpForm() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isTeacher, setIsTeacher] = useState(false);
     const [hidingPassword, setHidingPassword] = useState(true);
     const [confirmPassword, setConfirmPassword] = useState("");
-    
+
     const [hidingConfirmPassword, setHidingConfirmPassword] = useState(true);
     const [errors, setErrors] = useState({
         email: "",
         password: "",
         confirmPassword: "",
-        username: ""
+        username: "",
     });
 
     const validate = () => {
-        const newErrors = { email: "", password: "", confirmPassword: "", username: "" };
+        const newErrors = {
+            email: "",
+            password: "",
+            confirmPassword: "",
+            username: "",
+        };
 
         if (!email) {
             newErrors.email = "Email is required";
@@ -65,7 +75,7 @@ export default function SignUpForm() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (validate()) {
             // TODO: create a universal function to call api
             fetch(GLOBAL.API_URL + "/v1/auth/signup", {
@@ -73,7 +83,7 @@ export default function SignUpForm() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, username, password }),
+                body: JSON.stringify({ email, username, password, isTeacher }),
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -102,7 +112,7 @@ export default function SignUpForm() {
                 />
             </div>
             {errors.email && (
-                <p className="text-red-500 text-xs font-semibold">
+                <p className="text-red-500 text-xs font-semibold mt-1">
                     {errors.email}
                 </p>
             )}
@@ -122,7 +132,7 @@ export default function SignUpForm() {
                 />
             </div>
             {errors.username && (
-                <p className="text-red-500 text-xs font-semibold">
+                <p className="text-red-500 text-xs font-semibold mt-1">
                     {errors.username}
                 </p>
             )}
@@ -153,7 +163,7 @@ export default function SignUpForm() {
                 )}
             </div>
             {errors.password && (
-                <p className="text-red-500 text-xs font-semibold">
+                <p className="text-red-500 text-xs font-semibold mt-1">
                     {errors.password}
                 </p>
             )}
@@ -184,11 +194,23 @@ export default function SignUpForm() {
                 )}
             </div>
             {errors.confirmPassword && (
-                <p className="text-red-500 text-xs font-semibold">
+                <p className="text-red-500 text-xs font-semibold mt-1">
                     {errors.confirmPassword}
                 </p>
             )}
-
+            <div className="flex items-center space-x-2 mt-4">
+                <div className="flex-1"/>
+                <Checkbox
+                    id="teacher-mode"
+                    checked={isTeacher}
+                    onCheckedChange={(checked: boolean) =>
+                        setIsTeacher(checked)
+                    }
+                />
+                <label
+                    htmlFor="teacher-mode" className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"> Are you a teacher?
+                </label>
+            </div>
             <button
                 type="submit"
                 className="w-full rounded-md flex justify-center items-center bg-blue-400 hover:bg-blue-500 text-white h-[50px] border-transparent border mt-4 font-semibold"
@@ -198,3 +220,25 @@ export default function SignUpForm() {
         </form>
     );
 }
+
+
+const Checkbox = React.forwardRef<
+  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <CheckboxPrimitive.Root
+    ref={ref}
+    className={cn(
+      "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+      className
+    )}
+    {...props}
+  >
+    <CheckboxPrimitive.Indicator
+      className={cn("flex items-center justify-center text-current")}
+    >
+      <Check className="h-4 w-4" />
+    </CheckboxPrimitive.Indicator>
+  </CheckboxPrimitive.Root>
+))
+Checkbox.displayName = CheckboxPrimitive.Root.displayName

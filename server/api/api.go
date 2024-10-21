@@ -62,6 +62,18 @@ func (a *api) ListenAndServeTLS() {
 	log.Panic("server ends: ", server.ListenAndServeTLS(config.SERVER_CRT_FILE, config.SERVER_KEY_FILE))
 }
 
+func (a *api) ListenAndServe() {
+	server := &http.Server{
+		Addr:         ":8000",
+		Handler:      a.Routes(),
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	log.Println("server url is http://localhost:8000")
+	log.Panic("server ends: ", server.ListenAndServe())
+}
+
 func (a *api) Routes() *mux.Router {
 	router := mux.NewRouter()
 
@@ -75,9 +87,12 @@ func (a *api) Routes() *mux.Router {
 	router.HandleFunc("/v1/auth/facebook/callback", a.OAuthFacebookCallBack).Methods("GET")
 	router.HandleFunc("/v1/auth/verify", a.verifyEmailHandler).Methods("GET")
 
-	router.HandleFunc("/v1/meeting", a.LiveKitGetJoinConnectionDetails).Methods("GET")
-	router.HandleFunc("/v1/meeting", a.LiveKitCreateRoom).Methods("POST")
-	router.HandleFunc("/v1/meeting/{roomName}", a.LiveKitDeleteRoom).Methods("DELETE")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitGetJoinConnectionDetails).Methods("GET")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitCreateSession).Methods("POST")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitDeleteRoom).Methods("DELETE")
+
+	router.HandleFunc("/v1/stripe/payment", a.CreateStripePaymentIntentHandler).Methods(http.MethodPost)
+	router.HandleFunc("/v1/stripe/webhook", a.StripeWebhookHandler).Methods(http.MethodPost)
 
 	router.PathPrefix("/").HandlerFunc(a.RouteNotFound)
 

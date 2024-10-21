@@ -9,13 +9,17 @@ import (
 type Question struct {
 	ID uuid.UUID `gorm:"type:uuid;primary_key;default:uuid_generate_v4()"`
 	gorm.Model
+	TestID           uuid.UUID
 	QuestionName     string `gorm:"size:255"`
-	QuestionText     string `gorm:"size:1000"`
+	QuestionText     string `gorm:"size:1023"`
 	Status           string `gorm:"size:50"` // QuestionStatus
+	Type             string
+	CreatedBy        uuid.UUID
+	ModifiedBy       uuid.UUID
 	DefaultMark      float64
-	QuestionChoices  []QuestionChoice
 	Usage            int
-	QuestionData     pgtype.JSONBCodec `gorm:"type:jsonb"`
+	Data             pgtype.JSONBCodec `gorm:"type:jsonb"`
+	QuestionChoices  []QuestionChoice
 	StudentResponses []QuestionChoice
 }
 

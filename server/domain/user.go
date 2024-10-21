@@ -13,12 +13,15 @@ type User struct {
 	Email        string `json:"email" gorm:"unique;not null"`
 	PasswordHash string `json:"-"`
 	IsVerified   bool   `json:"isVerified" gorm:"not full;default:false"`
+	IsTeacher    bool   `json:"isTeacher" gorm:"not null"`
 
-	RefreshTokens   []RefreshToken `json:"-"`
-	VerifyTokens    []VerifyToken  `json:"-"`
-	UserProgresses  []UserProgress
-	Courses         []Course          `gorm:"many2many:user_courses"`
-	QuestionChoices []StudentResponse `gorm:"foreignKey:StudentID"`
+	RefreshTokens     []RefreshToken    `json:"-"`
+	VerifyTokens      []VerifyToken     `json:"-"`
+	UserProgresses    []UserProgress    `json:"-"`
+	Courses           []Course          `json:"-" gorm:"many2many:user_courses"`
+	QuestionChoices   []StudentResponse `json:"-" gorm:"foreignKey:StudentID"`
+	CreatedQuestions  []Question        `json:"-" gorm:"foreignKey:CreatedBy"`
+	ModifiedQuestions []Question        `json:"-" gorm:"foreignKey:ModifiedBy"`
 }
 
 type UserRepository interface {

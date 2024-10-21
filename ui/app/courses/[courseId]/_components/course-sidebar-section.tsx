@@ -1,47 +1,43 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn, scrollTo } from "@/lib/utils";
 import { Section } from "@/models/course";
 import { Topic } from "@/models/topic";
 import { ChevronDown } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import CourseSidebarTopicItem from "./course-sidebar-topic-";
+import CourseSidebarTopicItem from "./course-sidebar-topic";
 
 interface Props {
   courseId: string;
   section: Section;
+  isActive: boolean;
+  onClick?: () => void;
 }
-const CourseSidebarSection = ({ section, courseId }: Props) => {
+const CourseSidebarSection = ({
+  section,
+  courseId,
+  isActive,
+  onClick,
+}: Props) => {
   const { topics, id, title } = section;
-  const path = usePathname();
-  const router = useRouter();
-  const isActive = path.includes(`/courses/${courseId}/#${id}`);
   const [showContent, setShowContent] = useState(true);
   const [topicContents, setTopicContents] = useState<Topic[]>([]);
 
-  const scrollToSection = (id: string) => {
-    if (typeof window === undefined) return;
-    const topPositionOfSection = document!.getElementById(
-      `section-${id}`
-    )!.offsetTop;
+  const handleScrollToSection = () => {
     const navbarHeight =
       document!.getElementById("course-navbar")!.offsetHeight;
-
-    // Scroll with adjustment for the navbar height
-    window.scrollTo({
-      top: topPositionOfSection - navbarHeight - 20,
-      behavior: "smooth",
-    });
+    scrollTo(`section-${id}`, -navbarHeight - 80);
   };
 
   const handleSectionClick = () => {
     if (!showContent) setShowContent(true);
-    scrollToSection(id);
+    handleScrollToSection();
+    if (onClick) onClick();
   };
 
   const handleTopicClick = (e: any) => {
     e.stopPropagation();
-    scrollToSection(id);
+    handleScrollToSection();
+    if (onClick) onClick();
   };
 
   useEffect(() => {

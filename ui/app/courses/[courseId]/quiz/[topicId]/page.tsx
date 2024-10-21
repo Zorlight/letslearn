@@ -8,10 +8,12 @@ import { Test } from "@/models/quiz";
 import { TabProvider } from "@/provider/tab-provider";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { colorMap, iconMap } from "../../_components/topic-map";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
+import CustomBreadCrumb from "@/components/ui/breadcrumb";
+import { useBreadCrumb } from "@/hooks/useBreadCrumb";
 
 interface Props {
   params: {
@@ -24,6 +26,13 @@ const QuizIdPage = ({ params }: Props) => {
   const { topicId, courseId } = params;
   const [quiz, setQuiz] = useState<Test>(fakeQuizTest);
   const [isQuizMode, setIsQuizMode] = useState<boolean>(false);
+  // const breadCrumbContext = useBreadCrumb();
+  // const { currentRoute, handleRouteChange } = breadCrumbContext;
+
+  // // Update the current route
+  // useEffect(() => {
+  //   handleRouteChange(`/courses/${courseId}/quiz/${topicId}`);
+  // }, [courseId, topicId]);
 
   //get course by id
   const course = useMemo(() => {
@@ -53,7 +62,8 @@ const QuizIdPage = ({ params }: Props) => {
     <TabProvider initTab={Tab.QUIZ}>
       <div className="p-6">
         {!isQuizMode && (
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
+            {/* <CustomBreadCrumb /> */}
             <div className="flex flex-row items-center gap-2 mb-4">
               <MiniLink href={`/courses/${course.id}`}>{course.title}</MiniLink>
               <span className="text-slate-600">/</span>
@@ -71,7 +81,7 @@ const QuizIdPage = ({ params }: Props) => {
           </div>
         )}
         <TabContent
-          className="w-full max-w-3xl mx-auto"
+          className="w-full max-w-4xl mx-auto"
           quiz={quiz}
           onQuizChange={handleQuizChange}
           onQuizModeChange={setIsQuizMode}

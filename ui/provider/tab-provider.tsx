@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useState,
-  ReactNode,
-  useContext,
-  useEffect,
-} from "react";
+import { createContext, ReactNode, useState } from "react";
 
 // Generic Props Interface
 interface Props<T> {
@@ -37,4 +31,4 @@ const TabProvider = <T,>({ children, initTab }: Props<T>) => {
   return <TabContext.Provider value={value}>{children}</TabContext.Provider>;
 };
 
-export { TabProvider, TabContext };
+export { TabContext, TabProvider };

@@ -9,7 +9,7 @@ const config = {
     "./lib/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/components/(date-input|date-picker|spinner|button|ripple|calendar|popover).js"
+    "./node_modules/@nextui-org/theme/dist/components/(breadcrumbs|date-picker|spinner|button|ripple|calendar|date-input|popover).js"
   ],
   prefix: "",
   theme: {

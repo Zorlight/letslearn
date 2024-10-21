@@ -10,7 +10,7 @@ interface Props {
 }
 const CourseCard = ({ course }: Props) => {
   const url = `/courses/${course.id}`;
-  const { imageUrl, title, price, category } = course;
+  const { imageUrl, title, price } = course;
   return (
     <Link href={url}>
       <div className="h-full border rounded-lg p-3 hover:shadow-md transition-all overflow-hidden group">
@@ -21,9 +21,9 @@ const CourseCard = ({ course }: Props) => {
           <h3 className="font-bold line-clamp-2 transition-all group-hover:text-indigo-600">
             {title}
           </h3>
-          <p className="text-sm text-slate-600">
+          {/* <p className="text-sm text-slate-600">
             {category ? category.name : "No category"}
-          </p>
+          </p> */}
           <div className="my-3 flex flex-row items-center gap-2">
             <IconBadge icon={<BookOpen size={16} />} />
             <span className="text-sm text-slate-600">{`${length} ${

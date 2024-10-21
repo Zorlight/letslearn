@@ -1,4 +1,4 @@
-import { Topic } from "@/models/course";
+import { Topic } from "@/models/topic";
 
 interface Props {
   content: Topic;

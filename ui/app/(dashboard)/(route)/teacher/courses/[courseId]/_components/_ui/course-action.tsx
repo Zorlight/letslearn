@@ -15,6 +15,7 @@ const CourseAction = ({ courseId, disabled, isPublished }: Props) => {
     <div className="flex flex-row items-center gap-2">
       <Button
         variant="outline"
+        size="sm"
         className=""
         onClick={() => dispatch(openConfetti())}
       >

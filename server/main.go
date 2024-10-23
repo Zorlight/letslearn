@@ -34,7 +34,7 @@ func GetDatabaseConnection() *gorm.DB {
 
 	var dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Saigon", host, user, password, dbname, port)
 	var db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-		DryRun: false,
+		DryRun: true,
 	})
 	if err != nil {
 		log.Panic(err)

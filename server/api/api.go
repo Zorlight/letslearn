@@ -24,12 +24,15 @@ type api struct {
 	userRepo         domain.UserRepository
 	refreshTokenRepo domain.RefreshTokenRepository
 	verifyTokenRepo  domain.VerifyTokenRepository
+	courseRepo       domain.CourseRepository
 }
 
 func NewApi(dbConn gorm.DB) *api {
 	var userRepo = repository.NewUserRepository(dbConn)
 	var refreshTokenRepo = repository.NewRefreshTokenRepository(dbConn)
 	var verifyTokenRepo = repository.NewVerifyTokenRepo(dbConn)
+	var courseRepo = repository.NewCourseRepository(dbConn)
+
 	var logger, _ = zap.NewProduction()
 
 	return &api{
@@ -39,6 +42,7 @@ func NewApi(dbConn gorm.DB) *api {
 		userRepo:         userRepo,
 		refreshTokenRepo: refreshTokenRepo,
 		verifyTokenRepo:  verifyTokenRepo,
+		courseRepo:       courseRepo,
 	}
 }
 
@@ -93,6 +97,8 @@ func (a *api) Routes() *mux.Router {
 
 	router.HandleFunc("/v1/stripe/payment", a.CreateStripePaymentIntentHandler).Methods(http.MethodPost)
 	router.HandleFunc("/v1/stripe/webhook", a.StripeWebhookHandler).Methods(http.MethodPost)
+
+	router.HandleFunc("/v1/course", a.CreateCourse).Methods(http.MethodPost)
 
 	router.PathPrefix("/").HandlerFunc(a.RouteNotFound)
 

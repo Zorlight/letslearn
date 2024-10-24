@@ -13,7 +13,6 @@ func AutoMigrateAllTables(dbConn gorm.DB) error {
 		&domain.Course{},
 		&domain.User{},
 		&domain.Section{},
-		&domain.Category{},
 		&domain.Chapter{},
 		&domain.ChartData{},
 		&domain.Purchase{},

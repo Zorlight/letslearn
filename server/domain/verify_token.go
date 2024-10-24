@@ -15,10 +15,3 @@ type VerifyToken struct {
 	UserID uuid.UUID `gorm:"not null;index"`
 	User   User      `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 }
-
-type VerifyTokenRepository interface {
-	CreateToken(userId uuid.UUID) (*VerifyToken, error)
-	GetByToken(token string) (*VerifyToken, error)
-	UpdateToken(VerifyToken) error
-	DeleteToken(tokenId uint) error
-}

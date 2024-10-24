@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import CourseNavbar from "./_components/course-navbar";
 import CourseSidebarToggle from "./_components/course-sidebar-toggle";
@@ -11,7 +12,7 @@ interface Props {
   };
 }
 
-const CourseLayout = async ({ children, params: { courseId } }: Props) => {
+const CourseLayout = ({ children, params: { courseId } }: Props) => {
   return (
     <div className="h-screen w-full flex flex-row">
       <div className="h-[80px] fixed w-full z-50 bg-white">

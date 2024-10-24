@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "bg-indigo-100 text-indigo-950 hover:bg-indigo-200 dark:bg-indigo-800 dark:text-indigo-50 dark:hover:bg-indigo-800/80",
         ghost:
           "hover:bg-indigo-100 hover:text-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50",
-        link: "text-indigo-950 underline-offset-4 hover:underline dark:text-indigo-50",
+        link: "text-indigo-700 underline-offset-4 hover:underline",
         indigo:
           "bg-indigo-50 text-indigo-950 hover:bg-indigo-950 hover:text-white dark:hover:bg-indigo-800 dark:hover:text-white",
         success: "bg-green-500 text-white hover:bg-green-600",

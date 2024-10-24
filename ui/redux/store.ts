@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import ProfileReducer from "./slices/profile";
 import ConfettiReducer from "./slices/confetti";
+import BreadcrumbReducer from "./slices/breadcrumb";
 
 export const store = configureStore({
   reducer: {
     profile: ProfileReducer,
     confetti: ConfettiReducer,
+    breadcrumb: BreadcrumbReducer,
   },
 });
 

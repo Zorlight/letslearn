@@ -1,13 +1,12 @@
 "use client";
-import React from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/lib/shadcn/accordion";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
+import React from "react";
 
 interface Props {
   trigger: React.ReactNode;

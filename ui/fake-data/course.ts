@@ -3,7 +3,7 @@ import { fakeSections } from "./section";
 
 export const fakeCourses: Course[] = [
   {
-    id: "1",
+    id: "sdalsdjka",
     title: "Introduction to Accounting",
     categoryId: "1",
     sections: fakeSections.filter((section) => section.courseId === "1"),

@@ -4,7 +4,7 @@ import { displayNumber } from "@/lib/utils";
 import { Course } from "@/models/course";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
-import IconBadge from "../buttons/icon-badge";
+import IconBadge from "./simple/icon-badge";
 interface Props {
   course: Course;
 }
@@ -26,9 +26,9 @@ const CourseCard = ({ course }: Props) => {
           </p> */}
           <div className="my-3 flex flex-row items-center gap-2">
             <IconBadge icon={<BookOpen size={16} />} />
-            <span className="text-sm text-slate-600">{`${length} ${
+            {/* <span className="text-sm text-slate-600">{`${length} ${
               length <= 1 ? "Chapter" : "Chapters"
-            }`}</span>
+            }`}</span> */}
           </div>
           <p className="text-sm text-indigo-950">{displayNumber(price, "$")}</p>
           {/* {progress != null ? (

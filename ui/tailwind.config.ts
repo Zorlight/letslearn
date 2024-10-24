@@ -9,7 +9,7 @@ const config = {
     "./lib/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/components/(breadcrumbs|date-picker|spinner|button|ripple|calendar|date-input|popover).js"
+    "./node_modules/@nextui-org/theme/dist/components/(breadcrumbs|date-picker|spinner|button|ripple|calendar|date-input|popover).js",
   ],
   prefix: "",
   theme: {
@@ -21,6 +21,14 @@ const config = {
       },
     },
     extend: {
+      colors: {
+        assignment: "#7E22CE",
+        page: "#D946EF",
+        link: "#14B8A6",
+        quiz: "#DB2777",
+        file: "#60A5FA",
+        meeting: "#4338CA",
+      },
       fontFamily: {
         nunito: ["var(--font-nunito)"],
       },

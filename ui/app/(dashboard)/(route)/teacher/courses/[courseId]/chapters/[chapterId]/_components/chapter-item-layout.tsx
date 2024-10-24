@@ -1,4 +1,4 @@
-import IconBadge from "@/components/buttons/icon-badge";
+import IconBadge from "@/components/ui/simple/icon-badge";
 import { Button } from "@/lib/shadcn/button";
 import React, { ReactNode } from "react";
 

@@ -5,11 +5,13 @@ import { ClassValue } from "clsx";
 import React from "react";
 
 const iconBadgeVariants = cva(
-  "rounded-full border border-transparent transition-all ease-linear duration-200 hover:border-indigo-950",
+  "rounded-full border border-transparent transition-all ease-linear duration-200 cursor-pointer",
   {
     variants: {
       variant: {
-        default: "bg-indigo-100 text-indigo-950",
+        default: "bg-white text-gray-500 hover:bg-gray-100",
+        gray: "bg-gray-100 text-gray-500 hover:bg-gray-200",
+        indigo: "bg-indigo-100 text-indigo-950 hover:border-indigo-950",
         success: "bg-green-100 text-green-600",
       },
       size: {
@@ -27,7 +29,7 @@ const iconBadgeVariants = cva(
 interface Props extends VariantProps<typeof iconBadgeVariants> {
   icon: React.ReactNode;
   className?: ClassValue;
-  variant?: "default" | "success";
+  variant?: "default" | "indigo" | "gray" | "success";
   size?: "default" | "sm";
   onClick?: () => void;
 }

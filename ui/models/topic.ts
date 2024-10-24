@@ -11,11 +11,10 @@ interface BaseTopic {
 export enum TopicType {
   LINK = "link",
   MEETING = "meeting",
-  LEARNING = "learning",
   ASSIGNMENT = "assignment",
-  CHOICE = "choice",
   FILE = "file",
   QUIZ = "quiz",
+  PAGE = "page",
 }
 
 export interface QuizTopic extends BaseTopic {
@@ -27,40 +26,31 @@ export interface AssignmentTopic extends BaseTopic {
 export interface MeetingTopic extends BaseTopic {
   type: TopicType.MEETING;
 }
-export interface LearningTopic extends BaseTopic {
-  type: TopicType.LEARNING;
-  chapterIds: string[];
-}
 export interface LinkTopic extends BaseTopic {
   type: TopicType.LINK;
 }
-export interface ChoiceTopic extends BaseTopic {
-  type: TopicType.CHOICE;
-}
+
 export interface FileTopic extends BaseTopic {
   type: TopicType.FILE;
   file: AttachedFile;
+}
+export interface PageTopic extends BaseTopic {
+  type: TopicType.PAGE;
 }
 
 export type Topic =
   | LinkTopic
   | MeetingTopic
-  | LearningTopic
   | AssignmentTopic
-  | ChoiceTopic
   | FileTopic
-  | QuizTopic;
+  | QuizTopic
+  | PageTopic;
 
 export type TopicMap = {
   [TopicType.LINK]: any;
   [TopicType.MEETING]: any;
-  [TopicType.LEARNING]: any;
   [TopicType.ASSIGNMENT]: any;
-  [TopicType.CHOICE]: any;
-  [TopicType.FILE]: {
-    document: any;
-    audio: any;
-    video: any;
-  };
+  [TopicType.FILE]: any;
   [TopicType.QUIZ]: any;
+  [TopicType.PAGE]: any;
 };

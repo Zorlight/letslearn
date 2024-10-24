@@ -1,12 +1,12 @@
 "use client";
-import IconBadge from "@/components/buttons/icon-badge";
+import IconBadge from "@/components/ui/simple/icon-badge";
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/lib/shadcn/accordion";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, MoreVertical } from "lucide-react";
 import { ReactNode } from "react";
 
 interface Props {
@@ -16,10 +16,12 @@ interface Props {
   showContent: string[];
   children: ReactNode;
   className?: string;
+  canEdit?: boolean;
 }
 const CollapsibleContent = ({
   title,
   value,
+  canEdit = true,
   onTrigger,
   children,
   showContent,
@@ -30,20 +32,24 @@ const CollapsibleContent = ({
   };
   return (
     <AccordionItem value={value} className={className}>
-      <AccordionTrigger className="decoration-indigo-800">
-        <div
-          className="w-fit flex flex-row items-center justify-start gap-4 cursor-pointer"
-          onClick={handleTrigger}
-        >
-          <IconBadge
-            icon={<ChevronRight />}
-            size="sm"
-            className={cn(showContent.includes(value) && "rotate-90")}
+      <div className="w-full flex flex-row items-center justify-between">
+        <AccordionTrigger className="decoration-indigo-800 ">
+          <div
+            className="w-fit flex flex-row items-center justify-start gap-4 cursor-pointer"
             onClick={handleTrigger}
-          />
-          <h5 className="text-indigo-800">{title}</h5>
-        </div>
-      </AccordionTrigger>
+          >
+            <IconBadge
+              icon={<ChevronRight />}
+              size="sm"
+              className={cn(showContent.includes(value) && "rotate-90")}
+              onClick={handleTrigger}
+            />
+            <h5 className="text-indigo-800">{title}</h5>
+          </div>
+        </AccordionTrigger>
+        {canEdit && <MoreVertical size={20} />}
+      </div>
+
       <AccordionContent>{children}</AccordionContent>
     </AccordionItem>
   );

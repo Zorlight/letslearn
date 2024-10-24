@@ -28,5 +28,6 @@ export type Section = {
   id: string;
   courseId: string;
   title: string;
+  desc: string | null;
   topics: Topic[];
 };

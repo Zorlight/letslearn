@@ -66,14 +66,17 @@ const SettingList = () => {
   const titles = ["General", "Availability", "Submission Types"];
   const collapsibleContent = [
     <GeneralSetting
+      key={1}
       initValue={generalSetting}
       onChange={handleGeneralSettingChange}
     />,
     <AvailabilitySetting
+      key={2}
       initValue={availabilitySetting}
       onChange={handleAvailabilitySettingChange}
     />,
     <SubmissionTypeSetting
+      key={3}
       initValue={submissionTypeSetting}
       onChange={handleSubmissionTypeSettingChange}
     />,

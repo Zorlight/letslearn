@@ -7,11 +7,22 @@ import (
 	"gorm.io/gorm"
 )
 
+type UserRepository interface {
+	GetByID(uuid.UUID) (*domain.User, error)
+	GetByName(string) (*domain.User, error)
+	GetByEmail(string) (*domain.User, error)
+	GetByFacebookID(string) (*domain.User, error)
+
+	Create(*domain.User) error
+	Save(*domain.User) error
+	Delete(string) error
+}
+
 type postgresUserRepo struct {
 	db gorm.DB
 }
 
-func NewUserRepository(conn gorm.DB) domain.UserRepository {
+func NewUserRepository(conn gorm.DB) UserRepository {
 	return &postgresUserRepo{
 		db: conn,
 	}
@@ -57,13 +68,13 @@ func (r *postgresUserRepo) GetByEmail(email string) (*domain.User, error) {
 	return &user, nil
 }
 
-func (r *postgresUserRepo) Create(newUser domain.User) error {
-	result := r.db.Create(&newUser)
+func (r *postgresUserRepo) Create(newUser *domain.User) error {
+	result := r.db.Create(newUser)
 	return result.Error
 }
 
-func (r *postgresUserRepo) Update(user domain.User) error {
-	tx := r.db.Updates(&user)
+func (r *postgresUserRepo) Save(user *domain.User) error {
+	tx := r.db.Save(user)
 	return tx.Error
 
 }

@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	"context"
@@ -19,13 +19,21 @@ var livekitHost = os.Getenv("LIVEKIT_HOST")
 var livekitServerUrl = os.Getenv("LIVEKIT_URL")
 var roomClient = lksdk.NewRoomServiceClient(livekitHost, os.Getenv("LIVEKIT_API_KEY"), os.Getenv("LIVEKIT_API_SECRET"))
 
+type LivekitHandler struct {
+	ErrorHandler
+}
+
+func NewLivekitHandler() *LivekitHandler {
+	return &LivekitHandler{}
+}
+
 // start the live meeting
-func (a *api) LiveKitCreateSession(w http.ResponseWriter, r *http.Request) {
+func (h *LivekitHandler) LiveKitCreateSession(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	meetingID, ok := params["meetingID"]
 
 	if !ok {
-		a.errorResponse(w, http.StatusBadRequest, errors.New("missing meeting ID"))
+		h.WriteErrorResponse(w, http.StatusBadRequest, errors.New("missing meeting ID"))
 		return
 	}
 
@@ -36,19 +44,19 @@ func (a *api) LiveKitCreateSession(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, err)
+		h.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (a *api) LiveKitDeleteRoom(w http.ResponseWriter, r *http.Request) {
+func (h *LivekitHandler) LiveKitDeleteRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	meetingID, ok := params["meetingID"]
 
 	if !ok {
-		a.errorResponse(w, http.StatusBadRequest, errors.New("missing meeting ID"))
+		h.WriteErrorResponse(w, http.StatusBadRequest, errors.New("missing meeting ID"))
 		return
 	}
 
@@ -57,20 +65,20 @@ func (a *api) LiveKitDeleteRoom(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, err)
+		h.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Request) {
+func (h *LivekitHandler) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	meetingID, mOk := params["meetingID"]
 	username := r.URL.Query().Get("name")
 
 	if len(username) == 0 || !mOk {
-		a.errorResponse(w, http.StatusBadRequest, errors.New("missing information"))
+		h.WriteErrorResponse(w, http.StatusBadRequest, errors.New("missing information"))
 		return
 	}
 
@@ -86,7 +94,7 @@ func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Req
 	}
 
 	if !existRoom {
-		a.errorResponse(w, http.StatusNotFound, errors.New("room not found"))
+		h.WriteErrorResponse(w, http.StatusNotFound, errors.New("room not found"))
 		return
 	}
 
@@ -106,7 +114,7 @@ func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Req
 
 	token, err := at.ToJWT()
 	if err != nil {
-		a.errorResponse(w, http.StatusInternalServerError, err)
+		h.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -125,7 +133,7 @@ func (a *api) LiveKitGetJoinConnectionDetails(w http.ResponseWriter, r *http.Req
 	//jRes, err := json.Marshal(response)
 
 	//if err != nil {
-	//	a.errorResponse(w, http.StatusInternalServerError, err)
+	//	h.WriteErrorResponse(w, http.StatusInternalServerError, err)
 	//	return
 	//}
 

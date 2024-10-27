@@ -1,48 +1,71 @@
 package api
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/sen1or/lets-learn/config"
-	"github.com/sen1or/lets-learn/domain"
+	"github.com/sen1or/lets-learn/controller"
+	"github.com/sen1or/lets-learn/handler"
 	"github.com/sen1or/lets-learn/repository"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 type api struct {
-	logger *zap.Logger
-	db     *gorm.DB // For raw sql queries
+	handler.ErrorHandler
+	db *gorm.DB // For raw sql queries
 
-	userRepo         domain.UserRepository
-	refreshTokenRepo domain.RefreshTokenRepository
-	verifyTokenRepo  domain.VerifyTokenRepository
-	courseRepo       domain.CourseRepository
+	userHandler         *handler.UserHandler
+	authHandler         *handler.AuthHandler
+	courseHandler       *handler.CourseHandler
+	questionHandler     *handler.QuestionHandler
+	questionBankHandler *handler.QuestionBankHandler
+	loggingHandler      *handler.LoggingHandler
+	livkitHandler       *handler.LivekitHandler
 }
 
 func NewApi(dbConn gorm.DB) *api {
 	var userRepo = repository.NewUserRepository(dbConn)
-	var refreshTokenRepo = repository.NewRefreshTokenRepository(dbConn)
+	var userCtrl = controller.NewUserController(userRepo)
+	var userHandler = handler.NewUserHandler(*userCtrl)
+
+	var jwtTokenRepository = repository.NewJWTTokenRepository(dbConn)
+	var jwtTokenController = controller.NewJWTTokenController(jwtTokenRepository)
 	var verifyTokenRepo = repository.NewVerifyTokenRepo(dbConn)
+	var verifyTokenCtrl = controller.NewVerifyTokenController(verifyTokenRepo)
+	var authHandler = handler.NewAuthHandler(jwtTokenController, userCtrl, verifyTokenCtrl)
+
 	var courseRepo = repository.NewCourseRepository(dbConn)
+	var courseCtrl = controller.NewCourseController(courseRepo)
+	var courseHandler = handler.NewCourseHandler(courseCtrl)
+
+	var questionBankRepo = repository.NewQuestionBankRepository(dbConn)
+	var questionBankCtrl = controller.NewQuestionBankController(questionBankRepo)
+	var questionBankHandler = handler.NewQuestionBankHandler(questionBankCtrl)
+
+	var questionRepo = repository.NewQuestionRepository(dbConn)
+	var questionCtrl = controller.NewQuestionController(questionRepo)
+	var questionHandler = handler.NewQuestionHandler(questionCtrl)
+
+	var livekitHandler = handler.NewLivekitHandler()
 
 	var logger, _ = zap.NewProduction()
 
 	return &api{
-		logger: logger,
-		db:     &dbConn,
+		db: &dbConn,
 
-		userRepo:         userRepo,
-		refreshTokenRepo: refreshTokenRepo,
-		verifyTokenRepo:  verifyTokenRepo,
-		courseRepo:       courseRepo,
+		userHandler:         userHandler,
+		authHandler:         authHandler,
+		courseHandler:       courseHandler,
+		loggingHandler:      handler.NewLoggingHandler(logger),
+		questionBankHandler: questionBankHandler,
+		questionHandler:     questionHandler,
+		livkitHandler:       livekitHandler,
 	}
 }
 
@@ -81,35 +104,38 @@ func (a *api) ListenAndServe() {
 func (a *api) Routes() *mux.Router {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/v1/users/{id}", a.GetUserByIdHandler).Methods("GET")
+	router.HandleFunc("/v1/users/{id}", a.userHandler.GetUserByIdHandler).Methods("GET")
 
-	router.HandleFunc("/v1/auth/signup", a.SignUpHandler).Methods("POST")
-	router.HandleFunc("/v1/auth/login", a.LogInHandler).Methods("POST")
-	router.HandleFunc("/v1/auth/google", a.OAuthGoogleLogin).Methods("GET")
-	router.HandleFunc("/v1/auth/google/callback", a.OAuthGoogleCallBack).Methods("GET")
-	router.HandleFunc("/v1/auth/facebook", a.OAuthFacebookLogin).Methods("GET")
-	router.HandleFunc("/v1/auth/facebook/callback", a.OAuthFacebookCallBack).Methods("GET")
-	router.HandleFunc("/v1/auth/verify", a.verifyEmailHandler).Methods("GET")
+	router.HandleFunc("/v1/auth/signup", a.authHandler.SignUpHandler).Methods("POST")
+	router.HandleFunc("/v1/auth/login", a.authHandler.LogInHandler).Methods("POST")
+	router.HandleFunc("/v1/auth/google", a.authHandler.OAuthGoogleLogin).Methods("GET")
+	router.HandleFunc("/v1/auth/google/callback", a.authHandler.OAuthGoogleCallBack).Methods("GET")
+	router.HandleFunc("/v1/auth/facebook", a.authHandler.OAuthFacebookLogin).Methods("GET")
+	router.HandleFunc("/v1/auth/facebook/callback", a.authHandler.OAuthFacebookCallBack).Methods("GET")
+	router.HandleFunc("/v1/auth/verify", a.authHandler.VerifyEmailHandler).Methods("GET")
 
-	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitGetJoinConnectionDetails).Methods("GET")
-	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitCreateSession).Methods("POST")
-	router.HandleFunc("/v1/meeting/{meetingID}", a.LiveKitDeleteRoom).Methods("DELETE")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.livkitHandler.LiveKitGetJoinConnectionDetails).Methods("GET")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.livkitHandler.LiveKitCreateSession).Methods("POST")
+	router.HandleFunc("/v1/meeting/{meetingID}", a.livkitHandler.LiveKitDeleteRoom).Methods("DELETE")
 
-	router.HandleFunc("/v1/stripe/payment", a.CreateStripePaymentIntentHandler).Methods(http.MethodPost)
-	router.HandleFunc("/v1/stripe/webhook", a.StripeWebhookHandler).Methods(http.MethodPost)
+	//router.HandleFunc("/v1/stripe/payment", a.CreateStripePaymentIntentHandler).Methods(http.MethodPost)
+	//router.HandleFunc("/v1/stripe/webhook", a.StripeWebhookHandler).Methods(http.MethodPost)
 
-	router.HandleFunc("/v1/course", a.CreateCourse).Methods(http.MethodPost)
+	router.HandleFunc("/v1/course", a.courseHandler.CreateCourse).Methods(http.MethodPost)
+
+	router.HandleFunc("/v1/question-bank", a.questionBankHandler.Create).Methods(http.MethodPost)
+	router.HandleFunc("/v1/question-bank/{questionBankID}", a.questionHandler.Create).Methods(http.MethodPost)
 
 	router.PathPrefix("/").HandlerFunc(a.RouteNotFound)
 
-	router.Use(a.loggingMiddleware)
+	router.Use(a.loggingHandler.LoggingMiddleware)
 	router.Use(a.corsMiddleware)
 
 	return router
 }
 
 func (a *api) RouteNotFound(w http.ResponseWriter, r *http.Request) {
-	a.errorResponse(w, http.StatusNotFound, fmt.Errorf("route not found"))
+	a.WriteErrorResponse(w, http.StatusNotFound, fmt.Errorf("route not found"))
 }
 
 // Set the error message to the custom "X-LetsLive-Error" header
@@ -118,48 +144,9 @@ func (a *api) setError(w http.ResponseWriter, err error) {
 	w.Header().Add("X-LetsLive-Error", err.Error())
 }
 
-// Set error to the custom header and write the error to the request
-// After calling, the request will end and no other write should be done
-func (a *api) errorResponse(w http.ResponseWriter, status int, err error) {
-	w.Header().Add("X-LetsLearn-Error", err.Error())
-	type errorRes struct {
-		message string
-	}
-	response := &errorRes{message: err.Error()}
-
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Header().Set("X-Content-Type-Options", "nosniff")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(response)
-}
-
-func (a *api) setTokens(w http.ResponseWriter, refreshToken string, accessToken string) {
-	http.SetCookie(w, &http.Cookie{
-		Name:  "refreshToken",
-		Value: refreshToken,
-
-		Expires:  time.Now().Add(config.REFRESH_TOKEN_EXPIRES_DURATION),
-		MaxAge:   config.REFRESH_TOKEN_MAX_AGE,
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteDefaultMode,
-	})
-
-	http.SetCookie(w, &http.Cookie{
-		Name:  "accessToken",
-		Value: accessToken,
-
-		Expires:  time.Now().Add(config.ACCESS_TOKEN_EXPIRES_DURATION),
-		MaxAge:   config.ACCESS_TOKEN_MAX_AGE,
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteDefaultMode,
-	})
-}
-
 func (a *api) corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
@@ -169,67 +156,5 @@ func (a *api) corsMiddleware(next http.Handler) http.Handler {
 		}
 
 		next.ServeHTTP(w, r)
-	})
-}
-
-type LoggingResponseWriter struct {
-	w          http.ResponseWriter
-	statusCode int
-	bytes      int
-}
-
-func (lrw *LoggingResponseWriter) Header() http.Header {
-	return lrw.w.Header()
-}
-
-func (lrw *LoggingResponseWriter) Write(data []byte) (int, error) {
-	wb, err := lrw.w.Write(data)
-	lrw.bytes += wb
-	return wb, err
-}
-
-func (lrw *LoggingResponseWriter) WriteHeader(statusCode int) {
-	lrw.w.WriteHeader(statusCode)
-	lrw.statusCode = statusCode
-}
-
-func (a *api) loggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		timeStart := time.Now()
-		lrw := &LoggingResponseWriter{w: w}
-		next.ServeHTTP(lrw, r)
-
-		duration := time.Since(timeStart).Milliseconds()
-		remoteAddr := r.Header.Get("X-Forwarded-For")
-		if remoteAddr == "" {
-			if ip, _, err := net.SplitHostPort(r.RemoteAddr); err != nil {
-				remoteAddr = "unknown address"
-			} else {
-				remoteAddr = ip
-			}
-		}
-
-		fields := []zap.Field{
-			zap.Int64("duration", duration),
-			zap.String("method", r.Method),
-			zap.String("remote#addr", remoteAddr),
-			zap.Int("response#bytes", lrw.bytes),
-			zap.Int("response#status", lrw.statusCode),
-			zap.String("uri", r.RequestURI),
-		}
-
-		if lrw.statusCode == 200 {
-			a.logger.Info("Server: ", fields...)
-		} else {
-			err := lrw.w.Header().Get("X-LetsLearn-Error")
-			if len(err) == 0 {
-				a.logger.Info("Server: ", fields...)
-			} else {
-				a.logger.Error(err, fields...)
-
-			}
-		}
-
-		// TODO: prometheus
 	})
 }

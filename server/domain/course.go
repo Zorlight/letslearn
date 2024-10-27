@@ -12,11 +12,11 @@ type Course struct {
 	Level       *string   `json:"level" gorm:"type:text"`
 	IsPublished bool      `gorm:"not null;default:false"`
 
-	Students  []User `gorm:"many2many:user_courses"`
 	Sections  []Section
 	Resources []AttachedFile
-}
 
-type CourseRepository interface {
-	Create(*Course) error
+	Students []User `gorm:"many2many:user_courses"`
+
+	Creator   User      `json:"-" gorm:"foreignKey:CreatorID;constraint:OnDelete:CASCADE"`
+	CreatorID uuid.UUID `json:"-" gorm:"not null;index"`
 }

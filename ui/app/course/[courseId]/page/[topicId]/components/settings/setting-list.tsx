@@ -105,6 +105,7 @@ const SettingList = ({ page, onSubmitPageSetting }: Props) => {
       toast.info("No changes to submit");
       return;
     }
+    console.log("toSubmit", toSubmit);
     if (onSubmitPageSetting) onSubmitPageSetting(toSubmit);
   };
 
@@ -113,7 +114,7 @@ const SettingList = ({ page, onSubmitPageSetting }: Props) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <CollapsibleList titles={titles}>
+        <CollapsibleList titles={titles} initShowContent={titles}>
           <GeneralSetting
             formData={watch("generalSettingForm")}
             onChange={handleGeneralSettingChange}

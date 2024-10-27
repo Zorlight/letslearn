@@ -6,6 +6,7 @@ import ReduxProvider from "../redux/provider";
 import "./globals.css";
 import ConfettiProvider from "@/lib/react-confetti/confetti-provider";
 import "dotenv/config";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
@@ -24,7 +25,7 @@ export default function RootLayout({
     <ReduxProvider>
       <html lang="en">
         <ConfettiProvider />
-        <body className={nunito.className}>
+        <body className={cn("default-scrollbar", nunito.className)}>
           <ToastProvider />
           {children}
         </body>

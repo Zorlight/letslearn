@@ -1,4 +1,6 @@
+import { Editor } from "@tinymce/tinymce-react";
 import React from "react";
+import { cn } from "../utils";
 
 interface Props {
   htmlString: string;
@@ -7,9 +9,28 @@ interface Props {
 const EditorDisplay = ({ htmlString, className }: Props) => {
   return (
     <div
-      className={className}
-      dangerouslySetInnerHTML={{ __html: htmlString }}
-    />
+      className={cn(
+        "h-fit [&>div.tox-tinymce]:border-0 [&>html]:scrollbar [&_*]:!bg-transparent",
+        className
+      )}
+    >
+      <Editor
+        apiKey="p7z81chejai65m6tmap8bd0q4g4hxf5qbipdja5vvwqzeyb0"
+        init={{
+          plugins: ["autoresize"],
+          statusbar: false,
+          menu: {},
+          menubar: false,
+          toolbar: false,
+          highlight_on_focus: false,
+          editable_root: false,
+          content_style:
+            "iframe {background-color: transparent;} .mce-content-body {box-shadow: none !important; cursor: default; margin: 0;} ",
+        }}
+        disabled={true}
+        initialValue={htmlString}
+      />
+    </div>
   );
 };
 

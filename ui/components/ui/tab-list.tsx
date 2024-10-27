@@ -7,10 +7,20 @@ interface Props {
   tabs: string[];
   className?: string;
   variant?: "default" | "white-text";
+  onTabSelected?: (tab: string) => void;
 }
-const TabList = ({ tabs, className, variant = "default" }: Props) => {
+const TabList = ({
+  tabs,
+  className,
+  variant = "default",
+  onTabSelected,
+}: Props) => {
   const tabContext = useTab<string>();
-  const { selectedTab, handleTabSelected } = tabContext;
+  const { selectedTab, handleTabSelected: onSelectTab } = tabContext;
+  const handleTabSelected = (tab: string) => {
+    onSelectTab(tab);
+    if (onTabSelected) onTabSelected(tab);
+  };
   return (
     <div
       className={cn(

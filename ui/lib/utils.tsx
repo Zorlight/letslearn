@@ -132,8 +132,10 @@ const getTextFromHtml = (html: string) => {
 const scrollTo = (id: string, adjustTopPosition: number = 0) => {
   if (typeof window === undefined) return;
   const questionToScroll = document.getElementById(id);
+  console.log("questionToScroll", questionToScroll);
   if (!questionToScroll) return;
   const topPositionOfQuestion = questionToScroll.offsetTop;
+  console.log("topPositionOfQuestion", topPositionOfQuestion);
 
   // Scroll with adjustment for the navbar height
   window.scrollTo({

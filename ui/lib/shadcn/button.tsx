@@ -9,19 +9,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-indigo-950 text-indigo-50 hover:bg-indigo-900 dark:bg-indigo-50 dark:text-indigo-950 dark:hover:bg-indigo-50/90",
-        destructive:
-          "bg-red-500 text-indigo-50 hover:bg-red-500/90 dark:bg-red-950 dark:text-indigo-50 dark:hover:bg-red-950/90",
+        default: "bg-indigo-700 text-indigo-50 hover:bg-indigo-800",
+        destructive: "bg-red-500 text-indigo-50 hover:bg-red-500/90",
         outline:
-          "border border-indigo-500 bg-white hover:bg-indigo-100 text-indigo-800 dark:border-indigo-800 dark:bg-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50",
-        secondary:
-          "bg-indigo-100 text-indigo-950 hover:bg-indigo-200 dark:bg-indigo-800 dark:text-indigo-50 dark:hover:bg-indigo-800/80",
-        ghost:
-          "hover:bg-indigo-100 hover:text-indigo-950 dark:hover:bg-indigo-800 dark:hover:text-indigo-50",
+          "border border-indigo-500 bg-white hover:bg-indigo-100 text-indigo-800",
+        secondary: "bg-indigo-100 text-indigo-950 hover:bg-indigo-200",
+        ghost: "hover:bg-indigo-100 hover:text-indigo-950",
         link: "text-indigo-700 underline-offset-4 hover:underline",
         indigo:
-          "bg-indigo-50 text-indigo-950 hover:bg-indigo-950 hover:text-white dark:hover:bg-indigo-800 dark:hover:text-white",
+          "bg-indigo-50 text-indigo-950 hover:bg-indigo-950 hover:text-white",
+        cyan: "bg-cyan-500 text-white hover:bg-cyan-600",
         success: "bg-green-500 text-white hover:bg-green-600",
       },
       size: {

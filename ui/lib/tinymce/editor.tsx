@@ -39,6 +39,7 @@ const TinyEditor = ({ initValue, onChange }: Props) => {
         ],
         toolbar:
           "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+        resize: true,
       }}
       initialValue={_initValue}
       onChange={handleChange}

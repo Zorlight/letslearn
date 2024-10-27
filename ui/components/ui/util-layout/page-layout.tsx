@@ -7,10 +7,7 @@ interface Props {
 export default function PageLayout({ children, className }: Props) {
   return (
     <div
-      className={cn(
-        "relative flex w-full h-full overflow-y-scroll default-scrollbar",
-        className
-      )}
+      className={cn("relative flex w-full h-full default-scrollbar", className)}
     >
       {children}
     </div>

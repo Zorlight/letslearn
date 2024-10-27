@@ -41,6 +41,7 @@ const CollapsibleContent = ({
             <IconBadge
               icon={<ChevronRight className="text-indigo-800" />}
               size="sm"
+              variant="indigo"
               className={cn(showContent.includes(value) && "rotate-90")}
               onClick={handleTrigger}
             />

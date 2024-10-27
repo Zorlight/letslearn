@@ -12,7 +12,7 @@ import { cn } from "../utils";
 
 interface Props<T> {
   data: T[];
-  onReordered: (newData: T[]) => void;
+  onReordered?: (newData: T[]) => void;
   renderItem: (item: T, index: number) => ReactNode;
   containerClassName?: string;
   itemClassName?: string;

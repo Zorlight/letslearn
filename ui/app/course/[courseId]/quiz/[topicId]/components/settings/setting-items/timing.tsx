@@ -9,8 +9,8 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { nanoid } from "@reduxjs/toolkit";
 import { ChevronDown } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { TimeLimitType } from "../../static-data";
 import { QuizSettingForm } from "../setting-list";
+import { TimeLimitType } from "@/models/test";
 
 export type TimingSettingForm = {
   open: {

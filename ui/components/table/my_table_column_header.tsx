@@ -24,7 +24,7 @@ function DataTableColumnHeader<TData, TValue>({
   return (
     <div
       className={cn(
-        "font-nunito w-min flex items-center space-x-2 text-indigo-950 justify-stretch",
+        "font-nunito w-min flex items-center space-x-2 text-gray-800 justify-stretch",
         className
       )}
     >
@@ -49,37 +49,37 @@ function DataTableColumnHeader<TData, TValue>({
         <DropdownMenuContent
           align="start"
           className={cn(
-            "font-sans bg-white text-secondary-word",
+            "font-sans bg-white text-gray-500",
             column.getCanSort() ? "" : "hidden"
           )}
         >
           <DropdownMenuItem
-            className="cursor-pointer hover:bg-gray-100 ease-linear duration-100"
+            className="flex items-center cursor-pointer hover:bg-gray-100 ease-linear duration-100"
             onClick={() => column.toggleSorting(false)}
           >
-            <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-gray-500" />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="cursor-pointer hover:bg-gray-100 ease-linear duration-100"
+            className="flex items-center cursor-pointer hover:bg-gray-100 ease-linear duration-100"
             onClick={() => column.toggleSorting(true)}
           >
-            <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-gray-500" />
             Desc
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="cursor-pointer hover:bg-gray-100 ease-linear duration-100"
+            className="flex items-center cursor-pointer hover:bg-gray-100 ease-linear duration-100"
             onClick={() => column.clearSorting()}
           >
-            <Ban className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Ban className="mr-2 h-3.5 w-3.5 text-gray-500" />
             No sorting
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="cursor-pointer hover:bg-gray-100 ease-linear duration-100"
+            className="flex items-center cursor-pointer hover:bg-gray-100 ease-linear duration-100"
             onClick={() => column.toggleVisibility(false)}
           >
-            <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <EyeOff className="mr-2 h-3.5 w-3.5 text-gray-500" />
             Hide
           </DropdownMenuItem>
         </DropdownMenuContent>

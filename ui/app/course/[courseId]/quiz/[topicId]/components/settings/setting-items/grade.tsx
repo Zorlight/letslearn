@@ -5,12 +5,8 @@ import { Input } from "@/lib/shadcn/input";
 import { ChevronDown } from "lucide-react";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
-import {
-  attemptsAllowedOptions,
-  GradingMethod,
-  gradingMethodOptions,
-} from "../../static-data";
 import { QuizSettingForm } from "../setting-list";
+import { attemptsAllowedOptions, GradingMethod } from "@/models/test";
 
 export type GradeSettingForm = {
   gradeToPass: number;
@@ -41,6 +37,8 @@ const GradeSetting = ({ formData, onChange }: GradeSettingProps) => {
   const handleComboboxChange = (key: keyof GradeSettingForm, value: string) => {
     handleSettingChange({ ...formData, [key]: value });
   };
+
+  const gradingMethodOptions = Object.values(GradingMethod);
 
   return (
     <div className="w-full flex flex-col p-4 gap-8">

@@ -70,7 +70,7 @@ export function CustomDataTablePagination<TData>({
   return (
     <div
       className={cn(
-        "flex flex-row items-center justify-between text-sm",
+        "flex flex-row items-center justify-between text-sm text-gray-800",
         config.showRowSelectedCounter ? "visible" : "hidden"
       )}
     >

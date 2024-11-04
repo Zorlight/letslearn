@@ -1,4 +1,4 @@
-import { Test } from "@/models/quiz";
+import { Test } from "@/models/test";
 import SettingList from "../settings/setting-list";
 
 interface Props {

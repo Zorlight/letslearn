@@ -1,5 +1,5 @@
 import { Question } from "./question";
-import { Test } from "./quiz";
+import { Test } from "./test";
 import { User } from "./user";
 
 export type StudentResponse = {

@@ -1,12 +1,11 @@
 "use client";
 import { Button } from "@/lib/shadcn/button";
-import { QuizData, Test } from "@/models/quiz";
+import { GradingMethod, QuizData, Test, TimeLimitType } from "@/models/test";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
-import { GradingMethod, TimeLimitType } from "../static-data";
 import GeneralSetting, { GeneralSettingForm } from "./setting-items/general";
 import GradeSetting, { GradeSettingForm } from "./setting-items/grade";
 import TimingSetting, { TimingSettingForm } from "./setting-items/timing";
@@ -73,6 +72,7 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
   };
 
   const handleGetTimingSetting = (quiz: Test) => {
+    const { timeLimit } = quiz.data as QuizData;
     const timingSetting: TimingSettingForm = {
       open: {
         enabled: quiz.open.enabled,
@@ -83,9 +83,9 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
         value: quiz.close.value,
       },
       timeLimit: {
-        enabled: quiz.timeLimit.enabled,
-        value: quiz.timeLimit.value,
-        unit: quiz.timeLimit.unit as TimeLimitType,
+        enabled: timeLimit.enabled,
+        value: timeLimit.value,
+        unit: timeLimit.unit as TimeLimitType,
       },
     };
     return timingSetting;
@@ -142,9 +142,9 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
       description: data.generalSettingForm.description,
       open: data.timingSettingForm.open,
       close: data.timingSettingForm.close,
-      timeLimit: data.timingSettingForm.timeLimit,
       data: {
         ...quiz.data,
+        timeLimit: data.timingSettingForm.timeLimit,
         gradeToPass: data.gradeSettingForm.gradeToPass,
         gradingMethod: data.gradeSettingForm.gradingMethod,
         attemptAllowed: data.gradeSettingForm.attemptAllowed,

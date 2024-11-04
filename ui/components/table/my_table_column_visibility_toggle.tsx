@@ -38,7 +38,7 @@ function DataTableViewOptions<TData>({
       <DropdownMenuTrigger asChild>
         <Button
           className={cn(
-            "gap-2 whitespace-nowrap text-secondary-word bg-gray-100 hover:bg-gray-200 ease-linear duration-100 py-2 rounded-md cursor-pointer select-none",
+            "gap-2 whitespace-nowrap text-gray-500 font-bold bg-gray-100 hover:bg-gray-200 ease-linear duration-100 py-2 rounded-md cursor-pointer select-none",
             "dark:bg-white/10 dark:hover:bg-white/20"
           )}
         >
@@ -48,7 +48,7 @@ function DataTableViewOptions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="font-sans flex flex-row justify-between space-x-2 bg-white text-secondary-word dark:bg-dark-secondary-bg dark:text-dark-secondary-word"
+        className="font-sans flex flex-row justify-between space-x-2 bg-white text-gray-500"
       >
         {arrColIndex.map((col) => {
           return (
@@ -57,6 +57,7 @@ function DataTableViewOptions<TData>({
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
                 .map((column, index) => {
+                  console.log(column.id);
                   const headerContent =
                     columnHeaders !== undefined
                       ? columnHeaders[column.id as keyof typeof columnHeaders]

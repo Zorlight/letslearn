@@ -1,14 +1,13 @@
+import CustomDialog from "@/components/ui/custom-dialog";
 import { Button } from "@/lib/shadcn/button";
 import { Question } from "@/models/question";
-import { CirclePlus, Hand } from "lucide-react";
+import { CirclePlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { QuestionStatus, QuestionType, TabInTab } from "../static-data";
-import { tabInTabMapper } from "./tab-in-tab/tap-in-tab-mapper";
-import CustomDialog from "@/components/ui/custom-dialog";
 import CreateQuestionDialog from "../question-bank/dialog/create-question-dialog";
 import QuestionTable from "../question-bank/table/question-table";
-import { useRouter } from "next/navigation";
+import { QuestionStatus, QuestionType } from "../static-data";
 
 interface Props {
   questions: Question[];

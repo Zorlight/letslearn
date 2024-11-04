@@ -1,4 +1,4 @@
-import { GradingMethod, TimeLimitType } from "../static-data";
+import { GradingMethod, TimeLimitType } from "@/models/test";
 import { GeneralSettingForm } from "./setting-items/general";
 import { GradeSettingForm } from "./setting-items/grade";
 import { TimingSettingForm } from "./setting-items/timing";

@@ -1,15 +1,15 @@
 "use client";
 import TabList from "@/components/ui/tab-list";
 import PageLayout from "@/components/ui/util-layout/page-layout";
-import { fakeQuizTest } from "@/fake-data/test";
+import { fakeAssignment, fakeQuizTest } from "@/fake-data/test";
 import { Test } from "@/models/test";
 import { TabProvider } from "@/provider/tab-provider";
 import { useEffect, useState } from "react";
 import { iconMap } from "../../components/topic/topic-map";
 import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
-import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import { useAppDispatch } from "@/redux/hooks";
+import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 
 interface Props {
@@ -20,8 +20,8 @@ interface Props {
 }
 export default function TopicQuiz({ params }: Props) {
   const { courseId, topicId } = params;
-  const [quiz, setQuiz] = useState<Test>(fakeQuizTest);
-  const [initTab, setInitTab] = useState<string>(Tab.QUIZ);
+  const [assignment, setAssignment] = useState<Test>(fakeAssignment);
+  const [initTab, setInitTab] = useState<string>(Tab.ASSIGNMENT);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -36,8 +36,8 @@ export default function TopicQuiz({ params }: Props) {
         href: `/course/${courseId}`,
       },
       {
-        label: quiz.name,
-        href: `/course/${courseId}/quiz/${topicId}`,
+        label: assignment.name,
+        href: `/course/${courseId}/assignment/${topicId}`,
       },
     ];
     dispatch(setBreadcrumb(breadcrumbItems));
@@ -48,25 +48,24 @@ export default function TopicQuiz({ params }: Props) {
     let storageTab = localStorage.getItem(topicId);
     if (storageTab) setInitTab(storageTab);
   }, [topicId]);
-
-  const handleQuizChange = (data: Test) => {
-    setQuiz(data);
+  const handleAssignmentChange = (data: Test) => {
+    setAssignment(data);
   };
   const handleTabSelected = (tab: string) => {
     localStorage.setItem(topicId, tab);
   };
 
-  const Icon = iconMap.quiz;
+  const Icon = iconMap["assignment"];
   const tabs = Object.values(Tab);
 
   return (
-    <PageLayout className="relative bg-pink-50 !overflow-y-hidden">
+    <PageLayout className="relative bg-purple-50 !overflow-y-hidden">
       <TabProvider initTab={initTab}>
-        <div className="z-0 absolute top-0 w-full h-[250px] px-5 py-10 justify-center bg-gradient-to-br from-quiz via-[#751540] via-75% to-[#751540] shadow-[inset_4px_4px_20px_0px_#751540] text-white">
+        <div className="z-0 absolute top-0 w-full h-[250px] px-5 py-10 justify-center bg-gradient-to-br from-assignment via-[#480373] via-75% to-[#480373] shadow-[inset_4px_4px_20px_0px_#480373] text-white">
           <div className="w-full space-y-8">
             <div className="w-full px-5 flex flex-row gap-4">
               <Icon size={32} />
-              <h3>{quiz.name}</h3>
+              <h3>{assignment.name}</h3>
             </div>
             <TabList
               tabs={tabs}
@@ -77,7 +76,10 @@ export default function TopicQuiz({ params }: Props) {
         </div>
         <div className="z-10 mt-[150px] flex w-full default-scrollbar p-5">
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
-            <TabContent quiz={quiz} onQuizChange={handleQuizChange} />
+            <TabContent
+              assignment={assignment}
+              onAssignmentChange={handleAssignmentChange}
+            />
           </div>
         </div>
       </TabProvider>

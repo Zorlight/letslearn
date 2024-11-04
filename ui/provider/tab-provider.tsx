@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
 // Generic Props Interface
 interface Props<T> {
@@ -18,6 +18,9 @@ const TabContext = createContext<TabContextType<any> | null>(null);
 // Provider component
 const TabProvider = <T,>({ children, initTab }: Props<T>) => {
   const [selectedTab, setSelectedTab] = useState<T>(initTab);
+  useEffect(() => {
+    setSelectedTab(initTab);
+  }, [initTab]);
 
   const handleTabSelected = (tab: T) => {
     setSelectedTab(tab);

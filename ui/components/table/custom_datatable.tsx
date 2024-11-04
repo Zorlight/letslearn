@@ -197,7 +197,7 @@ export function CustomDatatable<TData>({
               <DropdownMenuTrigger asChild>
                 <Button
                   className={cn(
-                    "gap-2 whitespace-nowrap text-secondary-word bg-gray-100 hover:bg-gray-200 ease-linear duration-100 py-2 rounded-md cursor-pointer outline-none select-none",
+                    "gap-2 whitespace-nowrap text-gray-500 font-bold bg-gray-100 hover:bg-gray-200 ease-linear duration-100 py-2 rounded-md cursor-pointer outline-none select-none",
                     "dark:bg-white/10 dark:hover:bg-white/20"
                   )}
                 >

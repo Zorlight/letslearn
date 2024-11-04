@@ -27,7 +27,7 @@ import { getGradeColor } from "../../static-data";
 const resultColumnTitles = {
   id: "ID",
   image: "Image",
-  student: "Student name",
+  name: "Student name",
   email: "Email",
   status: "Status",
   duration: "Duration",
@@ -39,7 +39,7 @@ const resultColumnTitles = {
 const resultColumnVisibility = {
   id: false,
   image: true,
-  student: true,
+  name: true,
   email: true,
   status: true,
   duration: true,
@@ -48,17 +48,14 @@ const resultColumnVisibility = {
   completedAt: false,
 };
 
-const imageColumn = (
-  accessorKey: string,
-  title: string
-): ColumnDef<StudentResponse> => {
+const imageColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: accessorKey,
+    accessorKey: "image",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
     cell: ({ row }) => {
-      const student: User = row.getValue(accessorKey);
+      const student: User = row.getValue("student");
       const imageUrl = student.image;
 
       return (
@@ -74,17 +71,14 @@ const imageColumn = (
   return col;
 };
 
-const studentNameColumn = (
-  accessorKey: string,
-  title: string
-): ColumnDef<StudentResponse> => {
+const studentNameColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: accessorKey,
+    accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
     cell: ({ row }) => {
-      const student: User = row.getValue(accessorKey);
+      const student: User = row.getValue("student");
       const name = student.username;
 
       return <p className="px-2 w-[150px]">{name}</p>;
@@ -93,17 +87,14 @@ const studentNameColumn = (
   };
   return col;
 };
-const emailColumn = (
-  accessorKey: string,
-  title: string
-): ColumnDef<StudentResponse> => {
+const emailColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: accessorKey,
+    accessorKey: "email",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
     cell: ({ row }) => {
-      const student: User = row.getValue(accessorKey);
+      const student: User = row.getValue("student");
       const email = student.email;
 
       return <p className="px-2">{email}</p>;
@@ -113,12 +104,9 @@ const emailColumn = (
   return col;
 };
 
-const statusColumn = (
-  accessorKey: string,
-  title: string
-): ColumnDef<StudentResponse> => {
+const statusColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: accessorKey,
+    accessorKey: "status",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
@@ -132,12 +120,9 @@ const statusColumn = (
   };
   return col;
 };
-const durationColumn = (
-  accessorKey: string,
-  title: string
-): ColumnDef<StudentResponse> => {
+const durationColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: accessorKey,
+    accessorKey: "duration",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
@@ -154,12 +139,9 @@ const durationColumn = (
   return col;
 };
 
-const gradeColumn = (
-  accessorKey: string,
-  title: string
-): ColumnDef<StudentResponse> => {
+const gradeColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: accessorKey,
+    accessorKey: "grade",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
@@ -237,12 +219,12 @@ const resultTableColumns = ({
   const columns: ColumnDef<StudentResponse>[] = [
     defaultSelectColumn<StudentResponse>(),
     defaultIndexColumn<StudentResponse>(),
-    imageColumn("student", resultColumnTitles.image),
-    studentNameColumn("student", resultColumnTitles.student),
-    emailColumn("student", resultColumnTitles.email),
-    statusColumn("data", resultColumnTitles.status),
-    durationColumn("data", resultColumnTitles.duration),
-    gradeColumn("data", resultColumnTitles.grade),
+    imageColumn(resultColumnTitles.image),
+    studentNameColumn(resultColumnTitles.name),
+    emailColumn(resultColumnTitles.email),
+    statusColumn(resultColumnTitles.status),
+    durationColumn(resultColumnTitles.duration),
+    gradeColumn(resultColumnTitles.grade),
     actionColumn({ onEdit, onDelete }),
   ];
 

@@ -20,7 +20,7 @@ const Tab = ({ title, isSelected, variant = "default", onClick }: Props) => {
           "border-indigo-700 text-indigo-700",
         !isSelected &&
           variant === "white-text" &&
-          "text-white hover:text-white/75",
+          "text-white/60 hover:text-white/90",
         isSelected && variant === "white-text" && "border-gray-200 text-white"
       )}
       onClick={onClick}

@@ -1,11 +1,11 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
-import { CircleCheckBig } from "lucide-react";
+import { Circle, CircleCheckBig } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const answerVariants = cva(
-  "w-full flex items-center justify-center gap-2 py-2 px-6 rounded-md cursor-pointer transition-all duration-300 bg-slate-100 text-slate-600 border border-transparent",
+  "w-full flex items-center justify-center gap-2 py-2 px-6 font-semibold rounded-md cursor-pointer transition-all duration-300 bg-slate-100 text-slate-600 border border-transparent",
   {
     variants: {
       variant: {
@@ -79,6 +79,16 @@ const FalseAnswer = ({
     >
       {state === "selected" && (
         <CircleCheckBig size={16} className="text-white" />
+      )}
+      {state === "notSelected" && (
+        <Circle size={16} className="text-cyan-600" />
+      )}
+      {state === "missing" && <Circle size={16} className="text-cyan-600" />}
+      {state === "correct" && (
+        <CircleCheckBig size={16} className="text-cyan-600" />
+      )}
+      {state === "incorrect" && (
+        <CircleCheckBig size={16} className="text-cyan-600" />
       )}
       <span>False</span>
       {state === "correct" && <span className="text-green-500">✓</span>}

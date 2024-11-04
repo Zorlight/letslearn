@@ -1,9 +1,5 @@
 "use client";
-import {
-  getSecondFromTimeLimitType,
-  QuestionResult,
-  TimeLimitType,
-} from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
+import { QuestionResult } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import ColorAnnotation from "@/app/course/[courseId]/quiz/[topicId]/components/tab-content/_components/quiz-attempting-tab/color-annotation";
 import QuizAttemptResult from "@/app/course/[courseId]/quiz/[topicId]/components/tab-content/_components/quiz-attempting-tab/quiz-attempt-result";
 import QuizCountdown from "@/app/course/[courseId]/quiz/[topicId]/components/tab-content/_components/quiz-attempting-tab/quiz-countdown";
@@ -19,7 +15,12 @@ import useTimer from "@/hooks/useTimer";
 import { Button } from "@/lib/shadcn/button";
 import { Card } from "@/lib/shadcn/card";
 import { cn, scrollTo } from "@/lib/utils";
-import { QuizData, Test } from "@/models/quiz";
+import {
+  getSecondFromTimeLimitType,
+  QuizData,
+  Test,
+  TimeLimitType,
+} from "@/models/test";
 import {
   QuizAnswer,
   QuizResponseData,

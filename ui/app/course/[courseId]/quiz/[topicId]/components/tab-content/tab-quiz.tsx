@@ -2,7 +2,13 @@ import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import { Separator } from "@/lib/shadcn/separator";
 import { cn, getTextFromHtml, getTimeStringByDuration } from "@/lib/utils";
-import { QuizData, Test } from "@/models/quiz";
+import {
+  attemptsAllowedOptions,
+  getSecondFromTimeLimitType,
+  GradingMethod,
+  QuizData,
+  Test,
+} from "@/models/test";
 import {
   getQuizResponseMark,
   QuizResponseData,
@@ -14,12 +20,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { SearchCheck } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
-import {
-  attemptsAllowedOptions,
-  getSecondFromTimeLimitType,
-  GradingMethod,
-  TabInTab,
-} from "../static-data";
+import { TabInTab } from "../static-data";
 import QuizAttemptResult from "./_components/quiz-attempting-tab/quiz-attempt-result";
 import { format } from "date-fns";
 import EditorDisplay from "@/lib/tinymce/editor-display";
@@ -43,8 +44,9 @@ const TabQuiz = ({
 }: Props) => {
   const router = useRouter();
   const thisUser = fakeUser;
-  const { data, name, description, timeLimit, open, close } = quiz;
-  const { questions, attemptAllowed, gradingMethod } = data as QuizData;
+  const { data, name, description, open, close } = quiz;
+  const { questions, attemptAllowed, gradingMethod, timeLimit } =
+    data as QuizData;
 
   const handlePreviewQuiz = () => {
     router.push(`/quiz-attempting/${quiz.id}`);

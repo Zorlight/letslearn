@@ -2,14 +2,17 @@ import { Test } from "@/models/test";
 import SettingList from "../settings/setting-list";
 
 interface Props {
-  quiz: Test;
-  onQuizChange?: (data: Test) => void;
+  assignment: Test;
+  onAssignmentChange?: (data: Test) => void;
 }
-const TabSetting = ({ quiz, onQuizChange }: Props) => {
+const TabSetting = ({ assignment, onAssignmentChange }: Props) => {
   return (
     <div>
       <h1 className="font-bold text-2xl text-orange-500">Edit settings</h1>
-      <SettingList quiz={quiz} onSubmitQuizSetting={onQuizChange} />
+      <SettingList
+        assignment={assignment}
+        onSubmitAssignmentSetting={onAssignmentChange}
+      />
     </div>
   );
 };

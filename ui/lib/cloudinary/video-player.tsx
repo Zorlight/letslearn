@@ -1,11 +1,12 @@
 "use client";
 import { LoadingCircle } from "@/components/icons/loading-circle";
-import { cn, getPublicIdFromCloudinaryUrl } from "@/lib/utils";
 import { ClassValue } from "clsx";
 import { Video } from "lucide-react";
 import { CldVideoPlayer, getCldVideoUrl } from "next-cloudinary";
 import "next-cloudinary/dist/cld-video-player.css";
 import { useEffect, useRef, useState } from "react";
+import { getPublicIdFromCloudinaryUrl } from "./utils";
+import { cn } from "../utils";
 
 interface Props {
   videoUrl: string | null | undefined;

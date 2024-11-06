@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
 import { ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export type SubmissionSettingForm = {
-  submissionType: string[];
+  submissionType: SubmissionType[];
   wordLimit: {
     enabled: boolean;
     value: number;
@@ -43,7 +44,7 @@ export default function SubmissionSetting({ formData, onChange }: Props) {
   };
 
   const handleEnableChange =
-    (key: keyof SubmissionSettingForm, value: boolean) => () => {
+    (key: keyof SubmissionSettingForm) => (value: boolean) => {
       handleSettingChange({
         ...formData,
         [key]: { ...formData[key], enabled: value },
@@ -64,7 +65,7 @@ export default function SubmissionSetting({ formData, onChange }: Props) {
       handleSettingChange({ ...formData, [key]: { ...formData[key], value } });
     };
 
-  const handleSubmissionTypeChange = (value: string) => () => {
+  const handleSubmissionTypeChange = (value: SubmissionType) => () => {
     const newSetting = { ...formData };
     const { submissionType } = newSetting;
     if (submissionType.includes(value)) {
@@ -110,57 +111,57 @@ export default function SubmissionSetting({ formData, onChange }: Props) {
           </label>
         </div>
       </RowSetting>
-      <RowSettingWithCheckbox
-        title="Word limit"
-        enabled={wordLimit.enabled}
-        handleEnableChange={handleEnableChange("wordLimit", !wordLimit.enabled)}
-      >
-        <Input
-          type="number"
-          defaultValue={wordLimit.value}
-          disabled={!wordLimit.enabled}
-          onChange={handleNumberInputChange("wordLimit")}
-        />
-      </RowSettingWithCheckbox>
-      <RowSettingWithCheckbox
-        title="Maximum number of uploaded files"
-        enabled={maximumFile.enabled}
-        handleEnableChange={handleEnableChange(
-          "maximumFile",
-          !maximumFile.enabled
-        )}
-      >
-        <Input
-          type="number"
-          defaultValue={maximumFile.value}
-          disabled={!maximumFile.enabled}
-          onChange={handleNumberInputChange("maximumFile")}
-        />
-      </RowSettingWithCheckbox>
-      <RowSettingWithCheckbox
-        title="Maximum submission size"
-        enabled={maximumFileSize.enabled}
-        handleEnableChange={handleEnableChange(
-          "maximumFileSize",
-          !maximumFileSize.enabled
-        )}
-      >
-        <Combobox
-          showSearch={false}
-          options={maximumFileSizeOptions}
-          initialValue={maximumFileSize.value}
-          onChange={handleComboboxChange("maximumFileSize")}
-          popoverClassName="w-[150px]"
+      {submissionType.includes(SubmissionType.ONLINE_TEXT) && (
+        <RowSettingWithCheckbox
+          title="Word limit"
+          enabled={wordLimit.enabled}
+          handleEnableChange={handleEnableChange("wordLimit")}
         >
-          <Button
-            variant="outline"
-            className="w-[150px] justify-between text-black border border-gray-300 hover:border-gray-400 hover:bg-gray-50 data-[state=open]:border-blue-500"
+          <Input
+            type="number"
+            defaultValue={wordLimit.value}
+            disabled={!wordLimit.enabled}
+            onChange={handleNumberInputChange("wordLimit")}
+          />
+        </RowSettingWithCheckbox>
+      )}
+      {submissionType.includes(SubmissionType.FILE_UPLOAD) && (
+        <RowSettingWithCheckbox
+          title="Maximum number of uploaded files"
+          enabled={maximumFile.enabled}
+          handleEnableChange={handleEnableChange("maximumFile")}
+        >
+          <Input
+            type="number"
+            defaultValue={maximumFile.value}
+            disabled={!maximumFile.enabled}
+            onChange={handleNumberInputChange("maximumFile")}
+          />
+        </RowSettingWithCheckbox>
+      )}
+      {submissionType.includes(SubmissionType.FILE_UPLOAD) && (
+        <RowSettingWithCheckbox
+          title="Maximum submission size"
+          enabled={maximumFileSize.enabled}
+          handleEnableChange={handleEnableChange("maximumFileSize")}
+        >
+          <Combobox
+            showSearch={false}
+            options={maximumFileSizeOptions}
+            initialValue={maximumFileSize.value}
+            onChange={handleComboboxChange("maximumFileSize")}
+            popoverClassName="w-[150px]"
           >
-            {maximumFileSize.value}
-            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </Combobox>
-      </RowSettingWithCheckbox>
+            <Button
+              variant="outline"
+              className="w-[150px] justify-between text-black border border-gray-300 hover:border-gray-400 hover:bg-gray-50 data-[state=open]:border-blue-500"
+            >
+              {maximumFileSize.value}
+              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </Combobox>
+        </RowSettingWithCheckbox>
+      )}
     </div>
   );
 }
@@ -192,7 +193,7 @@ interface RowSettingWithCheckboxProps {
   title: string;
   children?: React.ReactNode;
   enabled: boolean;
-  handleEnableChange: () => void;
+  handleEnableChange: (value: boolean) => void;
 }
 const RowSettingWithCheckbox = ({
   title,

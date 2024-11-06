@@ -1,6 +1,6 @@
 "use server";
 import crypto from "crypto";
-import { getPublicIdFromCloudinaryUrl } from "../utils";
+import { getPublicIdFromCloudinaryUrl } from "./utils";
 
 const videoType = [
   "video/mp4",

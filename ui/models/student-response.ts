@@ -1,3 +1,4 @@
+import { CloudinaryFile } from "./cloudinary-file";
 import { Question } from "./question";
 import { Test } from "./test";
 import { User } from "./user";
@@ -31,7 +32,17 @@ export type QuizResponseData = {
   answers: QuizAnswer[];
 };
 
-export type AssignmentResponseData = {};
+export type AssignmentResponseData = {
+  submittedAt: string | null;
+  submitted: AssignmentOnlineText | AssignmentFileUpload;
+};
+
+export type AssignmentOnlineText = {
+  text: string;
+};
+export type AssignmentFileUpload = {
+  files: CloudinaryFile[];
+};
 
 export type ChoiceResponseData = {
   data: ChoiceResponse[];

@@ -1,18 +1,12 @@
 import { type ClassValue, clsx } from "clsx";
 import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
+import { RefObject } from "react";
+import { toast } from "react-toastify";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-const getPublicIdFromCloudinaryUrl = (url: string) => {
-  //E.g: url = http://res.cloudinary.com/dggtc5ucv/image/upload/v1720082993/jlqkd6dqyx4mrbsqhe31.jpg
-  // -> public_id = jlqkd6dqyx4mrbsqhe31
-  const parts = url.split("/");
-  const publicId = parts[parts.length - 1].split(".")[0];
-  return publicId;
-};
 
 const getFileSize = (bytes: number) => {
   if (bytes === 0) return "0 Bytes";
@@ -88,25 +82,32 @@ function handleFilterColumn<T>(
 
 // 3680s -> 1 hour 1 minute 20 second
 const getDurationText = (startTime: any, endTime: any) => {
-  if (!startTime || !endTime) return 0;
+  if (!startTime || !endTime) return "";
 
   try {
     startTime = new Date(startTime);
     endTime = new Date(endTime);
   } catch (e) {
-    return null;
+    return "";
   }
 
-  const duration = Math.floor(endTime / 1000) - Math.floor(startTime / 1000);
+  const duration = Math.abs(
+    Math.floor(endTime / 1000) - Math.floor(startTime / 1000)
+  );
   return getTimeStringByDuration(duration);
 };
 
 const getTimeStringByDuration = (duration: number) => {
   const years = Math.floor(duration / 31536000);
+  duration -= years * 31536000;
   const months = Math.floor(duration / 2628000);
+  duration -= months * 2628000;
   const days = Math.floor(duration / 86400);
+  duration -= days * 86400;
   const hours = Math.floor(duration / 3600);
+  duration -= hours * 3600;
   const minutes = Math.floor((duration % 3600) / 60);
+  duration -= minutes * 60;
   const seconds = duration % 60;
   // any value that is 0 will not be displayed
   const time = [
@@ -144,16 +145,87 @@ const scrollTo = (id: string, adjustTopPosition: number = 0) => {
   });
 };
 
+const resetFileInput = (ref: RefObject<HTMLInputElement>) => {
+  //this function is used to reset input type="file" element easily
+  if (!ref.current) {
+    toast.error("Something went wrong");
+    return;
+  }
+  ref.current.value = "";
+};
+const getFileInput = (ref: RefObject<HTMLInputElement>) => {
+  //this function is used to get single file from input type="file" element easily
+  if (!ref.current) {
+    toast.error("Something went wrong");
+    return;
+  }
+  return ref.current.files?.[0];
+};
+const getMultipleFileInput = (ref: RefObject<HTMLInputElement>) => {
+  //this function is used to get multiple files from input type="file" element easily
+  if (!ref.current) {
+    toast.error("Something went wrong");
+    return;
+  }
+  return ref.current.files?.length ? Array.from(ref.current.files) : [];
+};
+
+const imageExtension = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"];
+const videoExtension = ["mp4", "webm", "ogg", "avi", "mov", "flv", "wmv"];
+const audioExtension = ["mp3", "wav", "ogg", "flac", "aac", "wma"];
+const documentExtension = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
+const archiveExtension = ["zip", "rar", "7z", "tar", "gz", "bz2"];
+
+const isImageExtension = (ex: string) => imageExtension.includes(ex);
+const isVideoExtension = (ex: string) => videoExtension.includes(ex);
+const isAudioExtension = (ex: string) => audioExtension.includes(ex);
+const isDocumentExtension = (ex: string) => documentExtension.includes(ex);
+const isArchiveExtension = (ex: string) => archiveExtension.includes(ex);
+const fileTypeColorMap = {
+  pdf: "text-red-500",
+  doc: "text-blue-500",
+  docx: "text-blue-500",
+  ppt: "text-orange-500",
+  pptx: "text-orange-500",
+  xls: "text-green-500",
+  xlsx: "text-green-500",
+  image: "text-yellow-500",
+  video: "text-indigo-600",
+  audio: "text-pink-500",
+  archive: "text-teal-500",
+  default: "text-gray-500",
+};
+const getFileTypeColor = (ex: string) => {
+  if (isImageExtension(ex)) return fileTypeColorMap.image;
+  if (isVideoExtension(ex)) return fileTypeColorMap.video;
+  if (isAudioExtension(ex)) return fileTypeColorMap.audio;
+  if (isArchiveExtension(ex)) return fileTypeColorMap.archive;
+  if (isDocumentExtension(ex)) {
+    if (ex === "pdf") return fileTypeColorMap.pdf;
+    if (ex === "doc" || ex === "docx") return fileTypeColorMap.doc;
+    if (ex === "ppt" || ex === "pptx") return fileTypeColorMap.ppt;
+    if (ex === "xls" || ex === "xlsx") return fileTypeColorMap.xls;
+  }
+  return fileTypeColorMap.default;
+};
 export {
   cn,
   displayNumber,
   formatDate,
   getFileSize,
   getByteFromSize,
-  getPublicIdFromCloudinaryUrl,
   handleFilterColumn,
   getDurationText,
   getTimeStringByDuration,
   getTextFromHtml,
   scrollTo,
+  resetFileInput,
+  getFileInput,
+  getMultipleFileInput,
+  isImageExtension,
+  isVideoExtension,
+  isAudioExtension,
+  isDocumentExtension,
+  isArchiveExtension,
+  getFileTypeColor,
 };

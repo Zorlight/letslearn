@@ -15,6 +15,7 @@ import {
   defaultTimingSetting,
 } from "./static-data";
 import CollapsibleList from "@/app/course/[courseId]/components/collapsible/collapsible-list";
+import { useDebounceFunction } from "@/hooks/useDebounce";
 
 const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
   name: z.string().min(1, "Name is required"),
@@ -123,17 +124,17 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
   const { setValue, watch } = form;
 
   //use for auto save setting and update the state when the show content is closed
-  const handleGeneralSettingChange = (data: GeneralSettingForm) => {
-    setValue("generalSettingForm", data);
-  };
+  const handleGeneralSettingChange = useDebounceFunction(
+    (data: GeneralSettingForm) => setValue("generalSettingForm", data)
+  );
 
-  const handleTimingSettingChange = (data: TimingSettingForm) => {
-    setValue("timingSettingForm", data);
-  };
+  const handleTimingSettingChange = useDebounceFunction(
+    (data: TimingSettingForm) => setValue("timingSettingForm", data)
+  );
 
-  const handleGradeSettingChange = (data: GradeSettingForm) => {
-    setValue("gradeSettingForm", data);
-  };
+  const handleGradeSettingChange = useDebounceFunction(
+    (data: GradeSettingForm) => setValue("gradeSettingForm", data)
+  );
 
   const handleGetQuizToUpdate = (data: QuizSettingForm) => {
     const quizToUpdate: Test = {

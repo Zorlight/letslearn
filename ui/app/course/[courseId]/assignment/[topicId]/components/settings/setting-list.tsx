@@ -1,9 +1,9 @@
 "use client";
 import CollapsibleList from "@/app/course/[courseId]/components/collapsible/collapsible-list";
 import { Button } from "@/lib/shadcn/button";
-import { AssignmentData, Test } from "@/models/test";
+import { AssignmentData, SubmissionType, Test } from "@/models/test";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
@@ -19,6 +19,7 @@ import {
   defaultGeneralSetting,
   defaultSubmissionSetting,
 } from "./static-data";
+import { useDebouce, useDebounceFunction } from "@/hooks/useDebounce";
 
 const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
   name: z.string().min(1, "Name is required"),
@@ -41,7 +42,7 @@ const availabilitySettingSchema: ZodType<AvailabilitySettingForm> = z.object({
 });
 
 const submissionSettingSchema: ZodType<SubmissionSettingForm> = z.object({
-  submissionType: z.array(z.string()),
+  submissionType: z.array(z.nativeEnum(SubmissionType)),
   wordLimit: z.object({
     enabled: z.boolean(),
     value: z.number(),
@@ -151,17 +152,17 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
   const { setValue, watch } = form;
 
   //use for auto save setting and update the state when the show content is closed
-  const handleGeneralSettingChange = (data: GeneralSettingForm) => {
-    setValue("generalSettingForm", data);
-  };
+  const handleGeneralSettingChange = useDebounceFunction(
+    (data: GeneralSettingForm) => setValue("generalSettingForm", data)
+  );
 
-  const handleAvailabilitySettingChange = (data: AvailabilitySettingForm) => {
-    setValue("availabilitySettingForm", data);
-  };
+  const handleAvailabilitySettingChange = useDebounceFunction(
+    (data: AvailabilitySettingForm) => setValue("availabilitySettingForm", data)
+  );
 
-  const handleSubmissionSettingChange = (data: SubmissionSettingForm) => {
-    setValue("submissionSettingForm", data);
-  };
+  const handleSubmissionSettingChange = useDebounceFunction(
+    (data: SubmissionSettingForm) => setValue("submissionSettingForm", data)
+  );
 
   const handleGetAssignmentToUpdate = (form: AssignmentSettingForm) => {
     const {
@@ -171,7 +172,8 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
     } = form;
     const { name, description } = generalSettingForm;
     const { open, close, remindToGrade } = availabilitySettingForm;
-    const { wordLimit, maximumFile, maximumFileSize } = submissionSettingForm;
+    const { wordLimit, maximumFile, maximumFileSize, submissionType } =
+      submissionSettingForm;
     const assignmentToUpdate: Test = {
       ...assignment,
       name,
@@ -180,6 +182,7 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
       close,
       data: {
         ...assignment.data,
+        submissionType,
         remindToGrade,
         wordLimit,
         maximumFile,
@@ -198,7 +201,7 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
 
   const onSubmit = (data: AssignmentSettingForm) => {
     const assignmentToSubmit = handleGetAssignmentToUpdate(data);
-    if (isSettingChange) {
+    if (!isSettingChange) {
       toast.info("No changes to submit");
       return;
     }

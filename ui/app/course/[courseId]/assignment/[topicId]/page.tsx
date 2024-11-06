@@ -11,6 +11,7 @@ import TabContent from "./components/tab-content/tab-content";
 import { useAppDispatch } from "@/redux/hooks";
 import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
+import { StudentResponse } from "@/models/student-response";
 
 interface Props {
   params: {
@@ -49,6 +50,7 @@ export default function TopicQuiz({ params }: Props) {
     if (storageTab) setInitTab(storageTab);
   }, [topicId]);
   const handleAssignmentChange = (data: Test) => {
+    console.log("change assignment", data);
     setAssignment(data);
   };
   const handleTabSelected = (tab: string) => {
@@ -57,6 +59,10 @@ export default function TopicQuiz({ params }: Props) {
 
   const Icon = iconMap["assignment"];
   const tabs = Object.values(Tab);
+
+  useEffect(() => {
+    console.log("assignment change", assignment);
+  }, [assignment]);
 
   return (
     <PageLayout className="relative bg-purple-50 !overflow-y-hidden">

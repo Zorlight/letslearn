@@ -1,12 +1,11 @@
 "use client";
-import { Bell, Menu, MessageSquare, Plus } from "lucide-react";
-import React from "react";
-import Avatar from "../simple/avatar";
 import { cn } from "@/lib/utils";
-import BreadCrumb, { BreadcrumbItem } from "../simple/breadcrumb";
-import AddCourseDialog from "./create-meeting-dialog";
-import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
+import { Bell, Menu, MessageSquare, Plus } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import Avatar from "../simple/avatar";
+import BreadCrumb, { BreadcrumbItem } from "../simple/breadcrumb";
+import NavbarButtonLayout from "./nav-button-layout";
 
 interface Props {
   className?: string;
@@ -23,6 +22,9 @@ export default function Navbar({ className, role = "teacher" }: Props) {
   const handleAddCourse = () => {
     router.push("/course/create");
   };
+  const handleAvatarClick = () => {
+    router.push("/setting");
+  };
   return (
     <div
       className={cn(
@@ -34,7 +36,7 @@ export default function Navbar({ className, role = "teacher" }: Props) {
         <Menu size={20} />
         <BreadCrumb items={breadcrumbItems} />
       </div>
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-1">
         {isHomePage && role === "teacher" && (
           <div
             className={cn(
@@ -50,13 +52,13 @@ export default function Navbar({ className, role = "teacher" }: Props) {
           </div>
         )}
 
-        <div className="p-3 rounded-full hover:bg-gray-100 cursor-pointer">
+        <NavbarButtonLayout>
           <Bell size={20} />
-        </div>
-        <div className="p-3 rounded-full hover:bg-gray-100 cursor-pointer">
+        </NavbarButtonLayout>
+        <NavbarButtonLayout>
           <MessageSquare size={20} />
-        </div>
-        <Avatar />
+        </NavbarButtonLayout>
+        <Avatar className="hover:scale-110" onClick={handleAvatarClick} />
       </div>
     </div>
   );

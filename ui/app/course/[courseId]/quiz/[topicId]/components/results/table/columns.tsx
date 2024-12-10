@@ -56,7 +56,7 @@ const imageColumn = (title: string): ColumnDef<StudentResponse> => {
     ),
     cell: ({ row }) => {
       const student: User = row.getValue("student");
-      let imageUrl = "/default-user.webp";
+      let imageUrl = "/default-user.png";
       if (student && student.image) imageUrl = student.image;
 
       return (

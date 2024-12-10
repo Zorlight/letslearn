@@ -18,6 +18,7 @@ export default function QuizReviewPage({ params }: Props) {
     useState<StudentResponse>(defaultQuizResponse);
 
   const handleGetQuizResponseSuccess = (quizResponse: StudentResponse) => {
+    console.log("Quiz response", quizResponse);
     setSelectedQuizResponse(quizResponse);
   };
   const handleGetQuizResponseFail = (error: any) => {

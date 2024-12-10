@@ -69,40 +69,35 @@ const SectionList = ({
     toggleEdit(sectionId);
   };
   const handleCreateTopic = (section: Section) => (type: TopicType) => {
-    switch (type) {
-      case TopicType.QUIZ: {
-        const newQuiz: QuizTopic = {
-          ...initQuiz,
-          id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
-          sectionId: section.id,
-        };
-        const newSection: Section = {
-          ...section,
-          topics: [...section.topics, newQuiz],
-        };
-        onSectionChange(newSection);
-        break;
-      }
-      case TopicType.ASSIGNMENT:
-        const newAssignment: AssignmentTopic = {
-          ...initAssignment,
-          id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
-          sectionId: section.id,
-        };
-        const newSection: Section = {
-          ...section,
-          topics: [...section.topics, newAssignment],
-        };
-        onSectionChange(newSection);
-        break;
-      case TopicType.MEETING:
-        break;
+    if (type === TopicType.QUIZ) handleCreateQuizTopic(section);
+    else if (type === TopicType.ASSIGNMENT)
+      handleCreateAssignmentTopic(section);
+  };
 
-      case TopicType.FILE:
-        break;
-      default:
-        break;
-    }
+  const handleCreateQuizTopic = (section: Section) => {
+    const newQuiz: QuizTopic = {
+      ...initQuiz,
+      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+      sectionId: section.id,
+    };
+    const newSection: Section = {
+      ...section,
+      topics: [...section.topics, newQuiz],
+    };
+    onSectionChange(newSection);
+  };
+
+  const handleCreateAssignmentTopic = (section: Section) => {
+    const newAssignment: AssignmentTopic = {
+      ...initAssignment,
+      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+      sectionId: section.id,
+    };
+    const newSection: Section = {
+      ...section,
+      topics: [...section.topics, newAssignment],
+    };
+    onSectionChange(newSection);
   };
 
   const handleReorderedTopic = (section: Section) => (data: Topic[]) => {

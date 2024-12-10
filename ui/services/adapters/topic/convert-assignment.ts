@@ -8,3 +8,13 @@ export const convertAssignmentToRequestData = (assignment: AssignmentTopic) => {
     data: JSON.stringify(data),
   };
 };
+
+export const convertAssignmentFromResponseData = (
+  assignment: any
+): AssignmentTopic => {
+  const parsedData = JSON.parse(assignment.data);
+  return {
+    ...assignment,
+    data: parsedData,
+  };
+};

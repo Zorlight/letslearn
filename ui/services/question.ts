@@ -4,7 +4,7 @@ import {
   convertQuestionFromResponseData,
   convertShortAnswerQuestionToRequestData,
   convertTrueFalseQuestionToRequestData,
-} from "./adapters/question";
+} from "./adapters/question/question";
 import { GET, POST, PUT } from "@/lib/http-handle/http-handle";
 
 export const createQuestion = (

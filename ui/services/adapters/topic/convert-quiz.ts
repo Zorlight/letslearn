@@ -1,10 +1,9 @@
 import { Question, QuestionType } from "@/models/question";
 import { QuizTopic } from "@/models/topic";
-import {
-  convertChoiceQuestionToRequestData,
-  convertShortAnswerQuestionToRequestData,
-  convertTrueFalseQuestionToRequestData,
-} from "../question";
+import { convertChoiceQuestionToRequestData } from "../question/choice-question";
+import { convertShortAnswerQuestionToRequestData } from "../question/short-answer-question";
+import { convertTrueFalseQuestionToRequestData } from "../question/true-false-question";
+import { convertQuestionFromResponseData } from "../question/question";
 
 const removeTempIdInQuestions = (questions: Question[]) => {
   return questions.map((question) => {
@@ -36,4 +35,21 @@ export const convertQuizToRequestData = (quiz: QuizTopic) => {
     ...reqData,
     data: JSON.stringify(convertedData),
   };
+};
+
+export const convertQuizFromResponseData = (quiz: any): QuizTopic => {
+  const parsedData = JSON.parse(quiz.data);
+  const convertedQuestions = parsedData.questions.map((q: any) =>
+    convertQuestionFromResponseData(q)
+  );
+
+  let res = {
+    ...quiz,
+    data: {
+      ...parsedData,
+      questions: convertedQuestions,
+    },
+  };
+
+  return res as QuizTopic;
 };

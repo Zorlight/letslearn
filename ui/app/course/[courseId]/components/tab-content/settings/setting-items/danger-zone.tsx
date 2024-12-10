@@ -41,14 +41,6 @@ const DangerZoneSetting = ({ formData, onChange }: DangerZoneSettingProps) => {
           {changeCourseVisibilityButtonContent}
         </Button>
       </RowSetting>
-      <RowSetting
-        title="Delete this course"
-        description="Once you delete this course, there is no going back. Please be certain."
-      >
-        <Button className="bg-gray-100 border-1 text-red-600 font-bold hover:bg-gray-200">
-          Delete this course
-        </Button>
-      </RowSetting>
     </div>
   );
 };

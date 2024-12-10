@@ -1,10 +1,6 @@
 "use client";
 
-import QuizAttemptResult from "@/app/course/[courseId]/quiz/[topicId]/components/quiz/quiz-attempt-result";
-import {
-  getQuizResultFromMark,
-  QuestionResult,
-} from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
+import { QuestionResult } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import CustomDialog from "@/components/ui/custom-dialog";
 import { Button } from "@/lib/shadcn/button";
 import { cn, scrollTo } from "@/lib/utils";

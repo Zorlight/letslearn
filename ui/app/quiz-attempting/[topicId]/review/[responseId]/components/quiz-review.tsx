@@ -30,7 +30,7 @@ const QuizReview = ({ className, quizResponse }: Props) => {
 
   useEffect(() => {
     handleShowCorrectAnswer();
-  }, []);
+  }, [studentAnswers]);
 
   const handleShowCorrectAnswer = () => {
     let results = studentAnswers.map((ans) => {

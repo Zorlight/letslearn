@@ -1,14 +1,22 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React from "react";
 
 interface Props {
   className?: string;
+  onClick?: () => void;
 }
-export default function Avatar({ className }: Props) {
+export default function Avatar({ className, onClick }: Props) {
   return (
-    <div className={cn("w-8 h-8 rounded-full overflow-hidden", className)}>
-      <Image src="/JohnDoe.png" alt="avatar" width={100} height={100} />
-    </div>
+    <Image
+      src="/default-user.png"
+      alt="avatar"
+      width={1000}
+      height={1000}
+      className={cn(
+        "w-16 rounded-full object-cover overflow-hidden transition-all duration-200 cursor-pointer",
+        className
+      )}
+      onClick={onClick}
+    />
   );
 }

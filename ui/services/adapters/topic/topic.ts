@@ -1,7 +1,12 @@
 import { AssignmentTopic, QuizTopic, Topic, TopicType } from "@/models/topic";
-import { convertAssignmentToRequestData } from "./convert-assignment";
-import { convertQuizToRequestData } from "./convert-quiz";
-import { convertQuestionFromResponseData } from "../question";
+import {
+  convertAssignmentFromResponseData,
+  convertAssignmentToRequestData,
+} from "./convert-assignment";
+import {
+  convertQuizFromResponseData,
+  convertQuizToRequestData,
+} from "./convert-quiz";
 
 export const convertTopicToRequestData = (topic: Topic) => {
   const { type } = topic;
@@ -14,20 +19,13 @@ export const convertTopicToRequestData = (topic: Topic) => {
   return reqData;
 };
 
-export const convertTopicFromResponseData = (topic: any): Topic => {
-  console.log("topic", topic);
-  const parsedData = JSON.parse(topic.data);
-  const convertedQuestions = parsedData.questions.map((q: any) =>
-    convertQuestionFromResponseData(q)
-  );
-  console.log("parsedData", parsedData);
-  let res = {
-    ...topic,
-    data: {
-      ...parsedData,
-      questions: convertedQuestions,
-    },
-  };
-  console.log("res", res);
-  return res as Topic;
+export const convertTopicFromResponseData = (topic: any) => {
+  const { type } = topic;
+  let res;
+  if (type === TopicType.QUIZ) {
+    res = convertQuizFromResponseData(topic);
+  } else if (type === TopicType.ASSIGNMENT) {
+    res = convertAssignmentFromResponseData(topic);
+  }
+  return res;
 };

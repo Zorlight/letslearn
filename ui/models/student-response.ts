@@ -33,12 +33,9 @@ export enum QuizStatus {
 
 export type AssignmentResponseData = {
   submittedAt: string | null;
-  submitted: AssignmentOnlineText | AssignmentFileUpload;
+  submitted: AssignmentFileUpload;
 };
 
-export type AssignmentOnlineText = {
-  text: string;
-};
 export type AssignmentFileUpload = {
   files: CloudinaryFile[];
 };

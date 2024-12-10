@@ -3,7 +3,6 @@ import { fakeUserList } from "@/fake-data/user";
 import { Input } from "@/lib/shadcn/input";
 import { cn } from "@/lib/utils";
 import { StudentResponse } from "@/models/student-response";
-import { Test } from "@/models/quiz";
 import { User } from "@/models/user";
 import { useEffect, useRef, useState } from "react";
 import { submisisonFilterKeys } from "../static-data";
@@ -13,16 +12,20 @@ import SubmissionDefaultView from "../submission/submission-view/default-view";
 import SubmissionSubmittedView from "../submission/submission-view/submitted-view";
 import { fakeStudentResponses } from "@/fake-data/student-response";
 import { X } from "lucide-react";
+import { AssignmentTopic } from "@/models/topic";
 
 interface Props {
-  assignment: Test;
+  assignment: AssignmentTopic;
+  assignmentResponses: StudentResponse[];
   className?: string;
 }
-export function TabSubmission({ className, assignment }: Props) {
+export function TabSubmission({
+  className,
+  assignment,
+  assignmentResponses,
+}: Props) {
   const refInput = useRef<HTMLInputElement>(null);
   const [filterKey, setFilterKey] = useState<string>("");
-  const [studentResponses, setStudentResponses] =
-    useState<StudentResponse[]>(fakeStudentResponses);
   const [selectedStudentResponse, setSelectedStudentResponse] =
     useState<StudentResponse | null>(null);
   const [students, setStudents] = useState<User[]>(fakeUserList);
@@ -60,7 +63,7 @@ export function TabSubmission({ className, assignment }: Props) {
           </div>
           <SubmissionTable
             selectedStudentResponse={selectedStudentResponse}
-            studentResponses={studentResponses}
+            studentResponses={assignmentResponses}
             students={students}
             onResponseSelect={handleResponseSelect}
           />
@@ -68,7 +71,7 @@ export function TabSubmission({ className, assignment }: Props) {
         {selectedStudentResponse === null && (
           <SubmissionDefaultView
             assignment={assignment}
-            studentResponses={studentResponses}
+            studentResponses={assignmentResponses}
             className="w-full flex flex-col gap-4 p-6"
           />
         )}

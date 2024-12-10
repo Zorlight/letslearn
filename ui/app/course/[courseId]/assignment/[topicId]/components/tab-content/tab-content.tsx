@@ -1,26 +1,36 @@
+"use client";
 import { useTab } from "@/hooks/useTab";
-import { AssignmentData, Test } from "@/models/quiz";
+import { AssignmentTopic } from "@/models/topic";
 import { notFound } from "next/navigation";
 import { Tab } from "../static-data";
 import TabAssignment from "./tab-assignment";
 import TabSetting from "./tab-setting";
 import { TabSubmission } from "./tab-submission";
+import { useEffect, useState } from "react";
 import { StudentResponse } from "@/models/student-response";
+import { Role } from "@/models/user";
 
 interface Props {
-  assignment: Test;
-  onAssignmentChange?: (quiz: Test) => void;
+  assignment: AssignmentTopic;
+  role: Role;
+  onAssignmentChange?: (quiz: AssignmentTopic) => void;
 }
 
-const TabContent = ({ assignment, onAssignmentChange }: Props) => {
+const TabContent = ({ role, assignment, onAssignmentChange }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
-  const { data } = assignment;
-  const {} = data as AssignmentData;
+
+  const [assignmentResponses, setAssignmentResponses] = useState<
+    StudentResponse[]
+  >([]);
+
+  useEffect(() => {}, []);
 
   switch (selectedTab) {
     case Tab.ASSIGNMENT:
-      return <TabAssignment assignment={assignment} className="h-full" />;
+      return (
+        <TabAssignment role={role} assignment={assignment} className="h-full" />
+      );
     case Tab.SETTINGS:
       return (
         <TabSetting
@@ -29,7 +39,13 @@ const TabContent = ({ assignment, onAssignmentChange }: Props) => {
         />
       );
     case Tab.SUBMISSIONS:
-      return <TabSubmission assignment={assignment} className="h-full" />;
+      return (
+        <TabSubmission
+          assignment={assignment}
+          assignmentResponses={assignmentResponses}
+          className="h-full"
+        />
+      );
     default:
       return notFound();
   }

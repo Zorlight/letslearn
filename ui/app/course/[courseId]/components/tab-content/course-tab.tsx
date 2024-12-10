@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/lib/shadcn/button";
 import { Course, Section } from "@/models/course";
-import { createSection, updateSection } from "@/services/section";
+import { createSection, getSection, updateSection } from "@/services/section";
 import { Spinner } from "@nextui-org/spinner";
 import { Plus } from "lucide-react";
 import { useState } from "react";
@@ -59,8 +59,15 @@ export default function CourseTab({ course, onCourseChange }: Props) {
     );
   };
 
-  const handleSaveSectionSuccess = (data: Section) => {
+  const handleGetSectionSuccess = (data: Section) => {
     handleSectionChange(data);
+  };
+  const handleGetCourseFail = (error: any) => {
+    toast.error(error);
+  };
+
+  const handleSaveSectionSuccess = (data: Section) => {
+    getSection(data.id, handleGetSectionSuccess, handleGetCourseFail);
   };
   const handleSaveSectionFail = (error: any) => {
     toast.error(error);

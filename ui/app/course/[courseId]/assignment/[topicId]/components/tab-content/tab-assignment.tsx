@@ -1,56 +1,50 @@
-import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import EditorDisplay from "@/lib/tinymce/editor-display";
-import { cn, getTimeStringByDuration } from "@/lib/utils";
-import {
-  AssignmentData,
-  getSecondFromTimeLimitType,
-  Test,
-} from "@/models/quiz";
+import { cn } from "@/lib/utils";
+
+import { AssignmentTopic } from "@/models/topic";
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
-import { useMemo } from "react";
-import GradingSummary from "../assignment/grading-summary";
+import GradingSummary from "../assignment/grading-summary-table";
+import { Role } from "@/models/user";
+import GradingView from "../assignment/grading-view";
+import SubmissionView from "../assignment/submission-view";
 
 interface Props {
-  assignment: Test;
+  role: Role;
+  assignment: AssignmentTopic;
   className?: string;
 }
-const TabAssignment = ({ className, assignment }: Props) => {
-  const router = useRouter();
-  const thisUser = fakeUser;
-  const { data, name, description, open, close } = assignment;
-  const {} = data as AssignmentData;
+const TabAssignment = ({ className, assignment, role }: Props) => {
+  const { data } = assignment;
+  const { open, close, description } = data;
 
-  const openTime = format(new Date(open.value), "EEEE, dd MMMM yyyy, h:mm a");
-  const closeTime = format(new Date(close.value), "EEEE, dd MMMM yyyy, h:mm a");
+  const openTime = open
+    ? format(new Date(open), "EEEE, dd MMMM yyyy, h:mm a")
+    : null;
+  const closeTime = close
+    ? format(new Date(close), "EEEE, dd MMMM yyyy, h:mm a")
+    : null;
 
   return (
     <div className={cn(className)}>
       <div className="pb-4 space-y-2 border-b-[0.5px] border-gray-300 text-gray-700">
-        <p>
-          <span className="font-bold">Open: </span>
-          <span className="text-gray-500">{openTime}</span>
-        </p>
-        <p>
-          <span className="font-bold">Close: </span>
-          <span className="text-gray-500">{closeTime}</span>
-        </p>
+        {openTime && (
+          <p>
+            <span className="font-bold">Open: </span>
+            <span className="text-gray-500">{openTime}</span>
+          </p>
+        )}
+        {closeTime && (
+          <p>
+            <span className="font-bold">Close: </span>
+            <span className="text-gray-500">{closeTime}</span>
+          </p>
+        )}
       </div>
       <EditorDisplay className="text-gray-500" htmlString={description} />
-      <div className="space-y-4">
-        <Button variant="cyan" className="w-fit rounded-lg">
-          Grade
-        </Button>
-
-        <div className="font-bold text-orange-500">Grading summary</div>
-        <GradingSummary
-          hiddenFromStudent={0}
-          assigned={40}
-          submitted={36}
-          needGrading={0}
-        />
-      </div>
+      {/* {role === Role.TEACHER && <GradingView />}
+      {role === Role.STUDENT && <SubmissionView />} */}
+      <SubmissionView />
     </div>
   );
 };

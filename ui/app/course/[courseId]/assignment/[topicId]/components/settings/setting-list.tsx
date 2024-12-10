@@ -1,8 +1,11 @@
 "use client";
 import CollapsibleList from "@/app/course/[courseId]/components/collapsible/collapsible-list";
+import { useDebounceFunction } from "@/hooks/useDebounce";
 import { Button } from "@/lib/shadcn/button";
+import { FileSizeOption } from "@/models/assignment";
+import { AssignmentTopic } from "@/models/topic";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
@@ -18,9 +21,6 @@ import {
   defaultGeneralSetting,
   defaultSubmissionSetting,
 } from "./static-data";
-import { useDebouce, useDebounceFunction } from "@/hooks/useDebounce";
-import { AssignmentTopic } from "@/models/topic";
-import { FileSizeOption } from "@/models/assignment";
 
 const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
   title: z.string().min(1, "Name is required"),
@@ -43,10 +43,6 @@ const availabilitySettingSchema: ZodType<AvailabilitySettingForm> = z.object({
 });
 
 const submissionSettingSchema: ZodType<SubmissionSettingForm> = z.object({
-  wordLimit: z.object({
-    enabled: z.boolean(),
-    value: z.number(),
-  }),
   maximumFile: z.object({
     enabled: z.boolean(),
     value: z.number(),
@@ -87,18 +83,20 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
 
   const handleGetAvailabilitySetting = (assignment: AssignmentTopic) => {
     const { remindToGrade, open, close } = assignment.data;
+    console.log("assignment", assignment);
+    const currentDate = new Date().toISOString();
     const availabilitySetting: AvailabilitySettingForm = {
       open: {
         enabled: open !== null,
-        value: open || "",
+        value: open || currentDate,
       },
       close: {
         enabled: close !== null,
-        value: close || "",
+        value: close || currentDate,
       },
       remindToGrade: {
         enabled: remindToGrade !== null,
-        value: remindToGrade || "",
+        value: remindToGrade || currentDate,
       },
     };
     return availabilitySetting;
@@ -144,6 +142,7 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
     },
   });
   const { setValue, watch } = form;
+  const { errors } = form.formState;
 
   //use for auto save setting and update the state when the show content is closed
   const handleGeneralSettingChange = useDebounceFunction(
@@ -229,7 +228,14 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
           />
         </CollapsibleList>
         <div className="w-full flex flex-row justify-center">
-          <Button type="submit" disabled={!isSettingChange} variant="default">
+          <Button
+            type="submit"
+            disabled={!isSettingChange}
+            onClick={() => {
+              console.log("error", errors);
+            }}
+            variant="default"
+          >
             Save
           </Button>
         </div>

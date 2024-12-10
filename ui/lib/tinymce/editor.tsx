@@ -50,6 +50,7 @@ const TinyEditor = ({ initValue, onChange }: Props) => {
         setInitValue(e.target.value);
         if (onChange) onChange(e.target.value);
       }}
+      className="py-2"
     />
   );
 };

@@ -39,22 +39,38 @@ export default function FileUpload({
 
   const handleFileChange = () => {
     const newFiles = getMultipleFileInput(inputRef);
+    if (!newFiles || newFiles.length == 0) return;
 
-    if (newFiles) {
-      const allowedFiles = newFiles.filter((file) =>
-        config.allowedTypes.includes(file.type)
-      );
-      // set files to upload to cloudinary (type: File)
-      setCloudinaryFilesToUpload(allowedFiles);
+    const allowedFiles = newFiles.filter((file) =>
+      config.allowedTypes.includes(file.type)
+    );
+    // set files to upload to cloudinary (type: File)
+    setCloudinaryFilesToUpload(allowedFiles);
 
-      const newAttachedFiles: CloudinaryFile[] = allowedFiles.map((file) => ({
-        name: file.name,
-        displayUrl: "",
-        downloadUrl: "",
-      }));
-      // set files to upload to store in backend (type: CloudinaryFile)
-      setBackendFilesToStore((prev) => [...prev, ...newAttachedFiles]);
-    }
+    const newAttachedFiles: CloudinaryFile[] = allowedFiles.map((file) => ({
+      name: file.name,
+      displayUrl: "",
+      downloadUrl: "",
+    }));
+    // set files to upload to store in backend (type: CloudinaryFile)
+    setBackendFilesToStore((prev) => [...prev, ...newAttachedFiles]);
+  };
+
+  const handleUploadSuccess = (res: any) => {
+    toast.success(res.message);
+
+    //update url in backendFilesToStore
+    const uploadedFiles = [...backendFilesToStore];
+    uploadedFiles.map((file, index) => {
+      file.displayUrl = res.data[index].url;
+      file.downloadUrl = convertCloudinaryUrlToDownloadUrl(res.data[index].url);
+    });
+
+    setCloudinaryUploadedFiles(uploadedFiles);
+  };
+
+  const handleUploadFail = (err: any) => {
+    toast.error(err);
   };
 
   const handleUpload = async () => {
@@ -66,24 +82,8 @@ export default function FileUpload({
     const res = await UploadFiles(formData);
 
     //handle response
-    if (res.errors) {
-      await error().then(() => toast.error(res.errors[0]));
-    } else {
-      await finish().then(() => {
-        toast.success(res.message);
-
-        //update url in backendFilesToStore
-        const uploadedFiles = [...backendFilesToStore];
-        uploadedFiles.map((file, index) => {
-          file.displayUrl = res.data[index].url;
-          file.downloadUrl = convertCloudinaryUrlToDownloadUrl(
-            res.data[index].url
-          );
-        });
-
-        setCloudinaryUploadedFiles(uploadedFiles);
-      });
-    }
+    if (res.errors) await error().then(() => handleUploadFail(res.errors[0]));
+    else await finish().then(() => handleUploadSuccess(res));
   };
 
   useEffect(() => {

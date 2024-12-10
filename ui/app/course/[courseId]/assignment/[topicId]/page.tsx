@@ -9,6 +9,12 @@ import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { useEffect, useState } from "react";
 import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
+import { toast } from "react-toastify";
+import { getCourse } from "@/services/course";
+import { Course } from "@/models/course";
+import { getTopic } from "@/services/topic";
+import { User } from "@/models/user";
+import { getMyInfo } from "@/services/user";
 
 interface Props {
   params: {
@@ -18,11 +24,28 @@ interface Props {
 }
 export default function TopicQuiz({ params }: Props) {
   const { courseId, topicId } = params;
+  const [course, setCourse] = useState<Course>();
+  const [user, setUser] = useState<User>();
   const [assignment, setAssignment] = useState<AssignmentTopic>();
   const [initTab, setInitTab] = useState<string>(Tab.ASSIGNMENT);
   const dispatch = useAppDispatch();
 
+  const handleGetCourseSuccess = (data: Course) => {
+    setCourse(data);
+  };
+  const handleGetCourseFail = (error: any) => {
+    toast.error(error);
+  };
+
+  const handleGetMyInfoSuccess = (data: User) => {
+    setUser(data);
+  };
+  const handleGetMyInfoFail = (error: any) => {
+    toast.error(error);
+  };
+
   useEffect(() => {
+    if (!assignment || !course) return;
     //this useEffect is used for setting breadcrumb when the page is loaded
     const breadcrumbItems: BreadcrumbItem[] = [
       {
@@ -30,22 +53,38 @@ export default function TopicQuiz({ params }: Props) {
         href: "/home",
       },
       {
-        label: "Introduce to Astronomy",
+        label: course.title,
         href: `/course/${courseId}`,
       },
       {
-        label: "Assignment",
+        label: assignment.title,
         href: `/course/${courseId}/assignment/${topicId}`,
       },
     ];
     dispatch(setBreadcrumb(breadcrumbItems));
-  }, []);
+  }, [course, assignment]);
 
   useEffect(() => {
     //this useEffect is used for updating tab based on local storage
     let storageTab = localStorage.getItem(topicId);
     if (storageTab) setInitTab(storageTab);
+    getTopic(topicId, handleGetAssignmentSuccess, handleGetAssignmentFail);
   }, [topicId]);
+
+  useEffect(() => {
+    getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
+  }, [courseId]);
+
+  useEffect(() => {
+    getMyInfo(handleGetMyInfoSuccess, handleGetMyInfoFail);
+  }, []);
+
+  const handleGetAssignmentSuccess = (data: AssignmentTopic) => {
+    setAssignment(data);
+  };
+  const handleGetAssignmentFail = (error: any) => {
+    toast.error(error);
+  };
   const handleAssignmentChange = (data: AssignmentTopic) => {
     setAssignment(data);
   };
@@ -56,7 +95,7 @@ export default function TopicQuiz({ params }: Props) {
   const Icon = iconMap["assignment"];
   const tabs = Object.values(Tab);
 
-  if (!assignment) return null;
+  if (!assignment || !user) return null;
 
   return (
     <PageLayout className="relative bg-purple-50 !overflow-y-hidden">
@@ -77,6 +116,7 @@ export default function TopicQuiz({ params }: Props) {
         <div className="z-10 mt-[150px] flex w-full default-scrollbar p-5">
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
             <TabContent
+              role={user.role}
               assignment={assignment}
               onAssignmentChange={handleAssignmentChange}
             />

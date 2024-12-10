@@ -31,7 +31,7 @@ const EditorDisplay = ({ htmlString, className }: Props) => {
         initialValue={htmlString}
       /> */}
       <div
-        className="w-full h-full overflow-y-auto"
+        className="w-full h-full overflow-y-auto py-2"
         dangerouslySetInnerHTML={{ __html: htmlString }}
       />
     </div>

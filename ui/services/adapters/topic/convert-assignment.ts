@@ -5,7 +5,7 @@ export const convertAssignmentToRequestData = (assignment: AssignmentTopic) => {
   return {
     ...assignment,
     id: id.length === 4 ? null : id,
-    data: JSON.stringify(data),
+    data: data ? JSON.stringify(data) : null,
   };
 };
 

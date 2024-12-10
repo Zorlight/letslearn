@@ -68,6 +68,7 @@ const SectionList = ({
     if (toRefresh) onSectionChange(toRefresh);
     toggleEdit(sectionId);
   };
+
   const handleCreateTopic = (section: Section) => (type: TopicType) => {
     if (type === TopicType.QUIZ) handleCreateQuizTopic(section);
     else if (type === TopicType.ASSIGNMENT)

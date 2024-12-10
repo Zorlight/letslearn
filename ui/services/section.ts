@@ -1,4 +1,4 @@
-import { POST, PUT } from "@/lib/http-handle/http-handle";
+import { GET, POST, PUT } from "@/lib/http-handle/http-handle";
 import { Section } from "@/models/course";
 import { convertTopicToRequestData } from "./adapters/topic/topic";
 
@@ -33,7 +33,18 @@ export const updateSection = (
     courseId,
     topics: topics.map((topic) => convertTopicToRequestData(topic)),
   };
-  console.log("reqData", reqData);
 
   PUT(`/section/${id}`, reqData, onSuccess, onFail);
+};
+
+export const getSection = (
+  id: string,
+  onSuccess: (data: Section) => void,
+  onFail: (err?: any) => void
+) => {
+  const handleSuccess = (data: any) => {
+    console.log("section data", data);
+    onSuccess(data);
+  };
+  GET(`/section/${id}`, handleSuccess, onFail);
 };

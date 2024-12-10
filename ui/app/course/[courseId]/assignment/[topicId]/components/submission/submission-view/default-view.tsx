@@ -1,13 +1,13 @@
 import React from "react";
 import Part from "../part";
 import { StudentResponse } from "@/models/student-response";
-import { Test } from "@/models/quiz";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import EditorDisplay from "@/lib/tinymce/editor-display";
+import { AssignmentTopic } from "@/models/topic";
 interface Props {
   className?: string;
-  assignment: Test;
+  assignment: AssignmentTopic;
   studentResponses: StudentResponse[];
 }
 export default function SubmissionDefaultView({
@@ -15,21 +15,30 @@ export default function SubmissionDefaultView({
   studentResponses,
   className,
 }: Props) {
-  const { data, name, description, open, close } = assignment;
+  const { data } = assignment;
+  const { open, close, description } = data;
 
-  const openTime = format(new Date(open.value), "EEEE, dd MMMM yyyy, h:mm a");
-  const closeTime = format(new Date(close.value), "EEEE, dd MMMM yyyy, h:mm a");
+  const openTime = open
+    ? format(new Date(open), "EEEE, dd MMMM yyyy, h:mm a")
+    : null;
+  const closeTime = close
+    ? format(new Date(close), "EEEE, dd MMMM yyyy, h:mm a")
+    : null;
   return (
     <div className={cn(className)}>
       <div className="pb-4 space-y-2 border-b-[0.5px] border-gray-400 text-gray-800">
-        <p>
-          <span className="font-bold">Open: </span>
-          <span className="text-gray-500">{openTime}</span>
-        </p>
-        <p>
-          <span className="font-bold">Close: </span>
-          <span className="text-gray-500">{closeTime}</span>
-        </p>
+        {openTime && (
+          <p>
+            <span className="font-bold">Open: </span>
+            <span className="text-gray-500">{openTime}</span>
+          </p>
+        )}
+        {closeTime && (
+          <p>
+            <span className="font-bold">Close: </span>
+            <span className="text-gray-500">{closeTime}</span>
+          </p>
+        )}
       </div>
 
       <Part title="Status">

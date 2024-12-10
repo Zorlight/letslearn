@@ -31,7 +31,7 @@ export function MeetingPageComponent(props: {
 
   const handlePreJoinSubmit = React.useCallback(async (values: LocalUserChoices) => {
     setPreJoinChoices(values);
-    const url = new URL(`/v1/meeting/${props.meetingID}`, GLOBAL.API_URL);
+    const url = new URL(`/v1/meeting/${props.meetingID}`, GLOBAL.MEETING_URL);
     url.searchParams.append('name', values.username);
     const connectionDetailsResp = await fetch(url.toString());
     const connectionDetailsData = await connectionDetailsResp.json();

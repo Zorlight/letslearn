@@ -1,0 +1,16 @@
+services:
+  livekit:
+    build:
+      context: ./livekit-server
+      dockerfile: Dockerfile
+    container_name: letslearn_livekit
+    ports:
+      - "8111:8111"
+
+  tldraw:
+    build:
+      context: ./tldraw-server
+      dockerfile: Dockerfile
+    container_name: letslearn_tldraw
+    ports:
+      - "5858:5858"

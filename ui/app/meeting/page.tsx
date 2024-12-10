@@ -12,7 +12,6 @@ import {
     useTracks,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
-import { Track } from "livekit-client";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -21,7 +20,7 @@ export default function Page() {
 
     useEffect(() => {
         fetch(
-            GLOBAL.API_URL + `/v1/meeting/abc_this_is_a_test_meeting`,
+            GLOBAL.MEETING_URL + `/v1/meeting/abc_this_is_a_test_meeting`,
             {
                 method: "POST",
             }

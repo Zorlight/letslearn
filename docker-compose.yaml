@@ -32,8 +32,8 @@ services:
     shm_size: 64mb
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: letslearn
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: lets-learn
     volumes:
       - db_data:/var/lib/postgresql/data
     expose:

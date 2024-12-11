@@ -5,7 +5,7 @@ import { Bell, Menu, MessageSquare, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Avatar from "../simple/avatar";
 import BreadCrumb, { BreadcrumbItem } from "../simple/breadcrumb";
-import NavbarButtonLayout from "./nav-button-layout";
+import IconButton from "@/components/buttons/icon-button";
 
 interface Props {
   className?: string;
@@ -52,12 +52,12 @@ export default function Navbar({ className, role = "teacher" }: Props) {
           </div>
         )}
 
-        <NavbarButtonLayout>
+        <IconButton>
           <Bell size={20} />
-        </NavbarButtonLayout>
-        <NavbarButtonLayout>
+        </IconButton>
+        <IconButton>
           <MessageSquare size={20} />
-        </NavbarButtonLayout>
+        </IconButton>
         <Avatar className="hover:scale-110" onClick={handleAvatarClick} />
       </div>
     </div>

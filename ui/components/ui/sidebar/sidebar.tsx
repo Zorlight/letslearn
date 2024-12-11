@@ -19,7 +19,7 @@ export default function Sidebar({ className }: Props) {
     >
       <Group>
         <SidebarItem title="Home" icon={<Home />} href="/home" />
-        <SidebarItem title="Calendar" icon={<Calendar />} />
+        <SidebarItem title="Calendar" icon={<Calendar />} href="/calendar" />
       </Group>
       <Group>
         <SidebarCollapsibleItem

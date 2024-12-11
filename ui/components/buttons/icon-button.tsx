@@ -6,11 +6,7 @@ interface Props {
   className?: string;
   onClick?: () => void;
 }
-export default function NavbarButtonLayout({
-  children,
-  className,
-  onClick,
-}: Props) {
+export default function IconButton({ children, className, onClick }: Props) {
   return (
     <div
       className={cn(

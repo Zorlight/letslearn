@@ -5,18 +5,34 @@ import { cn } from "@/lib/utils";
 import { AssignmentTopic } from "@/models/topic";
 import { format } from "date-fns";
 import GradingSummary from "../assignment/grading-summary-table";
-import { Role } from "@/models/user";
+import { Role, User } from "@/models/user";
 import GradingView from "../assignment/grading-view";
 import SubmissionView from "../assignment/submission-view";
+import { StudentResponse } from "@/models/student-response";
+import { CloudinaryFile } from "@/models/cloudinary-file";
+import { defaultAssignmentResponse } from "../assignment/static-data";
+import { createAssignmentResponse } from "@/services/assignment-response";
+import { toast } from "react-toastify";
 
 interface Props {
-  role: Role;
+  user: User;
   assignment: AssignmentTopic;
+  assignmentResponses: StudentResponse[];
   className?: string;
+  onAssignmentResponsesChange?: (responses: StudentResponse[]) => void;
 }
-const TabAssignment = ({ className, assignment, role }: Props) => {
+const TabAssignment = ({
+  className,
+  assignment,
+  assignmentResponses,
+  user,
+  onAssignmentResponsesChange,
+}: Props) => {
   const { data } = assignment;
   const { open, close, description } = data;
+  const responseOfStudent = assignmentResponses.find(
+    (response) => response.student.id === user.id
+  );
 
   const openTime = open
     ? format(new Date(open), "EEEE, dd MMMM yyyy, h:mm a")
@@ -24,6 +40,35 @@ const TabAssignment = ({ className, assignment, role }: Props) => {
   const closeTime = close
     ? format(new Date(close), "EEEE, dd MMMM yyyy, h:mm a")
     : null;
+
+  const handleCreateAssignmentResponseSuccess = (res: StudentResponse) => {
+    if (onAssignmentResponsesChange) {
+      onAssignmentResponsesChange([...assignmentResponses, res]);
+    }
+  };
+
+  const handleCreateAssignmentResponseFail = (err: any) => {
+    toast.error(err);
+  };
+
+  const handleUploaded = (files: CloudinaryFile[]) => {
+    let initAssignmentResponses = defaultAssignmentResponse;
+    initAssignmentResponses = {
+      ...initAssignmentResponses,
+      topicId: assignment.id,
+      data: {
+        ...initAssignmentResponses.data,
+        files: files,
+        submittedAt: new Date().toISOString(),
+      },
+    };
+    createAssignmentResponse(
+      assignment.id,
+      initAssignmentResponses,
+      handleCreateAssignmentResponseSuccess,
+      handleCreateAssignmentResponseFail
+    );
+  };
 
   return (
     <div className={cn(className)}>
@@ -44,7 +89,11 @@ const TabAssignment = ({ className, assignment, role }: Props) => {
       <EditorDisplay className="text-gray-500" htmlString={description} />
       {/* {role === Role.TEACHER && <GradingView />}
       {role === Role.STUDENT && <SubmissionView />} */}
-      <SubmissionView />
+      <SubmissionView
+        assignemnt={assignment}
+        assignmentResponse={responseOfStudent}
+        onUploaded={handleUploaded}
+      />
     </div>
   );
 };

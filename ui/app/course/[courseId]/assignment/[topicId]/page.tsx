@@ -116,7 +116,7 @@ export default function AssignmentPage({ params }: Props) {
         <div className="z-10 mt-[150px] flex w-full default-scrollbar p-5">
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
             <TabContent
-              role={user.role}
+              user={user}
               assignment={assignment}
               onAssignmentChange={handleAssignmentChange}
             />

@@ -8,15 +8,15 @@ import TabSetting from "./tab-setting";
 import { TabSubmission } from "./tab-submission";
 import { useEffect, useState } from "react";
 import { StudentResponse } from "@/models/student-response";
-import { Role } from "@/models/user";
+import { Role, User } from "@/models/user";
 
 interface Props {
   assignment: AssignmentTopic;
-  role: Role;
+  user: User;
   onAssignmentChange?: (quiz: AssignmentTopic) => void;
 }
 
-const TabContent = ({ role, assignment, onAssignmentChange }: Props) => {
+const TabContent = ({ user, assignment, onAssignmentChange }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
 
@@ -29,7 +29,12 @@ const TabContent = ({ role, assignment, onAssignmentChange }: Props) => {
   switch (selectedTab) {
     case Tab.ASSIGNMENT:
       return (
-        <TabAssignment role={role} assignment={assignment} className="h-full" />
+        <TabAssignment
+          user={user}
+          assignment={assignment}
+          assignmentResponses={assignmentResponses}
+          className="h-full"
+        />
       );
     case Tab.SETTINGS:
       return (

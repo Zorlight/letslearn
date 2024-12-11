@@ -1,18 +1,31 @@
 "use client";
 import { Button } from "@/lib/shadcn/button";
-import { useState } from "react";
-import SubmissionStatusTable from "./submission-status-table";
-import FileSubmissionView from "./file-submisison-view";
 import { CloudinaryFile } from "@/models/cloudinary-file";
+import { useState } from "react";
+import FileSubmissionView from "./file-submisison-view";
+import SubmissionStatusTable from "./submission-status-table";
+import { StudentResponse } from "@/models/student-response";
+import { AssignmentTopic } from "@/models/topic";
 
-export default function SubmissionView() {
+interface Props {
+  assignemnt: AssignmentTopic;
+  assignmentResponse: StudentResponse | undefined;
+  onUploaded?: (files: CloudinaryFile[]) => void;
+}
+export default function SubmissionView({
+  assignemnt,
+  assignmentResponse,
+  onUploaded,
+}: Props) {
   const [isAddingSubmisison, setIsAddingSubmission] = useState(false);
   const toggleAddingSubmission = () =>
     setIsAddingSubmission(!isAddingSubmisison);
 
   const handleUploadedFile = (files: CloudinaryFile[]) => {
     toggleAddingSubmission();
+    if (onUploaded) onUploaded(files);
   };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-row gap-2 items-center ">
@@ -32,7 +45,12 @@ export default function SubmissionView() {
       </div>
 
       <div className="font-bold text-orange-500">Submission status</div>
-      {!isAddingSubmisison && <SubmissionStatusTable />}
+      {!isAddingSubmisison && (
+        <SubmissionStatusTable
+          assignment={assignemnt}
+          assignmentResponse={assignmentResponse}
+        />
+      )}
       {isAddingSubmisison && (
         <FileSubmissionView onUploaded={handleUploadedFile} />
       )}

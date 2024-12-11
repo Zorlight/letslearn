@@ -32,9 +32,9 @@ export enum QuizStatus {
 }
 
 export type AssignmentResponseData = {
-  submittedAt: string | null;
+  submittedAt: string;
   files: CloudinaryFile[];
-  mark: number;
+  mark: number | null;
   note: string;
 };
 

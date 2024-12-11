@@ -9,7 +9,7 @@ import { useState } from "react";
 import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
 
-export default function TopicPage() {
+export default function PagePage() {
   const [page, setPage] = useState<Page>(fakePage);
   const handlePageChange = (data: Page) => {
     setPage(data);

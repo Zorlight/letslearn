@@ -2,17 +2,18 @@
 import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import TabList from "@/components/ui/tab-list";
 import PageLayout from "@/components/ui/util-layout/page-layout";
-import { iconMap, QuizTopic } from "@/models/topic";
+import { iconMap, MeetingTopic, QuizTopic } from "@/models/topic";
 import { TabProvider } from "@/provider/tab-provider";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { getTopic } from "@/services/topic";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Tab } from "./components/static-data";
-import TabContent from "./components/tab-content/tab-content";
 import { getCourse } from "@/services/course";
 import { Course } from "@/models/course";
+import { Tab } from "./_components/static-data";
+import TabContent from "./_components/tab-content/tab-content";
+import { fakeMeeting } from "@/fake-data/meeting";
 
 interface Props {
   params: {
@@ -20,15 +21,15 @@ interface Props {
     topicId: string;
   };
 }
-export default function QuizPage({ params }: Props) {
+export default function MeetingPage({ params }: Props) {
   const { courseId, topicId } = params;
   const [course, setCourse] = useState<Course>();
-  const [quiz, setQuiz] = useState<QuizTopic>();
-  const [initTab, setInitTab] = useState<string>(Tab.QUIZ);
+  const [meeting, setMeeting] = useState<MeetingTopic>(fakeMeeting);
+  const [initTab, setInitTab] = useState<string>(Tab.DETAIL);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!quiz || !course) return;
+    if (!meeting || !course) return;
     //this useEffect is used for setting breadcrumb when the page is loaded
     const breadcrumbItems: BreadcrumbItem[] = [
       {
@@ -40,35 +41,32 @@ export default function QuizPage({ params }: Props) {
         href: `/course/${courseId}`,
       },
       {
-        label: quiz.title,
-        href: `/course/${courseId}/quiz/${topicId}`,
+        label: meeting.title,
+        href: `/course/${courseId}/meeting/${topicId}`,
       },
     ];
 
     dispatch(setBreadcrumb(breadcrumbItems));
-  }, [course, quiz]);
+  }, [course, meeting]);
 
   useEffect(() => {
     getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
   }, [courseId]);
 
-  useEffect(() => {
-    //this useEffect is used for updating tab based on local storage
-    let storageTab = localStorage.getItem(topicId);
-    if (storageTab) setInitTab(storageTab);
+  // useEffect(() => {
+  //   //this useEffect is used for updating tab based on local storage
+  //   let storageTab = localStorage.getItem(topicId);
+  //   if (storageTab) setInitTab(storageTab);
 
-    getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
-  }, [topicId]);
+  //   getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
+  // }, [topicId]);
 
-  const handleQuizChange = (data: QuizTopic) => {
-    setQuiz(data);
-  };
   const handleTabSelected = (tab: string) => {
     localStorage.setItem(topicId, tab);
   };
 
-  const handleGetTopicSuccess = (data: QuizTopic) => {
-    setQuiz(data);
+  const handleGetTopicSuccess = (data: MeetingTopic) => {
+    setMeeting(data);
   };
   const handleGetTopicFail = (error: any) => {
     toast.error(error);
@@ -84,15 +82,15 @@ export default function QuizPage({ params }: Props) {
   const Icon = iconMap.quiz;
   const tabs = Object.values(Tab);
 
-  if (!quiz) return null;
+  // if (!meeting) return null;
   return (
-    <PageLayout className="relative bg-pink-50 !overflow-y-hidden">
+    <PageLayout className="relative bg-blue-50 !overflow-y-hidden">
       <TabProvider initTab={initTab}>
-        <div className="z-0 absolute top-0 w-full h-[250px] px-5 py-10 justify-center bg-gradient-to-br from-quiz via-[#751540] via-75% to-[#751540] shadow-[inset_4px_4px_20px_0px_#751540] text-white">
+        <div className="z-0 absolute top-0 w-full h-[250px] px-5 py-10 justify-center bg-gradient-to-br from-meeting via-[#211C64] via-75% to-[#211C64] shadow-[inset_4px_4px_20px_0px_#211C64] text-white">
           <div className="w-full space-y-8">
             <div className="w-full px-5 flex flex-row gap-4">
               <Icon size={32} />
-              <h3>{quiz.title}</h3>
+              <h3>Meeting</h3>
             </div>
             <TabList
               tabs={tabs}
@@ -103,11 +101,7 @@ export default function QuizPage({ params }: Props) {
         </div>
         <div className="z-10 mt-[150px] flex w-full default-scrollbar p-5">
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
-            <TabContent
-              courseId={courseId}
-              quiz={quiz}
-              onQuizChange={handleQuizChange}
-            />
+            <TabContent meeting={meeting} />
           </div>
         </div>
       </TabProvider>

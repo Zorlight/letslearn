@@ -11,7 +11,8 @@ const Tab = ({ title, isSelected, variant = "default", onClick }: Props) => {
   return (
     <div
       className={cn(
-        "w-fit h-[40px] flex items-center px-4 border-b-2 border-transparent transition-all duration-300 font-semibold cursor-pointer",
+        "w-fit h-[40px] flex items-center px-4 border-b-2 border-transparent transition-all duration-300 text-sm font-semibold cursor-pointer",
+        isSelected && "font-bold",
         !isSelected &&
           variant === "default" &&
           "text-gray-500 hover:text-blue-700",

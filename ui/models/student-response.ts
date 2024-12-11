@@ -33,11 +33,9 @@ export enum QuizStatus {
 
 export type AssignmentResponseData = {
   submittedAt: string | null;
-  submitted: AssignmentFileUpload;
-};
-
-export type AssignmentFileUpload = {
   files: CloudinaryFile[];
+  mark: number;
+  note: string;
 };
 
 export const getQuizResponseMark = (quizResponse: QuizResponseData) => {

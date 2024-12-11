@@ -9,6 +9,7 @@ import {
 import { QuizData } from "./quiz";
 import { AssignmentData } from "./assignment";
 import { CloudinaryFile } from "./cloudinary-file";
+import { MeetingData } from "./meeting";
 
 interface BaseTopic {
   id: string;
@@ -36,6 +37,7 @@ export interface AssignmentTopic extends BaseTopic {
 }
 export interface MeetingTopic extends BaseTopic {
   type: TopicType.MEETING;
+  data: MeetingData;
 }
 export interface LinkTopic extends BaseTopic {
   type: TopicType.LINK;

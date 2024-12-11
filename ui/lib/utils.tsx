@@ -170,6 +170,11 @@ const getMultipleFileInput = (ref: RefObject<HTMLInputElement>) => {
   return ref.current.files?.length ? Array.from(ref.current.files) : [];
 };
 
+const getFileExtension = (filename: string) => {
+  const [, ex] = filename.split(".");
+  return ex.toLowerCase();
+};
+
 const imageExtension = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"];
 const videoExtension = ["mp4", "webm", "ogg", "avi", "mov", "flv", "wmv"];
 const audioExtension = ["mp3", "wav", "ogg", "flac", "aac", "wma"];
@@ -222,6 +227,7 @@ export {
   resetFileInput,
   getFileInput,
   getMultipleFileInput,
+  getFileExtension,
   isImageExtension,
   isVideoExtension,
   isAudioExtension,

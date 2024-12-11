@@ -9,7 +9,7 @@ export default function SettingBoard() {
   const tabs = Object.values(Tab);
   return (
     <TabProvider initTab={Tab.PROFILE}>
-      <div className="w-full pb-10 rounded-lg border-[0.5px] border-gray-400 bg-white shadow-md">
+      <div className="w-full pb-5 rounded-lg border-[0.5px] border-gray-400 bg-white shadow-md">
         <TabList tabs={tabs} />
         <TabContent />
       </div>

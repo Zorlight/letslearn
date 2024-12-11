@@ -42,7 +42,7 @@ export default function Sidebar({ className }: Props) {
         </SidebarCollapsibleItem>
       </Group>
       <Group hasBorder={false}>
-        <SidebarItem title="Settings" icon={<Settings />} />
+        <SidebarItem title="Setting" icon={<Settings />} href="/setting" />
       </Group>
     </div>
   );

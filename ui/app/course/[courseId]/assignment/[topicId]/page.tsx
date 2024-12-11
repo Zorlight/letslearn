@@ -22,7 +22,7 @@ interface Props {
     topicId: string;
   };
 }
-export default function TopicQuiz({ params }: Props) {
+export default function AssignmentPage({ params }: Props) {
   const { courseId, topicId } = params;
   const [course, setCourse] = useState<Course>();
   const [user, setUser] = useState<User>();

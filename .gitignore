@@ -1,2 +1,3 @@
 server/.env
 ui/.env
+.env

@@ -46,20 +46,12 @@ export const ChooseAvatarButton = ({
         className="absolute flex flex-row items-center justify-center w-full h-full cursor-pointer bg-gray-200/60 text-white opacity-0 hover:opacity-100 ease-linear duration-100"
       >
         <div
-          className={cn(
-            "h-full w-1/2 flex items-center justify-center hover:bg-gray-200/20 ease-linear duration-100",
-            !fileUrl && "w-0"
-          )}
+          className="h-full w-1/2 flex items-center justify-center hover:bg-gray-200/20 ease-linear duration-100"
           onClick={handleRemoveImage}
         >
           <ImageMinus />
         </div>
-        <div
-          className={cn(
-            "h-full w-1/2 flex items-center justify-center hover:bg-gray-200/20 ease-linear duration-100",
-            !fileUrl && "w-full"
-          )}
-        >
+        <div className="h-full w-1/2 flex items-center justify-center hover:bg-gray-200/20 ease-linear duration-100">
           <Camera />
         </div>
       </label>

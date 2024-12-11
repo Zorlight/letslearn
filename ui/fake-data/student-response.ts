@@ -25,6 +25,8 @@ export const fakeStudentResponses: StudentResponse[] = [
             "https://res.cloudinary.com/dggtc5ucv/image/upload/fl_attachment/v1720970602/epalczk6hix3bvbpa4xd.jpg",
         },
       ],
+      mark: 10,
+      note: "Good job!",
     },
   },
 ];

@@ -25,7 +25,11 @@ export default function Sidebar({ className }: Props) {
         <SidebarCollapsibleItem
           trigger={<SidebarItem title="Teaching" icon={<Users />} />}
         >
-          <SidebarItem title="To review" icon={<ClipboardList />} />
+          <SidebarItem
+            title="To review"
+            icon={<ClipboardList />}
+            href="/to-review"
+          />
           <SidebarCourseItem
             courseName="Introduction to Astronomy"
             category="Astronomy"

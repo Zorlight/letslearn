@@ -1,20 +1,22 @@
+"use client";
 import IconButton from "@/components/buttons/icon-button";
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
 import { format } from "date-fns";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Calendar, { CalendarRange } from "./_components/calendar/calendar";
+import { useState } from "react";
 
 export default function CalendarPage() {
   const options = ["All courses"];
   const current = new Date();
   const nextWeek = new Date(current);
   nextWeek.setDate(nextWeek.getDate() + 6);
-
-  const calendarRange: CalendarRange = {
+  const [calendarRange, setCalendarRange] = useState<CalendarRange>({
     start: current,
     end: nextWeek,
-  };
+  });
+
   const formatCalendarRange = (range: { start: Date; end: Date }) => {
     const startText = format(range.start, "MMM d");
     const endText = format(range.end, "MMM d, yyyy");
@@ -25,6 +27,7 @@ export default function CalendarPage() {
       <div className="flex flex-row items-center justify-between">
         <Combobox
           name="Course"
+          initialValue={options[0]}
           options={options}
           popoverClassName="min-w-[250px]"
         >

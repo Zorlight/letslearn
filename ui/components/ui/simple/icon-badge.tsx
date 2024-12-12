@@ -5,7 +5,7 @@ import { ClassValue } from "clsx";
 import React from "react";
 
 const iconBadgeVariants = cva(
-  "rounded-full border border-transparent transition-all ease-linear duration-200 cursor-pointer",
+  "rounded-full border border-transparent transition-all ease-linear duration-200 cursor-pointer flex items-center justify-center",
   {
     variants: {
       variant: {

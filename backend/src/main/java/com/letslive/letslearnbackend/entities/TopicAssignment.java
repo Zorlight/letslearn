@@ -36,12 +36,6 @@ public class TopicAssignment {
     @JsonProperty(value = "close", required = false)
     private String close;
 
-    @JsonProperty(value = "note", required = false)
-    private String note;
-
-    @JsonProperty("mark")
-    private BigDecimal mark;
-
     @JsonProperty("remindToGrade")
     private String remindToGrade;
 

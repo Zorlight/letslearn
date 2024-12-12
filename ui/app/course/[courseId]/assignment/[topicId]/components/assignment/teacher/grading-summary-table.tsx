@@ -1,5 +1,5 @@
 import React from "react";
-import MiniTableRow from "./mini-table-row";
+import MiniTableRow from "../util/mini-table-row";
 
 interface Props {
   hiddenFromStudent: number;

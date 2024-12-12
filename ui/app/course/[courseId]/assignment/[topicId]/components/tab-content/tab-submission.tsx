@@ -16,16 +16,14 @@ import { AssignmentTopic } from "@/models/topic";
 
 interface Props {
   assignment: AssignmentTopic;
-  assignmentResponses: StudentResponse[];
   className?: string;
 }
-export function TabSubmission({
-  className,
-  assignment,
-  assignmentResponses,
-}: Props) {
+export function TabSubmission({ className, assignment }: Props) {
   const refInput = useRef<HTMLInputElement>(null);
   const [filterKey, setFilterKey] = useState<string>("");
+  const [assignmentResponses, setAssignmentResponses] = useState<
+    StudentResponse[]
+  >([]);
   const [selectedStudentResponse, setSelectedStudentResponse] =
     useState<StudentResponse | null>(null);
   const [students, setStudents] = useState<User[]>(fakeUserList);
@@ -41,6 +39,8 @@ export function TabSubmission({
   const handleCloseSubmittedView = () => {
     setSelectedStudentResponse(null);
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div className={cn(className)}>

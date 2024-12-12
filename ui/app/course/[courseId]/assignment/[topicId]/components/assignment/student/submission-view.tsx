@@ -8,12 +8,12 @@ import { StudentResponse } from "@/models/student-response";
 import { AssignmentTopic } from "@/models/topic";
 
 interface Props {
-  assignemnt: AssignmentTopic;
+  assignment: AssignmentTopic;
   assignmentResponse: StudentResponse | undefined;
   onUploaded?: (files: CloudinaryFile[]) => void;
 }
 export default function SubmissionView({
-  assignemnt,
+  assignment,
   assignmentResponse,
   onUploaded,
 }: Props) {
@@ -47,7 +47,7 @@ export default function SubmissionView({
       <div className="font-bold text-orange-500">Submission status</div>
       {!isAddingSubmisison && (
         <SubmissionStatusTable
-          assignment={assignemnt}
+          assignment={assignment}
           assignmentResponse={assignmentResponse}
         />
       )}

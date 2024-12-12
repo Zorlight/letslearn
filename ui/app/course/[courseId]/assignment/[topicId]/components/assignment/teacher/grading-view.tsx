@@ -1,7 +1,11 @@
 import { Button } from "@/lib/shadcn/button";
 import GradingSummaryTable from "./grading-summary-table";
+import { StudentResponse } from "@/models/student-response";
 
-export default function GradingView() {
+interface Props {
+  assignmentResponses: StudentResponse[];
+}
+export default function GradingView({ assignmentResponses }: Props) {
   return (
     <div className="space-y-4">
       <Button variant="cyan" className="w-fit rounded-lg">

@@ -9,14 +9,14 @@ interface Props {
   className?: string;
 }
 const TabAssignment = ({ className, assignment, user }: Props) => {
-  if (user.role === Role.TEACHER)
-    return (
-      <TabTeacherAssignment
-        user={user}
-        assignment={assignment}
-        className={className}
-      />
-    );
+  // if (user.role === Role.TEACHER)
+  //   return (
+  //     <TabTeacherAssignment
+  //       user={user}
+  //       assignment={assignment}
+  //       className={className}
+  //     />
+  //   );
 
   return (
     <TabStudentAssignment

@@ -11,6 +11,7 @@ import defaultConfig, { FileUploadConfig } from "./file-upload-config";
 import FileUploadProgress from "./file-upload-progress";
 import { CloudUploadIcon } from "./icons";
 import { convertCloudinaryUrlToDownloadUrl } from "./utils";
+import { nanoid } from "@reduxjs/toolkit";
 
 interface Props {
   onUploaded?: (files: CloudinaryFile[]) => void;
@@ -48,6 +49,7 @@ export default function FileUpload({
     setCloudinaryFilesToUpload(allowedFiles);
 
     const newAttachedFiles: CloudinaryFile[] = allowedFiles.map((file) => ({
+      id: nanoid(4),
       name: file.name,
       displayUrl: "",
       downloadUrl: "",

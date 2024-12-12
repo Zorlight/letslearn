@@ -20,7 +20,7 @@ export default function ToReviewTab() {
           className="min-w-[400px] flex justify-between"
         >
           {selectedOption}
-          <ChevronDown />
+          <ChevronDown size={20} />
         </Button>
       </Combobox>
       <ReviewList />

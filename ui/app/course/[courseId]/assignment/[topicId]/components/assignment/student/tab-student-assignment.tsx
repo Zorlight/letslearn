@@ -8,6 +8,7 @@ import { User } from "@/models/user";
 import { CloudinaryFile } from "@/models/cloudinary-file";
 import { defaultAssignmentResponse } from "./static-data";
 import { createAssignmentResponse } from "@/services/assignment-response";
+import { toast } from "react-toastify";
 
 interface Props {
   user: User;
@@ -24,6 +25,14 @@ export default function TabStudentAssignment({
   useEffect(() => {
     // fetch assignment response of the student by assignment id and user id
   }, []);
+
+  const handleCreateAssignmentResponseSuccess = (data: StudentResponse) => {
+    setAssignmentResponse(data);
+    toast.success("Assignment submitted successfully");
+  };
+  const handleCreateAssignmentResponseFail = (err: any) => {
+    toast.error(err);
+  };
   const handleUploaded = (files: CloudinaryFile[]) => {
     let initAssignmentResponses = defaultAssignmentResponse;
     initAssignmentResponses = {
@@ -35,12 +44,12 @@ export default function TabStudentAssignment({
         submittedAt: new Date().toISOString(),
       },
     };
-    // createAssignmentResponse(
-    //   assignment.id,
-    //   initAssignmentResponses,
-    //   handleCreateAssignmentResponseSuccess,
-    //   handleCreateAssignmentResponseFail
-    // );
+    createAssignmentResponse(
+      assignment.id,
+      initAssignmentResponses,
+      handleCreateAssignmentResponseSuccess,
+      handleCreateAssignmentResponseFail
+    );
   };
   return (
     <TabAssignmentLayout

@@ -81,7 +81,7 @@ function handleFilterColumn<T>(
 }
 
 // 3680s -> 1 hour 1 minute 20 second
-const getDurationText = (startTime: any, endTime: any) => {
+const getDurationText = (startTime: any, endTime: any, fixed: number = 0) => {
   if (!startTime || !endTime) return "";
 
   try {
@@ -94,10 +94,10 @@ const getDurationText = (startTime: any, endTime: any) => {
   const duration = Math.abs(
     Math.floor(endTime / 1000) - Math.floor(startTime / 1000)
   );
-  return getTimeStringByDuration(duration);
+  return getTimeStringByDuration(duration, fixed);
 };
 
-const getTimeStringByDuration = (duration: number) => {
+const getTimeStringByDuration = (duration: number, fixed: number = 6) => {
   const years = Math.floor(duration / 31536000);
   duration -= years * 31536000;
   const months = Math.floor(duration / 2628000);
@@ -118,7 +118,12 @@ const getTimeStringByDuration = (duration: number) => {
     minutes && `${minutes} ${minutes > 1 ? "minutes" : "minute"}`,
     seconds && `${seconds} ${seconds > 1 ? "seconds" : "second"}`,
   ]
-    .filter((value) => value)
+    .filter((value) => {
+      if (value && fixed > 0) {
+        fixed -= 1;
+        return value;
+      }
+    })
     .join(" ");
 
   return time;

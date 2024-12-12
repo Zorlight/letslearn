@@ -1,13 +1,9 @@
 import {
   AssignmentResponseData,
-  QuizResponseData,
   StudentResponse,
 } from "@/models/student-response";
-import {
-  convertQuizResponseAnswerFromResponseData,
-  convertQuizResponseAnswerToRequestData,
-} from "./quiz-response-answer";
 import { User } from "@/models/user";
+import { convertCloudinaryFilesToRequestData } from "../cloudinary-file/cloudinary-file";
 
 export const convertAssignmentResponseToRequestData = (
   assignmentResponse: StudentResponse
@@ -18,7 +14,7 @@ export const convertAssignmentResponseToRequestData = (
     id: null,
     topicId,
     submittedAt,
-    files,
+    cloudinaryFiles: convertCloudinaryFilesToRequestData(files),
     mark,
     note,
   };
@@ -27,14 +23,14 @@ export const convertAssignmentResponseToRequestData = (
 export const convertAssignmentResponseFromResponseData = (
   data: any
 ): StudentResponse => {
-  const { id, topicId, user, submittedAt, files, mark, note } = data;
+  const { id, topicId, user, submittedAt, cloudinaryFiles, mark, note } = data;
   const res: StudentResponse = {
     id,
     topicId,
     student: user as User,
     data: {
       submittedAt,
-      files,
+      files: cloudinaryFiles,
       mark,
       note,
     },

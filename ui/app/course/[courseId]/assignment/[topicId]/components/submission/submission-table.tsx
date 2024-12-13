@@ -1,19 +1,23 @@
+"use client";
 import { getGradeColor } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import Avatar from "@/components/ui/simple/avatar";
+import { Input } from "@/lib/shadcn/input";
 import { cn } from "@/lib/utils";
-import { StudentResponse } from "@/models/student-response";
+import {
+  AssignmentResponseData,
+  StudentResponse,
+} from "@/models/student-response";
 import { User } from "@/models/user";
 
 interface Props {
   selectedStudentResponse: StudentResponse | null;
   studentResponses: StudentResponse[];
-  students: User[];
   onResponseSelect?: (student: StudentResponse) => void;
 }
+
 export default function SubmissionTable({
   selectedStudentResponse,
   studentResponses,
-  students,
   onResponseSelect,
 }: Props) {
   const handleStudentSelect = (student: User) => () => {
@@ -23,11 +27,13 @@ export default function SubmissionTable({
     if (!selectedResponse) return;
     if (onResponseSelect) onResponseSelect(selectedResponse);
   };
+  const totalMark = 100;
   return (
     <table className="border-1 border-gray-300 bg-white border-collapse">
       <tbody>
-        {students.map((student, index) => {
-          const mark = 90 - index * 10;
+        {studentResponses.map((res, index) => {
+          const { student } = res;
+          const { mark } = res.data as AssignmentResponseData;
           return (
             <tr
               key={index}
@@ -51,10 +57,24 @@ export default function SubmissionTable({
               <td className="p-0 m-0">
                 <div
                   className={cn(
-                    "h-full py-3 px-4 flex items-center font-bold border-1",
-                    getGradeColor(mark, 100)
+                    "h-full py-3 px-4 flex items-center font-bold border-1 text-gray-500 text-sm",
+                    mark && getGradeColor(mark, totalMark)
                   )}
-                >{`${mark}/100`}</div>
+                >
+                  {mark && <span>{mark}</span>}
+                  {!mark && (
+                    <div className="flex flex-row items-center">
+                      <Input
+                        max={totalMark}
+                        min={0}
+                        step={1}
+                        maxLength={totalMark.toString().length}
+                        className="h-fit w-[40px] bg-transparent border-0 border-b-[0.5px] rounded-none py-0 px-1 text-center"
+                      />
+                    </div>
+                  )}
+                  <span>{`/${totalMark}`}</span>
+                </div>
               </td>
             </tr>
           );

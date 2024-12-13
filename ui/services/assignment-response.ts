@@ -12,7 +12,10 @@ export const createAssignmentResponse = (
   onFail: (err?: any) => void
 ) => {
   const reqData = convertAssignmentResponseToRequestData(assignmentResponse);
-  POST(`/topic/${topicId}/assignment-response`, reqData, onSuccess, onFail);
+  const handleSuccess = (data: any) => {
+    onSuccess(convertAssignmentResponseFromResponseData(data));
+  };
+  POST(`/topic/${topicId}/assignment-response`, reqData, handleSuccess, onFail);
 };
 
 export const getAssignmentResponses = (

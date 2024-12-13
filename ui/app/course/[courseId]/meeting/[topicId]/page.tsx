@@ -50,6 +50,8 @@ export default function MeetingPage({ params }: Props) {
   }, [course, meeting]);
 
   useEffect(() => {
+    let storageTab = localStorage.getItem(`meeting-${topicId}`);
+    if (storageTab) setInitTab(storageTab);
     getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
   }, [courseId]);
 
@@ -62,7 +64,7 @@ export default function MeetingPage({ params }: Props) {
   // }, [topicId]);
 
   const handleTabSelected = (tab: string) => {
-    localStorage.setItem(topicId, tab);
+    localStorage.setItem(`meeting-${topicId}`, tab);
   };
 
   const handleGetTopicSuccess = (data: MeetingTopic) => {

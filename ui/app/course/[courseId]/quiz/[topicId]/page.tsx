@@ -54,7 +54,7 @@ export default function QuizPage({ params }: Props) {
 
   useEffect(() => {
     //this useEffect is used for updating tab based on local storage
-    let storageTab = localStorage.getItem(topicId);
+    let storageTab = localStorage.getItem(`quiz-${topicId}`);
     if (storageTab) setInitTab(storageTab);
 
     getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
@@ -64,7 +64,7 @@ export default function QuizPage({ params }: Props) {
     setQuiz(data);
   };
   const handleTabSelected = (tab: string) => {
-    localStorage.setItem(topicId, tab);
+    localStorage.setItem(`quiz-${topicId}`, tab);
   };
 
   const handleGetTopicSuccess = (data: QuizTopic) => {

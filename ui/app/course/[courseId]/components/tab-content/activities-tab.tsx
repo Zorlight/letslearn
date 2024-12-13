@@ -3,7 +3,7 @@ import { Button } from "@/lib/shadcn/button";
 import { activityTopics } from "@/models/topic";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
-import ActivityList from "./activities-tab/review-group/activity-list";
+import ActivityList from "./activities-tab/activity-group/activity-list";
 
 interface Props {}
 export default function ActivitiesTab({}: Props) {

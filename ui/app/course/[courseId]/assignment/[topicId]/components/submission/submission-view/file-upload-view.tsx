@@ -1,7 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
 import {
-  AssignmentFileUpload,
   AssignmentResponseData,
   StudentResponse,
 } from "@/models/student-response";
@@ -15,8 +14,7 @@ export default function SubmissionFileUploadView({
   studentResponse,
   className,
 }: Props) {
-  const { submitted } = studentResponse.data as AssignmentResponseData;
-  const { files } = submitted as AssignmentFileUpload;
+  const { files } = studentResponse.data as AssignmentResponseData;
 
   const title = files.length > 1 ? "Files uploaded" : "File uploaded";
   return (

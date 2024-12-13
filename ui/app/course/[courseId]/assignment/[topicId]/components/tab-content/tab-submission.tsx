@@ -1,36 +1,41 @@
 "use client";
-import { fakeUserList } from "@/fake-data/user";
+import { useDebouce } from "@/hooks/useDebounce";
 import { Input } from "@/lib/shadcn/input";
 import { cn } from "@/lib/utils";
-import { StudentResponse } from "@/models/student-response";
-import { User } from "@/models/user";
+import {
+  AssignmentResponseData,
+  StudentResponse,
+} from "@/models/student-response";
+import { AssignmentTopic } from "@/models/topic";
+import { getAssignmentResponses } from "@/services/assignment-response";
+import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import { submisisonFilterKeys } from "../static-data";
 import FilterButton from "../submission/filter-button";
 import SubmissionTable from "../submission/submission-table";
 import SubmissionDefaultView from "../submission/submission-view/default-view";
 import SubmissionSubmittedView from "../submission/submission-view/submitted-view";
-import { fakeStudentResponses } from "@/fake-data/student-response";
-import { X } from "lucide-react";
-import { AssignmentTopic } from "@/models/topic";
 
 interface Props {
   assignment: AssignmentTopic;
   className?: string;
 }
 export function TabSubmission({ className, assignment }: Props) {
-  const refInput = useRef<HTMLInputElement>(null);
+  const [filterInput, setFilterInput] = useState<string>("");
+  const debounceInputValue = useDebouce(filterInput);
   const [filterKey, setFilterKey] = useState<string>("");
   const [assignmentResponses, setAssignmentResponses] = useState<
     StudentResponse[]
   >([]);
+  const [filteredResponses, setFilteredResponses] = useState<StudentResponse[]>(
+    []
+  );
   const [selectedStudentResponse, setSelectedStudentResponse] =
     useState<StudentResponse | null>(null);
-  const [students, setStudents] = useState<User[]>(fakeUserList);
 
-  const handleInputChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!refInput.current) return;
-    refInput.current.value = e.target.value;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterInput(e.target.value);
   };
   const handleResponseSelect = (studentResponse: StudentResponse) => {
     setSelectedStudentResponse(studentResponse);
@@ -39,8 +44,68 @@ export function TabSubmission({ className, assignment }: Props) {
   const handleCloseSubmittedView = () => {
     setSelectedStudentResponse(null);
   };
+  const handleGetAssignmentResponsesSuccess = (
+    responses: StudentResponse[]
+  ) => {
+    setAssignmentResponses(responses);
+  };
+  const handleGetAssignmentResponsesFail = (err: any) => {
+    toast.error(err);
+  };
 
-  useEffect(() => {}, []);
+  const handleFilterKeyChange = (key: string) => {
+    setFilterKey(key);
+  };
+
+  const handleFilter = (value: string, key: string) => {
+    console.log("filtering: ", value, key);
+    if (value === "") {
+      setFilteredResponses(assignmentResponses);
+      return;
+    }
+    let filteredResponses: StudentResponse[] = [];
+    if (key === "")
+      filteredResponses = handleFilterAll(value, assignmentResponses);
+    else if (key == "name")
+      filteredResponses = handleFilterName(value, assignmentResponses);
+    else if (key === "grade")
+      filteredResponses = handleFilterGrade(value, assignmentResponses);
+
+    setFilteredResponses(filteredResponses);
+  };
+
+  const handleFilterName = (name: string, responses: StudentResponse[]) => {
+    return responses.filter((response) =>
+      response.student.username.includes(name)
+    );
+  };
+
+  const handleFilterGrade = (grade: string, responses: StudentResponse[]) => {
+    return responses.filter((response) => {
+      const data = response.data as AssignmentResponseData;
+      if (!data.mark) return false;
+      return data.mark.toString().includes(grade);
+    });
+  };
+
+  const handleFilterAll = (value: string, responses: StudentResponse[]) => {
+    const filteredByName = handleFilterName(value, responses);
+    const filteredByGrade = handleFilterGrade(value, responses);
+    return [...filteredByName, ...filteredByGrade];
+  };
+
+  useEffect(() => {
+    getAssignmentResponses(
+      assignment.id,
+      handleGetAssignmentResponsesSuccess,
+      handleGetAssignmentResponsesFail
+    );
+  }, [assignment.id]);
+
+  useEffect(() => {
+    if (debounceInputValue == null || debounceInputValue == undefined) return;
+    handleFilter(debounceInputValue, filterKey);
+  }, [debounceInputValue, assignmentResponses]);
 
   return (
     <div className={cn(className)}>
@@ -55,16 +120,23 @@ export function TabSubmission({ className, assignment }: Props) {
         <div className="flex flex-col gap-4 p-6 pl-0 border-r-1 border-gray-400">
           <div className="flex flex-row items-center gap-2">
             <Input
-              placeholder="Search anything..."
+              placeholder={
+                filterKey === ""
+                  ? "Search anything..."
+                  : `Search ${filterKey}...`
+              }
               onChange={handleInputChange}
               className="max-w-sm shrink-0 md:w-[300px] max-md:w-auto py-2"
             />
-            <FilterButton selectedKey={filterKey} data={submisisonFilterKeys} />
+            <FilterButton
+              selectedKey={filterKey}
+              data={submisisonFilterKeys}
+              handleSelectChange={handleFilterKeyChange}
+            />
           </div>
           <SubmissionTable
             selectedStudentResponse={selectedStudentResponse}
-            studentResponses={assignmentResponses}
-            students={students}
+            studentResponses={filteredResponses}
             onResponseSelect={handleResponseSelect}
           />
         </div>

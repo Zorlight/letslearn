@@ -23,11 +23,12 @@ export const convertAssignmentResponseToRequestData = (
 export const convertAssignmentResponseFromResponseData = (
   data: any
 ): StudentResponse => {
-  const { id, topicId, user, submittedAt, cloudinaryFiles, mark, note } = data;
+  const { id, topicId, student, submittedAt, cloudinaryFiles, mark, note } =
+    data;
   const res: StudentResponse = {
     id,
     topicId,
-    student: user as User,
+    student,
     data: {
       submittedAt,
       files: cloudinaryFiles,

@@ -34,7 +34,7 @@ export default function SubmissionSubmittedView({
   if (submittedAt) {
     submittedTime = format(new Date(submittedAt), "EEEE, dd MMMM yyyy, h:mm a");
     submissionStatusText = close
-      ? getDurationText(submittedAt, close)
+      ? getDurationText(submittedAt, close, 1)
       : "Submitted";
     if (!close) {
       submissionStatusText += " on time";

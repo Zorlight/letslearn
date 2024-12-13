@@ -13,7 +13,7 @@ export type Course = {
   price: number;
   category: string;
   level: string;
-  studentIds: number[];
+  studentIds: string[];
   sections: Section[];
   isPublished: boolean;
 };

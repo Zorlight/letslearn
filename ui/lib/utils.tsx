@@ -81,7 +81,7 @@ function handleFilterColumn<T>(
 }
 
 // 3680s -> 1 hour 1 minute 20 second
-const getDurationText = (startTime: any, endTime: any, fixed: number = 0) => {
+const getDurationText = (startTime: any, endTime: any, fixed: number = 6) => {
   if (!startTime || !endTime) return "";
 
   try {

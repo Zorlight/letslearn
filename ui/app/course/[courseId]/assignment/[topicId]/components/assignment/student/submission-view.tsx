@@ -36,12 +36,6 @@ export default function SubmissionView({
         >
           Add submission
         </Button>
-        <Button
-          variant="cyan"
-          className="w-fit rounded-lg font-bold bg-cyan-50 text-cyan-500 hover:bg-cyan-100 hover:text-cyan-600"
-        >
-          Mark as completed
-        </Button>
       </div>
 
       <div className="font-bold text-orange-500">Submission status</div>

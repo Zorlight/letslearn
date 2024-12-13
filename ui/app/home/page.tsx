@@ -1,14 +1,14 @@
 "use client";
-import CourseCard from "@/components/ui/complex/course-card";
 import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import PageLayout from "@/components/ui/util-layout/page-layout";
-import { Course } from "@/models/course";
+import { User } from "@/models/user";
 import { useAppDispatch } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { getTeacherCourses } from "@/services/course";
 import { getMyInfo } from "@/services/user";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import StudentCourseList from "./_components/student/student-course-list";
 
 const breadcrumbItems: BreadcrumbItem[] = [
   {
@@ -19,7 +19,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const HomePage = () => {
   const dispatch = useAppDispatch();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<User>();
   const [courses, setCourses] = useState([]);
 
   const handleGetInfoSuccess = (data: any) => {
@@ -36,9 +36,12 @@ const HomePage = () => {
     toast.error(error || "Failed to get teacher courses");
   };
 
+  const handleSubmitCode = (code: string) => {
+    console.log(code);
+  };
+
   useEffect(() => {
     if (!user) {
-      console.log("get user");
       getMyInfo(handleGetInfoSuccess, handleGetInfoFail);
       return;
     }
@@ -53,13 +56,14 @@ const HomePage = () => {
     dispatch(setBreadcrumb(breadcrumbItems));
   }, []);
 
+  if (!user) return null;
   return (
     <PageLayout>
-      <div className="w-full h-fit grid grid-cols-3 gap-5 m-5">
-        {courses.map((course: Course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
-      </div>
+      {/* {user.role === Role.TEACHER && <TeacherCourseList courses={courses} />}
+      {user.role === Role.STUDENT && (
+        <StudentCourseList courses={courses} onSubmitCode={handleSubmitCode} />
+      )} */}
+      <StudentCourseList courses={courses} onSubmitCode={handleSubmitCode} />
     </PageLayout>
   );
 };

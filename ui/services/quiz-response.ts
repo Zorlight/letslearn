@@ -12,7 +12,10 @@ export const createQuizResponse = (
   onFail: (err?: any) => void
 ) => {
   const reqData = convertQuizResponseToRequestData(quizResponse);
-  POST(`/topic/${topicId}/quiz-response`, reqData, onSuccess, onFail);
+  const handleSuccess = (data: any) => {
+    onSuccess(convertQuizResponseFromResponseData(data));
+  };
+  POST(`/topic/${topicId}/quiz-response`, reqData, handleSuccess, onFail);
 };
 
 export const getQuizResponses = (

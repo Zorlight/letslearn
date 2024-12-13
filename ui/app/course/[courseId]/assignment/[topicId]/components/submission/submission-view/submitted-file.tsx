@@ -17,11 +17,11 @@ export default function SubmittedFile({ file }: Props) {
     <Link
       href={downloadUrl}
       download={name}
-      className="flex flex-row items-center gap-3 text-cyan-500 font-bold"
+      className="w-fit flex flex-row items-center gap-3 text-cyan-500 font-bold"
     >
-      <FileText />
+      <FileText size={20} />
       <div className="flex flex-row items-center gap-1">
-        <span className="">{fileName}</span>
+        <span className="hover:underline"> {fileName}</span>
         <span className={cn(color)}>{`(.${extension})`}</span>
       </div>
     </Link>

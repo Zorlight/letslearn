@@ -66,7 +66,7 @@ export default function AssignmentPage({ params }: Props) {
 
   useEffect(() => {
     //this useEffect is used for updating tab based on local storage
-    let storageTab = localStorage.getItem(topicId);
+    let storageTab = localStorage.getItem(`assignment-${topicId}`);
     if (storageTab) setInitTab(storageTab);
     getTopic(topicId, handleGetAssignmentSuccess, handleGetAssignmentFail);
   }, [topicId]);
@@ -89,7 +89,7 @@ export default function AssignmentPage({ params }: Props) {
     setAssignment(data);
   };
   const handleTabSelected = (tab: string) => {
-    localStorage.setItem(topicId, tab);
+    localStorage.setItem(`assignment-${topicId}`, tab);
   };
 
   const Icon = iconMap["assignment"];

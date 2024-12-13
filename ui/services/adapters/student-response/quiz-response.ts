@@ -23,11 +23,12 @@ export const convertQuizResponseToRequestData = (
 export const convertQuizResponseFromResponseData = (
   data: any
 ): StudentResponse => {
-  const { id, topicId, user, status, startedAt, completedAt, answers } = data;
+  const { id, topicId, student, status, startedAt, completedAt, answers } =
+    data;
   const res: StudentResponse = {
     id,
     topicId,
-    student: user as User,
+    student,
     data: {
       status,
       startedAt,

@@ -13,3 +13,18 @@ export const defaultAssignmentResponse: StudentResponse = {
     note: "",
   },
 };
+
+export enum BackgroundColor {
+  GREEN = "bg-green-50",
+  RED = "bg-red-50",
+}
+
+export enum TextColor {
+  GREEN = "text-green-500",
+  RED = "text-red-500",
+}
+
+export enum GradingStatus {
+  NOT_GRADED = "Not graded",
+  GRADED = "Graded",
+}

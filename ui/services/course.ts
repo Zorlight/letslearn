@@ -1,4 +1,4 @@
-import { GET, POST, PUT } from "@/lib/http-handle/http-handle";
+import { GET, PATCH, POST, PUT } from "@/lib/http-handle/http-handle";
 import { Course } from "@/models/course";
 import { Role, User } from "@/models/user";
 
@@ -55,4 +55,12 @@ export const updateCourse = (
   };
 
   PUT(`/course/${id}`, reqData, onSuccess, onFail);
+};
+
+export const joinCourse = (
+  courseId: string,
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  PATCH(`/course/${courseId}/join`, null, onSuccess, onFail);
 };

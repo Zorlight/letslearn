@@ -1,17 +1,23 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Bell, Menu, MessageSquare, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Avatar from "../simple/avatar";
 import BreadCrumb, { BreadcrumbItem } from "../simple/breadcrumb";
 import IconButton from "@/components/buttons/icon-button";
+import { Role, User } from "@/models/user";
+import { useEffect, useState } from "react";
+import { getMyInfo } from "@/services/user";
+import { toast } from "react-toastify";
+import { setProfile } from "@/redux/slices/profile";
 
 interface Props {
   className?: string;
-  role?: "teacher" | "student";
 }
-export default function Navbar({ className, role = "teacher" }: Props) {
+export default function Navbar({ className }: Props) {
+  const [user, setUser] = useState<User>();
+  const dispatch = useAppDispatch();
   const breadcrumbItems: BreadcrumbItem[] = useAppSelector(
     (state) => state.breadcrumb.items
   );
@@ -25,6 +31,17 @@ export default function Navbar({ className, role = "teacher" }: Props) {
   const handleAvatarClick = () => {
     router.push("/setting");
   };
+  const handleGetMyInfoSuccess = (data: User) => {
+    setUser(data);
+    dispatch(setProfile(data));
+  };
+
+  const handleGetMyInfoFail = (error: any) => {
+    toast.error(error);
+  };
+  useEffect(() => {
+    getMyInfo(handleGetMyInfoSuccess, handleGetMyInfoFail);
+  }, []);
   return (
     <div
       className={cn(
@@ -37,7 +54,7 @@ export default function Navbar({ className, role = "teacher" }: Props) {
         <BreadCrumb items={breadcrumbItems} />
       </div>
       <div className="flex flex-row items-center gap-1">
-        {isHomePage && role === "teacher" && (
+        {isHomePage && user && user.role === Role.TEACHER && (
           <div
             className={cn(
               "p-3 rounded-full hover:bg-gray-100 cursor-pointer",

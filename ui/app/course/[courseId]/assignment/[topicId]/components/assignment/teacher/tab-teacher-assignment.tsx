@@ -28,7 +28,10 @@ export default function TabTeacherAssignment({
       user={user}
       className={className}
     >
-      <GradingView assignmentResponses={assignmentResponses} />
+      <GradingView
+        assignment={assignment}
+        assignmentResponses={assignmentResponses}
+      />
     </TabAssignmentLayout>
   );
 }

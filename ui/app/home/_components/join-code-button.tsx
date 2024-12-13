@@ -13,7 +13,7 @@ export default function JoinCodeButton({ open, onOpenChange }: Props) {
   return (
     <div
       className={cn(
-        "w-[50px] h-[50px] flex items-center justify-center rounded-md overflow-hidden shadow hover:shadow-md hover:scale-105 transition-all duration-100 cursor-pointer",
+        "w-[50px] h-[50px] flex items-center justify-center border-[0.5px] border-gray-200 hover:bg-gray-100 rounded-md overflow-hidden shadow hover:shadow-md hover:scale-105 transition-all duration-200 cursor-pointer",
         open && "scale-0 opacity-0 absolute"
       )}
     >

@@ -2,19 +2,17 @@
 import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import TabList from "@/components/ui/tab-list";
 import PageLayout from "@/components/ui/util-layout/page-layout";
+import { Course } from "@/models/course";
 import { AssignmentTopic, iconMap } from "@/models/topic";
 import { TabProvider } from "@/provider/tab-provider";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
+import { getCourse } from "@/services/course";
+import { getTopic } from "@/services/topic";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
-import { toast } from "react-toastify";
-import { getCourse } from "@/services/course";
-import { Course } from "@/models/course";
-import { getTopic } from "@/services/topic";
-import { User } from "@/models/user";
-import { getMyInfo } from "@/services/user";
 
 interface Props {
   params: {
@@ -25,7 +23,7 @@ interface Props {
 export default function AssignmentPage({ params }: Props) {
   const { courseId, topicId } = params;
   const [course, setCourse] = useState<Course>();
-  const [user, setUser] = useState<User>();
+  const user = useAppSelector((state) => state.profile.value);
   const [assignment, setAssignment] = useState<AssignmentTopic>();
   const [initTab, setInitTab] = useState<string>(Tab.ASSIGNMENT);
   const dispatch = useAppDispatch();
@@ -34,13 +32,6 @@ export default function AssignmentPage({ params }: Props) {
     setCourse(data);
   };
   const handleGetCourseFail = (error: any) => {
-    toast.error(error);
-  };
-
-  const handleGetMyInfoSuccess = (data: User) => {
-    setUser(data);
-  };
-  const handleGetMyInfoFail = (error: any) => {
     toast.error(error);
   };
 
@@ -74,10 +65,6 @@ export default function AssignmentPage({ params }: Props) {
   useEffect(() => {
     getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
   }, [courseId]);
-
-  useEffect(() => {
-    getMyInfo(handleGetMyInfoSuccess, handleGetMyInfoFail);
-  }, []);
 
   const handleGetAssignmentSuccess = (data: AssignmentTopic) => {
     setAssignment(data);

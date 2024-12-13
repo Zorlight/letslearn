@@ -9,7 +9,7 @@ interface Props {
 const CourseJoiningCode = ({ onSubmitCode }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="relative">
+    <div className="relative min-h-[200px]">
       <JoinCodeButton open={isOpen} onOpenChange={setIsOpen} />
       <JoiningCodeView
         open={isOpen}

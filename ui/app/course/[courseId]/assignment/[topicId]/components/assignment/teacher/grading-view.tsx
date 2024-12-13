@@ -1,14 +1,30 @@
 import { Button } from "@/lib/shadcn/button";
 import GradingSummaryTable from "./grading-summary-table";
 import { StudentResponse } from "@/models/student-response";
+import { useTab } from "@/hooks/useTab";
+import { Tab } from "../../static-data";
+import { AssignmentTopic } from "@/models/topic";
 
 interface Props {
+  assignment: AssignmentTopic;
   assignmentResponses: StudentResponse[];
 }
-export default function GradingView({ assignmentResponses }: Props) {
+export default function GradingView({
+  assignment,
+  assignmentResponses,
+}: Props) {
+  const { handleTabSelected } = useTab<Tab>();
+  const handleGradeClick = () => {
+    handleTabSelected(Tab.SUBMISSIONS);
+    localStorage.setItem(`assignment-${assignment.id}`, Tab.SUBMISSIONS);
+  };
   return (
     <div className="space-y-4">
-      <Button variant="cyan" className="w-fit rounded-lg">
+      <Button
+        variant="cyan"
+        className="w-fit rounded-lg"
+        onClick={handleGradeClick}
+      >
         Grade
       </Button>
 

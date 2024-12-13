@@ -20,3 +20,10 @@ export const refreshToken = (
 ) => {
   makeRequest("GET", "/auth/refresh", onSuccess, onFail);
 };
+
+export const logout = (
+  onSuccess: (data: any) => void,
+  onFail: (err: any) => void
+) => {
+  makeRequest("POST", "/auth/logout", onSuccess, onFail);
+};

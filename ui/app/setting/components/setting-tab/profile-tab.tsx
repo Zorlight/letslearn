@@ -1,17 +1,15 @@
 "use client";
+import { Button } from "@/lib/shadcn/button";
 import { Input } from "@/lib/shadcn/input";
+import { getFileExtension, isImageExtension } from "@/lib/utils";
+import { useAppSelector } from "@/redux/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z, ZodType } from "zod";
 import ImageGuiding, { ImageRequirement } from "../form-guiding/image-guiding";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "react-toastify";
-import { User } from "@/models/user";
-import { getMyInfo } from "@/services/user";
 import { ChooseAvatarButton } from "../profile-tab/choose-avatar-button";
-import { getFileExtension, isImageExtension } from "@/lib/utils";
-import { Button } from "@/lib/shadcn/button";
 
 type ProfileForm = {
   email: string;
@@ -34,6 +32,7 @@ export default function ProfileTab() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const user = useAppSelector((state) => state.profile.value);
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: initForm,
@@ -50,18 +49,11 @@ export default function ProfileTab() {
   const { username, email } = watch();
   const { errors } = formState;
 
-  const handleGetInfoSuccess = (data: User) => {
-    setValue("username", data.username);
-    setValue("email", data.email);
-    setIsLoading(false);
-  };
-  const handleGetInfoFail = (err: any) => {
-    toast.error(err);
-  };
   useEffect(() => {
-    setIsLoading(true);
-    getMyInfo(handleGetInfoSuccess, handleGetInfoFail);
-  }, []);
+    if (!user) return;
+    setValue("username", user.username);
+    setValue("email", user.email);
+  }, [user]);
 
   const handleInputChange = (key: keyof ProfileForm) => (e: any) => {
     setValue(key, e.target.value);

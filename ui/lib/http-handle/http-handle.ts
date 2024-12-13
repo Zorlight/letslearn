@@ -6,7 +6,7 @@ const HEADER = {
 };
 
 export const makeRequest = async (
-  method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" = "GET",
   uri: string,
   onSuccess: (data: any) => void,
   onFail: (err?: any) => void,
@@ -89,4 +89,13 @@ export const DELETE = async (
   onFail: (err?: any) => void
 ) => {
   makeRequest("DELETE", uri, onSuccess, onFail);
+};
+
+export const PATCH = async (
+  uri: string,
+  reqData: any,
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  makeRequest("PATCH", uri, onSuccess, onFail, reqData);
 };

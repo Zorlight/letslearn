@@ -2,13 +2,14 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 interface Props {
+  src?: string;
   className?: string;
   onClick?: () => void;
 }
-export default function Avatar({ className, onClick }: Props) {
+export default function Avatar({ src, className, onClick }: Props) {
   return (
     <Image
-      src="/default-user.png"
+      src={src || "/default-user.png"}
       alt="avatar"
       width={1000}
       height={1000}

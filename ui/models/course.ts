@@ -1,4 +1,5 @@
 import { Topic } from "./topic";
+import { User } from "./user";
 
 export type Category = {
   id: string;
@@ -13,7 +14,8 @@ export type Course = {
   price: number;
   category: string;
   level: string;
-  studentIds: string[];
+  students: User[];
+  creator: User;
   sections: Section[];
   isPublished: boolean;
 };

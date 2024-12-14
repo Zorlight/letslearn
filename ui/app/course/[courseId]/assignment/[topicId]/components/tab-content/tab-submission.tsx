@@ -134,11 +134,13 @@ export function TabSubmission({ className, assignment }: Props) {
               handleSelectChange={handleFilterKeyChange}
             />
           </div>
-          <SubmissionTable
-            selectedStudentResponse={selectedStudentResponse}
-            studentResponses={filteredResponses}
-            onResponseSelect={handleResponseSelect}
-          />
+          <div className="w-full h-[350px] default-scrollbar">
+            <SubmissionTable
+              selectedStudentResponse={selectedStudentResponse}
+              studentResponses={filteredResponses}
+              onResponseSelect={handleResponseSelect}
+            />
+          </div>
         </div>
         {selectedStudentResponse === null && (
           <SubmissionDefaultView

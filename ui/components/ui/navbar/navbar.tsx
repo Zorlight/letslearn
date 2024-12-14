@@ -1,7 +1,14 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Bell, Menu, MessageSquare, Plus } from "lucide-react";
+import {
+  Bell,
+  LogOut,
+  Menu,
+  MessageSquare,
+  Plus,
+  Settings2,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Avatar from "../simple/avatar";
 import BreadCrumb, { BreadcrumbItem } from "../simple/breadcrumb";
@@ -11,7 +18,12 @@ import { useEffect, useState } from "react";
 import { getMyInfo } from "@/services/user";
 import { toast } from "react-toastify";
 import { setProfile } from "@/redux/slices/profile";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/lib/shadcn/dropdown-menu";
 interface Props {
   className?: string;
 }
@@ -28,7 +40,7 @@ export default function Navbar({ className }: Props) {
   const handleAddCourse = () => {
     router.push("/course/create");
   };
-  const handleAvatarClick = () => {
+  const handleGoToSetting = () => {
     router.push("/setting");
   };
   const handleGetMyInfoSuccess = (data: User) => {
@@ -75,7 +87,26 @@ export default function Navbar({ className }: Props) {
         <IconButton>
           <MessageSquare size={20} />
         </IconButton>
-        <Avatar className="hover:scale-110" onClick={handleAvatarClick} />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div>
+              <Avatar className="hover:scale-110" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-white font-sans z-50">
+            <DropdownMenuItem
+              className="flex gap-2 hover:bg-gray-100"
+              onClick={handleGoToSetting}
+            >
+              <Settings2 size={16} />
+              Setting
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex gap-2 text-red-500 hover:bg-red-50">
+              <LogOut size={16} />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

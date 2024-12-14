@@ -29,7 +29,7 @@ export default function SubmissionTable({
   };
   const totalMark = 100;
   return (
-    <table className="border-1 border-gray-300 bg-white border-collapse">
+    <table className="w-full border-1 border-gray-300 bg-white border-collapse">
       <tbody>
         {studentResponses.map((res, index) => {
           const { student } = res;

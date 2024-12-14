@@ -5,6 +5,8 @@ import { User } from "@/models/user";
 import TabAssignmentLayout from "../util/tab-assignment-layout";
 import GradingView from "./grading-view";
 import { useEffect, useState } from "react";
+import { getAssignmentResponses } from "@/services/assignment-response";
+import { toast } from "react-toastify";
 
 interface Props {
   user: User;
@@ -19,9 +21,20 @@ export default function TabTeacherAssignment({
   const [assignmentResponses, setAssignmentResponses] = useState<
     StudentResponse[]
   >([]);
+  const handleGetAssignmentResponsesSuccess = (data: StudentResponse[]) => {
+    setAssignmentResponses(data);
+  };
+  const handleGetAssignmentResponsesFail = (error: any) => {
+    toast.error(error);
+  };
   useEffect(() => {
     // fetch assignment responses
-  }, []);
+    getAssignmentResponses(
+      assignment.id,
+      handleGetAssignmentResponsesSuccess,
+      handleGetAssignmentResponsesFail
+    );
+  }, [assignment.id]);
   return (
     <TabAssignmentLayout
       assignment={assignment}

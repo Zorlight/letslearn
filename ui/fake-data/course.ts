@@ -1,5 +1,6 @@
 import { Course } from "@/models/course";
 import { fakeSections } from "./section";
+import { Role } from "@/models/user";
 
 export const fakeCourses: Course[] = [
   {
@@ -13,7 +14,15 @@ export const fakeCourses: Course[] = [
       "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YWNjb3VudGluZ3xlbnwwfDB8MHx8fDI%3D",
     price: 79.99,
     level: "Beginner",
-    studentIds: [],
+    students: [],
+    creator: {
+      id: "1",
+      username: "John Doe",
+      email: "",
+      image: "",
+      password: "",
+      role: Role.TEACHER,
+    },
     isPublished: true,
   },
   {
@@ -27,7 +36,15 @@ export const fakeCourses: Course[] = [
       "https://images.unsplash.com/photo-1675495666895-9091741bfd78?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvbXB1dGVyJTIwc2NpZW5jZXxlbnwwfDB8MHx8fDI%3D",
     price: 59.99,
     level: "Beginner",
-    studentIds: [],
+    students: [],
+    creator: {
+      id: "1",
+      username: "John Doe",
+      email: "",
+      image: "",
+      password: "",
+      role: Role.TEACHER,
+    },
     isPublished: true,
   },
   {
@@ -41,7 +58,15 @@ export const fakeCourses: Course[] = [
       "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZW5naW5lZXJpbmd8ZW58MHwwfDB8fHwy",
     price: 99.99,
     level: "Beginner",
-    studentIds: [],
+    students: [],
+    creator: {
+      id: "1",
+      username: "John Doe",
+      email: "",
+      image: "",
+      password: "",
+      role: Role.TEACHER,
+    },
     isPublished: true,
   },
   {
@@ -55,7 +80,15 @@ export const fakeCourses: Course[] = [
       "https://images.unsplash.com/photo-1500705479396-0e1d0bee4076?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZmlsbWluZ3xlbnwwfDB8MHx8fDI%3D",
     price: 12.49,
     level: "Beginner",
-    studentIds: [],
+    students: [],
+    creator: {
+      id: "1",
+      username: "John Doe",
+      email: "",
+      image: "",
+      password: "",
+      role: Role.TEACHER,
+    },
     isPublished: true,
   },
   {
@@ -68,7 +101,15 @@ export const fakeCourses: Course[] = [
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bXVzaWN8ZW58MHwwfDB8fHwy",
     price: 29.99,
     level: "Beginner",
-    studentIds: [],
+    students: [],
+    creator: {
+      id: "1",
+      username: "John Doe",
+      email: "",
+      image: "",
+      password: "",
+      role: Role.TEACHER,
+    },
     isPublished: true,
   },
 ];

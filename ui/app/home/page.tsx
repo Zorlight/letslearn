@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import StudentCourseList from "./_components/student/student-course-list";
 import TeacherCourseList from "./_components/teacher/teacher-course-list";
+import { Course } from "@/models/course";
 
 const breadcrumbItems: BreadcrumbItem[] = [
   {
@@ -20,7 +21,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 const HomePage = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.profile.value);
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState<Course[]>([]);
 
   const handleGetTeacherCourseSuccess = (data: any) => {
     setCourses(data);
@@ -32,12 +33,17 @@ const HomePage = () => {
   useEffect(() => {
     if (!user) return;
 
-    getTeacherCourses(
-      user,
-      handleGetTeacherCourseSuccess,
-      handleGetTeacherCourseFail
-    );
+    if (user.role === Role.STUDENT) {
+      setCourses(user.courses);
+    } else {
+      getTeacherCourses(
+        user,
+        handleGetTeacherCourseSuccess,
+        handleGetTeacherCourseFail
+      );
+    }
   }, [user]);
+
   useEffect(() => {
     dispatch(setBreadcrumb(breadcrumbItems));
   }, []);

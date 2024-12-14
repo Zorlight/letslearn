@@ -16,6 +16,7 @@ import FilterButton from "../submission/filter-button";
 import SubmissionTable from "../submission/submission-table";
 import SubmissionDefaultView from "../submission/submission-view/default-view";
 import SubmissionSubmittedView from "../submission/submission-view/submitted-view";
+import IconButton from "@/components/buttons/icon-button";
 
 interface Props {
   assignment: AssignmentTopic;
@@ -112,10 +113,12 @@ export function TabSubmission({ className, assignment }: Props) {
       <h4 className="font-bold text-orange-500">Submissions</h4>
       <div className="relative w-full h-full flex flex-row">
         {selectedStudentResponse !== null && (
-          <X
-            className="absolute top-0 right-0 text-gray-500 hover:text-red-500 duration-100 ease-linear cursor-pointer"
+          <IconButton
+            className="absolute top-0 right-0 group"
             onClick={handleCloseSubmittedView}
-          />
+          >
+            <X className="text-gray-500 group-hover:text-red-500 duration-100 ease-linear" />
+          </IconButton>
         )}
         <div className="flex flex-col gap-4 p-6 pl-0 border-r-1 border-gray-400">
           <div className="flex flex-row items-center gap-2">
@@ -153,6 +156,7 @@ export function TabSubmission({ className, assignment }: Props) {
           <SubmissionSubmittedView
             assignment={assignment}
             studentResponse={selectedStudentResponse}
+            onStudentResponseChange={setSelectedStudentResponse}
             className="w-full flex flex-col gap-4 p-6"
           />
         )}

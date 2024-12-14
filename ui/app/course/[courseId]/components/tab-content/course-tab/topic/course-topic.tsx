@@ -38,7 +38,9 @@ const CourseTopic = ({
     router.push(`${path}/link/${topic.id}`);
   };
 
-  const handleMeetingAction = () => {};
+  const handleMeetingAction = () => {
+    router.push(`${path}/meeting/${topic.id}`);
+  };
 
   const handleAssignmentAction = () => {
     router.push(`${path}/assignment/${topic.id}`);

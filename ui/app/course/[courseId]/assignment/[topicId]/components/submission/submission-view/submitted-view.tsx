@@ -3,20 +3,24 @@ import {
   AssignmentResponseData,
   StudentResponse,
 } from "@/models/student-response";
-import { format } from "date-fns";
-import React from "react";
-import { SubmissionStatus } from "../static-data";
-import SubmissionFileUploadView from "./file-upload-view";
 import { AssignmentTopic } from "@/models/topic";
+import { format } from "date-fns";
+import { SubmissionStatus } from "../static-data";
 interface Props {
   className?: string;
   assignment: AssignmentTopic;
   studentResponse: StudentResponse;
+  onStudentResponseChange?: (studentResponse: StudentResponse) => void;
 }
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import SubmissionFileUploadView from "./file-upload-view";
+import NoteView from "./note-view";
+
 export default function SubmissionSubmittedView({
   assignment,
   studentResponse,
   className,
+  onStudentResponseChange,
 }: Props) {
   const { data } = assignment;
   const { close } = data;
@@ -47,6 +51,7 @@ export default function SubmissionSubmittedView({
       submissionStatusText += " early";
     }
   }
+
   return (
     <div className={cn(className)}>
       <div className="pb-4 space-y-2 border-b-[0.5px] border-gray-400 text-gray-800">
@@ -72,7 +77,19 @@ export default function SubmissionSubmittedView({
           </span>
         </p>
       </div>
-      <SubmissionFileUploadView studentResponse={studentResponse} />
+      <PanelGroup autoSaveId="example" direction="vertical">
+        <Panel defaultSize={50}>
+          <SubmissionFileUploadView studentResponse={studentResponse} />
+        </Panel>
+        <PanelResizeHandle />
+        <Panel defaultSize={25} className="min-h-fit">
+          <NoteView
+            assignment={assignment}
+            studentResponse={studentResponse}
+            onStudentResponseChange={onStudentResponseChange}
+          />
+        </Panel>
+      </PanelGroup>
     </div>
   );
 }

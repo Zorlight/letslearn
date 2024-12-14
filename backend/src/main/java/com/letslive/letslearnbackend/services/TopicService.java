@@ -217,7 +217,7 @@ public class TopicService {
                 }
                 break;
             case "meeting":
-                TopicMeeting topicMeeting = topicMeetingRepository.findById(topic.getId()).orElseThrow(() -> new CustomException("No topic meeting found!", HttpStatus.NOT_FOUND));
+                TopicMeeting topicMeeting = topicMeetingRepository.findByTopicId(topic.getId());
                 try {
                     topicData = mapper.writeValueAsString(topicMeeting);
                 } catch (JsonProcessingException e) {

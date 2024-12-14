@@ -1,6 +1,11 @@
 import { FileSizeOption } from "@/models/assignment";
 import { GradingMethod, TimeLimitType } from "@/models/quiz";
-import { AssignmentTopic, QuizTopic, TopicType } from "@/models/topic";
+import {
+  AssignmentTopic,
+  MeetingTopic,
+  QuizTopic,
+  TopicType,
+} from "@/models/topic";
 
 export const initQuiz: QuizTopic = {
   id: "",
@@ -34,5 +39,18 @@ export const initAssignment: AssignmentTopic = {
     remindToGrade: new Date(2024, 11, 10, 14, 30, 0, 0).toISOString(),
     maximumFile: 5,
     maximumFileSize: FileSizeOption["5MB"],
+  },
+};
+
+const current = new Date();
+const nextWeek = new Date(current.getTime() + 7 * 24 * 60 * 60 * 1000);
+export const initMeeting: MeetingTopic = {
+  id: "",
+  sectionId: "",
+  title: "Meeting",
+  type: TopicType.MEETING,
+  data: {
+    open: nextWeek.toISOString(),
+    description: "This is an important meeting. Please attend on time.",
   },
 };

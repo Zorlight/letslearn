@@ -16,8 +16,7 @@ const TabSetting = ({ meeting, onMeetingChange }: Props) => {
     toast.error(error);
   };
   const handleSubmitMeetingSetting = (data: MeetingTopic) => {
-    console.log("submit", data);
-    // updateTopic(data, handleUpdateTopicSuccess, handleUpdateTopicFail);
+    updateTopic(data, handleUpdateTopicSuccess, handleUpdateTopicFail);
   };
 
   return (

@@ -10,7 +10,8 @@ export const makeRequest = async (
   uri: string,
   onSuccess: (data: any) => void,
   onFail: (err?: any) => void,
-  reqData?: any
+  reqData?: any,
+  host: string = GLOBAL.API_URL
 ) => {
   const {
     handleFetchError,
@@ -21,7 +22,7 @@ export const makeRequest = async (
 
   try {
     const fetchData = () => {
-      return fetch(GLOBAL.API_URL + uri, {
+      return fetch(host + uri, {
         headers: HEADER,
         method,
         body: reqData ? JSON.stringify(reqData) : undefined,

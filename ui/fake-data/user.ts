@@ -7,6 +7,7 @@ export const fakeUser: User = {
   password: "",
   image: "",
   role: Role.TEACHER,
+  courses: [],
 };
 
 export const fakeUserList: User[] = [
@@ -17,6 +18,7 @@ export const fakeUserList: User[] = [
     password: "",
     image: "",
     role: Role.STUDENT,
+    courses: [],
   },
   {
     id: "2",
@@ -25,6 +27,7 @@ export const fakeUserList: User[] = [
     password: "",
     image: "",
     role: Role.STUDENT,
+    courses: [],
   },
   {
     id: "3",
@@ -33,6 +36,7 @@ export const fakeUserList: User[] = [
     password: "",
     image: "",
     role: Role.STUDENT,
+    courses: [],
   },
   {
     id: "4",
@@ -41,6 +45,7 @@ export const fakeUserList: User[] = [
     password: "",
     image: "",
     role: Role.STUDENT,
+    courses: [],
   },
   {
     id: "5",
@@ -49,6 +54,7 @@ export const fakeUserList: User[] = [
     password: "",
     image: "",
     role: Role.STUDENT,
+    courses: [],
   },
   {
     id: "6",
@@ -57,5 +63,6 @@ export const fakeUserList: User[] = [
     password: "",
     image: "",
     role: Role.STUDENT,
+    courses: [],
   },
 ];

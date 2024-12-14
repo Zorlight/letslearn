@@ -4,12 +4,18 @@ import { Accordion } from "@/lib/shadcn/accordion";
 import { Button } from "@/lib/shadcn/button";
 import { cn } from "@/lib/utils";
 import { Section } from "@/models/course";
-import { AssignmentTopic, QuizTopic, Topic, TopicType } from "@/models/topic";
+import {
+  AssignmentTopic,
+  MeetingTopic,
+  QuizTopic,
+  Topic,
+  TopicType,
+} from "@/models/topic";
 import { nanoid } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import SectionContent from "./section-content";
 import SectionLayout from "./section-layout";
-import { initAssignment, initQuiz } from "./static/init-topic";
+import { initAssignment, initMeeting, initQuiz } from "./static/init-topic";
 
 interface Props {
   initShowContent?: string[];
@@ -73,6 +79,7 @@ const SectionList = ({
     if (type === TopicType.QUIZ) handleCreateQuizTopic(section);
     else if (type === TopicType.ASSIGNMENT)
       handleCreateAssignmentTopic(section);
+    else if (type === TopicType.MEETING) handleCreateMeetingTopic(section);
   };
 
   const handleCreateQuizTopic = (section: Section) => {
@@ -97,6 +104,19 @@ const SectionList = ({
     const newSection: Section = {
       ...section,
       topics: [...section.topics, newAssignment],
+    };
+    onSectionChange(newSection);
+  };
+
+  const handleCreateMeetingTopic = (section: Section) => {
+    const newMeeting: MeetingTopic = {
+      ...initMeeting,
+      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+      sectionId: section.id,
+    };
+    const newSection: Section = {
+      ...section,
+      topics: [...section.topics, newMeeting],
     };
     onSectionChange(newSection);
   };

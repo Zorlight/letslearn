@@ -18,6 +18,25 @@ export const createAssignmentResponse = (
   POST(`/topic/${topicId}/assignment-response`, reqData, handleSuccess, onFail);
 };
 
+export const updateAssignmentResponse = (
+  topicId: string,
+  assignmentResponse: StudentResponse,
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  const { id } = assignmentResponse;
+  const reqData = convertAssignmentResponseToRequestData(assignmentResponse);
+  const handleSuccess = (data: any) => {
+    onSuccess(convertAssignmentResponseFromResponseData(data));
+  };
+  POST(
+    `/topic/${topicId}/assignment-response/${id}`,
+    reqData,
+    handleSuccess,
+    onFail
+  );
+};
+
 export const getAssignmentResponses = (
   topicId: string,
   onSuccess: (data: StudentResponse[]) => void,

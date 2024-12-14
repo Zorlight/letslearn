@@ -1,4 +1,10 @@
-import { AssignmentTopic, QuizTopic, Topic, TopicType } from "@/models/topic";
+import {
+  AssignmentTopic,
+  MeetingTopic,
+  QuizTopic,
+  Topic,
+  TopicType,
+} from "@/models/topic";
 import {
   convertAssignmentFromResponseData,
   convertAssignmentToRequestData,
@@ -7,6 +13,10 @@ import {
   convertQuizFromResponseData,
   convertQuizToRequestData,
 } from "./convert-quiz";
+import {
+  convertMeetingFromResponseData,
+  convertMeetingToRequestData,
+} from "./convert-meeting";
 
 export const convertTopicToRequestData = (topic: Topic) => {
   const { type } = topic;
@@ -15,6 +25,8 @@ export const convertTopicToRequestData = (topic: Topic) => {
     reqData = convertQuizToRequestData(topic as QuizTopic);
   } else if (type === TopicType.ASSIGNMENT) {
     reqData = convertAssignmentToRequestData(topic as AssignmentTopic);
+  } else if (type === TopicType.MEETING) {
+    reqData = convertMeetingToRequestData(topic as MeetingTopic);
   }
   return reqData;
 };
@@ -26,6 +38,8 @@ export const convertTopicFromResponseData = (topic: any) => {
     res = convertQuizFromResponseData(topic);
   } else if (type === TopicType.ASSIGNMENT) {
     res = convertAssignmentFromResponseData(topic);
+  } else if (type === TopicType.MEETING) {
+    res = convertMeetingFromResponseData(topic);
   }
   return res;
 };

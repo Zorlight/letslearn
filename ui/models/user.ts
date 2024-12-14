@@ -1,3 +1,5 @@
+import { Course } from "./course";
+
 export enum Role {
   TEACHER = "TEACHER",
   STUDENT = "STUDENT",
@@ -10,4 +12,5 @@ export type User = {
   password: string;
   image: string;
   role: Role;
+  courses: Course[];
 };

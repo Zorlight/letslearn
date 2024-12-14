@@ -50,7 +50,7 @@ const TinyEditor = ({ initValue, onChange }: Props) => {
         setInitValue(e.target.value);
         if (onChange) onChange(e.target.value);
       }}
-      className="p-2 border-[0.5px] border-gray-400 focus-within:border-blue-700 outline-none rounded-md"
+      className="w-full p-2 border-[0.5px] border-gray-400 focus-within:border-blue-700 outline-none rounded-md"
     />
   );
 };

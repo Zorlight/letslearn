@@ -24,7 +24,7 @@ interface Props {
 export default function MeetingPage({ params }: Props) {
   const { courseId, topicId } = params;
   const [course, setCourse] = useState<Course>();
-  const [meeting, setMeeting] = useState<MeetingTopic>(fakeMeeting);
+  const [meeting, setMeeting] = useState<MeetingTopic>();
   const [initTab, setInitTab] = useState<string>(Tab.DETAIL);
   const dispatch = useAppDispatch();
 
@@ -55,13 +55,13 @@ export default function MeetingPage({ params }: Props) {
     getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
   }, [courseId]);
 
-  // useEffect(() => {
-  //   //this useEffect is used for updating tab based on local storage
-  //   let storageTab = localStorage.getItem(topicId);
-  //   if (storageTab) setInitTab(storageTab);
+  useEffect(() => {
+    //this useEffect is used for updating tab based on local storage
+    let storageTab = localStorage.getItem(topicId);
+    if (storageTab) setInitTab(storageTab);
 
-  //   getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
-  // }, [topicId]);
+    getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
+  }, [topicId]);
 
   const handleTabSelected = (tab: string) => {
     localStorage.setItem(`meeting-${topicId}`, tab);
@@ -84,7 +84,7 @@ export default function MeetingPage({ params }: Props) {
   const Icon = iconMap.quiz;
   const tabs = Object.values(Tab);
 
-  // if (!meeting) return null;
+  if (!meeting) return null;
   return (
     <PageLayout className="relative bg-blue-50 !overflow-y-hidden">
       <TabProvider initTab={initTab}>
@@ -92,7 +92,7 @@ export default function MeetingPage({ params }: Props) {
           <div className="w-full space-y-8">
             <div className="w-full px-5 flex flex-row gap-4">
               <Icon size={32} />
-              <h3>Meeting</h3>
+              <h3>{meeting.title}</h3>
             </div>
             <TabList
               tabs={tabs}

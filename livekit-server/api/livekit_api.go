@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	auth "github.com/livekit/protocol/auth"
 	livekit "github.com/livekit/protocol/livekit"
+	"github.com/livekit/protocol/logger"
 	lksdk "github.com/livekit/server-sdk-go"
 )
 
@@ -20,10 +21,12 @@ var roomClient = lksdk.NewRoomServiceClient(livekitHost, os.Getenv("LIVEKIT_API_
 
 // start the live meeting
 func (a *api) LiveKitCreateSession(w http.ResponseWriter, r *http.Request) {
+	logger.Infow("mao phac")
 	params := mux.Vars(r)
 	meetingID, ok := params["meetingID"]
 
 	if !ok {
+		logger.Infow("error missing meeting id")
 		a.errorResponse(w, http.StatusBadRequest, errors.New("missing meeting ID"))
 		return
 	}
@@ -35,6 +38,7 @@ func (a *api) LiveKitCreateSession(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
+		logger.Infow("error", "err", err)
 		a.errorResponse(w, http.StatusInternalServerError, err)
 		return
 	}

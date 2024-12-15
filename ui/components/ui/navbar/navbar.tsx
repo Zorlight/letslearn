@@ -24,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/lib/shadcn/dropdown-menu";
+import { logout } from "@/services/auth";
 interface Props {
   className?: string;
 }
@@ -42,6 +43,15 @@ export default function Navbar({ className }: Props) {
   };
   const handleGoToSetting = () => {
     router.push("/setting");
+  };
+
+  const handleLogout = () => {
+    logout(
+      () => {},
+      () => {}
+    );
+    toast.success("Logout successfully");
+    router.push("/login");
   };
   const handleGetMyInfoSuccess = (data: User) => {
     setUser(data);
@@ -101,7 +111,10 @@ export default function Navbar({ className }: Props) {
               <Settings2 size={16} />
               Setting
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex gap-2 text-red-500 hover:bg-red-50">
+            <DropdownMenuItem
+              className="flex gap-2 text-red-500 hover:bg-red-50"
+              onClick={handleLogout}
+            >
               <LogOut size={16} />
               Log out
             </DropdownMenuItem>

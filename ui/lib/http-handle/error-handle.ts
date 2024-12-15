@@ -27,7 +27,6 @@ export const ErrorHandle = (onFail: (err?: any) => void) => {
   };
 
   const handleUnauthorizedError = async (
-    response: Response,
     callback: () => Promise<Response>
   ): Promise<Response> => {
     return new Promise((resolve, reject) => {
@@ -41,7 +40,7 @@ export const ErrorHandle = (onFail: (err?: any) => void) => {
       };
 
       const handleRefreshTokenFail = async () => {
-        reject(response);
+        reject();
       };
 
       refreshToken(handleRefreshTokenSuccess, handleRefreshTokenFail);

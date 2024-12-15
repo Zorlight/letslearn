@@ -16,6 +16,7 @@ const TabSetting = ({ assignment, onAssignmentChange }: Props) => {
     toast.error(error);
   };
   const handleSubmitAssignmentSetting = (data: AssignmentTopic) => {
+    console.log("data", data);
     updateTopic(data, handleUpdateTopicSuccess, handleUpdateTopicFail);
   };
 

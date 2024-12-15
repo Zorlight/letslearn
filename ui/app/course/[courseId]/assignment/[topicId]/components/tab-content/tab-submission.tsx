@@ -1,4 +1,5 @@
 "use client";
+import IconButton from "@/components/buttons/icon-button";
 import { useDebouce } from "@/hooks/useDebounce";
 import { Input } from "@/lib/shadcn/input";
 import { cn } from "@/lib/utils";
@@ -7,16 +8,18 @@ import {
   StudentResponse,
 } from "@/models/student-response";
 import { AssignmentTopic } from "@/models/topic";
-import { getAssignmentResponses } from "@/services/assignment-response";
+import {
+  getAssignmentResponses,
+  updateAssignmentResponse,
+} from "@/services/assignment-response";
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { submisisonFilterKeys } from "../static-data";
 import FilterButton from "../submission/filter-button";
-import SubmissionTable from "../submission/submission-table";
+import SubmissionList from "../submission/submission-list/submission-list";
 import SubmissionDefaultView from "../submission/submission-view/default-view";
 import SubmissionSubmittedView from "../submission/submission-view/submitted-view";
-import IconButton from "@/components/buttons/icon-button";
 
 interface Props {
   assignment: AssignmentTopic;
@@ -94,6 +97,27 @@ export function TabSubmission({ className, assignment }: Props) {
     const filteredByGrade = handleFilterGrade(value, responses);
     return [...filteredByName, ...filteredByGrade];
   };
+  const handleUpdateResponseSuccess = (data: StudentResponse) => {
+    const updatedResponses = assignmentResponses.map((response) =>
+      response.id === data.id ? data : response
+    );
+    setAssignmentResponses(updatedResponses);
+    setSelectedStudentResponse(data);
+    toast.success("Response updated");
+  };
+  const handleUpdateResponseFail = (err: any) => {
+    toast.error(err);
+  };
+
+  const handleUpdateResponse = () => {
+    if (!selectedStudentResponse) return;
+    updateAssignmentResponse(
+      assignment.id,
+      selectedStudentResponse,
+      handleUpdateResponseSuccess,
+      handleUpdateResponseFail
+    );
+  };
 
   useEffect(() => {
     getAssignmentResponses(
@@ -114,7 +138,7 @@ export function TabSubmission({ className, assignment }: Props) {
       <div className="relative w-full h-full flex flex-row">
         {selectedStudentResponse !== null && (
           <IconButton
-            className="absolute top-0 right-0 group"
+            className="absolute top-0 right-0 group hover:bg-red-50"
             onClick={handleCloseSubmittedView}
           >
             <X className="text-gray-500 group-hover:text-red-500 duration-100 ease-linear" />
@@ -138,10 +162,12 @@ export function TabSubmission({ className, assignment }: Props) {
             />
           </div>
           <div className="w-full h-[350px] default-scrollbar">
-            <SubmissionTable
+            <SubmissionList
               selectedStudentResponse={selectedStudentResponse}
               studentResponses={filteredResponses}
               onResponseSelect={handleResponseSelect}
+              onSelectedStudentResponseChange={setSelectedStudentResponse}
+              onEnter={handleUpdateResponse}
             />
           </div>
         </div>

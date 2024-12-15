@@ -2,8 +2,8 @@
 import { Button } from "@/lib/shadcn/button";
 import { Input } from "@/lib/shadcn/input";
 import { cn } from "@/lib/utils";
-import { SquareArrowOutUpLeft } from "lucide-react";
-import React, { useRef, useState } from "react";
+import { Minimize2 } from "lucide-react";
+import { useRef } from "react";
 
 interface Props {
   open: boolean;
@@ -36,8 +36,8 @@ export default function JoiningCodeView({
       )}
     >
       <div className="relative h-full flex flex-col items-center justify-end gap-4 p-4">
-        <SquareArrowOutUpLeft
-          className="absolute top-4 left-4 text-gray-400 cursor-pointer transition-all duration-200 hover:text-gray-500"
+        <Minimize2
+          className="absolute top-4 right-4 text-gray-400 cursor-pointer transition-all duration-200 hover:text-gray-500"
           size={20}
           onClick={handleClose}
         />

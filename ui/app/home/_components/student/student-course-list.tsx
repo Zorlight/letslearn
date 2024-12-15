@@ -34,10 +34,44 @@ export default function StudentCourseList({
 
   return (
     <div className={cn("w-full h-fit grid grid-cols-3 gap-5 m-5", className)}>
+      <CourseJoiningCode onSubmitCode={handleSubmitCode} />
+
       {courses.map((course) => (
         <StudentCourseCard key={course.id} course={course} />
       ))}
-      <CourseJoiningCode onSubmitCode={handleSubmitCode} />
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
+      {courses.map((course) => (
+        <StudentCourseCard key={course.id} course={course} />
+      ))}
     </div>
   );
 }

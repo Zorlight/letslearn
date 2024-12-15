@@ -14,7 +14,7 @@ import SettingRow from "./setting-row";
 import { Button } from "@/lib/shadcn/button";
 
 interface Props {
-  meetting: MeetingTopic;
+  meeting: MeetingTopic;
   className?: string;
   onSubmit?: (data: MeetingTopic) => void;
 }
@@ -31,8 +31,8 @@ const schema: ZodType<MeetingForm> = z.object({
   open: z.string(),
 });
 
-export default function SettingForm({ meetting, className, onSubmit }: Props) {
-  const { open } = meetting.data;
+export default function SettingForm({ meeting, className, onSubmit }: Props) {
+  const { open } = meeting.data;
   const handleGetMeetingSetting = (meeting: MeetingTopic) => {
     const { title, data } = meeting;
     const { description, open } = data;
@@ -43,7 +43,7 @@ export default function SettingForm({ meetting, className, onSubmit }: Props) {
     };
     return meetingSetting;
   };
-  const initMeetingSetting = handleGetMeetingSetting(meetting);
+  const initMeetingSetting = handleGetMeetingSetting(meeting);
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: initMeetingSetting,
@@ -63,9 +63,10 @@ export default function SettingForm({ meetting, className, onSubmit }: Props) {
   const handleGetMeetingSettingToSave = (data: MeetingForm) => {
     const { title, description, open } = data;
     const meetingSetting: MeetingTopic = {
-      ...meetting,
+      ...meeting,
       title,
       data: {
+        ...meeting.data,
         description,
         open,
       },

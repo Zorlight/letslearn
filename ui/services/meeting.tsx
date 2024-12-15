@@ -11,6 +11,7 @@ export const startMeeting = (
     `/v1/meeting/${meetingId}`,
     onSuccess,
     onFail,
+    null,
     GLOBAL.MEETING_URL
   );
 };
@@ -25,6 +26,7 @@ export const joinMeeting = (
     `/v1/meeting/${meetingId}`,
     onSuccess,
     onFail,
+    null,
     GLOBAL.MEETING_URL
   );
 };

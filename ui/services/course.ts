@@ -20,6 +20,14 @@ export const createCourse = (
   POST("/course", reqData, onSuccess, onFail);
 };
 
+export const getPublicCourses = (
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  const url = `/course`;
+  GET(url, onSuccess, onFail);
+};
+
 export const getTeacherCourses = (
   user: User,
   onSuccess: (data: any) => void,

@@ -1,4 +1,4 @@
-import { makeRequest, POST } from "@/lib/http-handle/http-handle";
+import { GET, makeRequest, POST } from "@/lib/http-handle/http-handle";
 
 export const signup = (
   reqData: any,
@@ -18,12 +18,12 @@ export const refreshToken = (
   onSuccess: (data: any) => void,
   onFail: (err: any) => void
 ) => {
-  makeRequest("GET", "/auth/refresh", onSuccess, onFail);
+  GET("/auth/refresh", onSuccess, onFail);
 };
 
 export const logout = (
   onSuccess: (data: any) => void,
   onFail: (err: any) => void
 ) => {
-  makeRequest("POST", "/auth/logout", onSuccess, onFail);
+  GET("/auth/logout", onSuccess, onFail);
 };

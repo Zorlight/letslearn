@@ -4,7 +4,7 @@ import PageLayout from "@/components/ui/util-layout/page-layout";
 import { Role } from "@/models/user";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
-import { getTeacherCourses } from "@/services/course";
+import { getPublicCourses, getTeacherCourses } from "@/services/course";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import StudentCourseList from "./_components/student/student-course-list";
@@ -30,11 +30,22 @@ const HomePage = () => {
     toast.error(error || "Failed to get teacher courses");
   };
 
+  const handleGetPublicCoursesSuccess =
+    (userCourses: Course[]) => (data: Course[]) => {
+      setCourses([...userCourses, ...data]);
+    };
+  const handleGetPublicCoursesFail = (error: any) => {
+    toast.error(error);
+  };
+
   useEffect(() => {
     if (!user) return;
 
     if (user.role === Role.STUDENT) {
-      setCourses(user.courses);
+      getPublicCourses(
+        handleGetPublicCoursesSuccess(user.courses),
+        handleGetPublicCoursesFail
+      );
     } else {
       getTeacherCourses(
         user,

@@ -34,7 +34,7 @@ export const makeRequest = async (
     if (!res.ok) {
       if (res.status === 403) {
         // retry by refreshing token
-        res = await handleUnauthorizedError(res, fetchData);
+        res = await handleUnauthorizedError(fetchData);
       } else {
         handleResponseError(res);
         return;

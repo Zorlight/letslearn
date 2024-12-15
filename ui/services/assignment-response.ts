@@ -1,4 +1,4 @@
-import { GET, POST } from "@/lib/http-handle/http-handle";
+import { GET, POST, PUT } from "@/lib/http-handle/http-handle";
 import { StudentResponse } from "@/models/student-response";
 import {
   convertAssignmentResponseFromResponseData,
@@ -29,7 +29,7 @@ export const updateAssignmentResponse = (
   const handleSuccess = (data: any) => {
     onSuccess(convertAssignmentResponseFromResponseData(data));
   };
-  POST(
+  PUT(
     `/topic/${topicId}/assignment-response/${id}`,
     reqData,
     handleSuccess,

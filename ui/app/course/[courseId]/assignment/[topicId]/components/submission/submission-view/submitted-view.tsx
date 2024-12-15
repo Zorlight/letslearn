@@ -77,7 +77,7 @@ export default function SubmissionSubmittedView({
           </span>
         </p>
       </div>
-      <PanelGroup autoSaveId="example" direction="vertical">
+      <PanelGroup autoSaveId="assignment-submitted-view" direction="vertical">
         <Panel defaultSize={50}>
           <SubmissionFileUploadView studentResponse={studentResponse} />
         </Panel>

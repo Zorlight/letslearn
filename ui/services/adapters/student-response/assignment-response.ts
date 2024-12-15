@@ -7,11 +7,12 @@ import { convertCloudinaryFilesToRequestData } from "../cloudinary-file/cloudina
 export const convertAssignmentResponseToRequestData = (
   assignmentResponse: StudentResponse
 ) => {
-  const { id, data, topicId } = assignmentResponse;
+  const { id, data, topicId, student } = assignmentResponse;
   const { submittedAt, files, mark, note } = data as AssignmentResponseData;
   return {
     id: id.length === 4 ? null : id,
     topicId,
+    student,
     submittedAt,
     cloudinaryFiles: convertCloudinaryFilesToRequestData(files),
     mark,

@@ -15,18 +15,3 @@ export const startMeeting = (
     GLOBAL.MEETING_URL
   );
 };
-
-export const joinMeeting = (
-  meetingId: string,
-  onSuccess: (data: any) => void,
-  onFail: (err?: any) => void
-) => {
-  makeRequest(
-    "GET",
-    `/v1/meeting/${meetingId}`,
-    onSuccess,
-    onFail,
-    null,
-    GLOBAL.MEETING_URL
-  );
-};

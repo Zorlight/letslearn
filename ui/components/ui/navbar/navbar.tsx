@@ -29,7 +29,7 @@ interface Props {
   className?: string;
 }
 export default function Navbar({ className }: Props) {
-  const [user, setUser] = useState<User>();
+  const user = useAppSelector((state) => state.profile.value);
   const dispatch = useAppDispatch();
   const breadcrumbItems: BreadcrumbItem[] = useAppSelector(
     (state) => state.breadcrumb.items
@@ -54,7 +54,6 @@ export default function Navbar({ className }: Props) {
     router.push("/login");
   };
   const handleGetMyInfoSuccess = (data: User) => {
-    setUser(data);
     dispatch(setProfile(data));
   };
 

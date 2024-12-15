@@ -11,13 +11,8 @@ import { useRouter } from "next/navigation";
 interface Props {
   courses: Course[];
   className?: string;
-  onCoursesChange?: (courses: Course[]) => void;
 }
-export default function StudentCourseList({
-  courses,
-  className,
-  onCoursesChange,
-}: Props) {
+export default function StudentCourseList({ courses, className }: Props) {
   const router = useRouter();
 
   const handleJoinCourseSuccess = (code: string) => (data: any) => {
@@ -28,49 +23,20 @@ export default function StudentCourseList({
     toast.error(error);
   };
 
-  const handleSubmitCode = (code: string) => {
+  const handleJoinCourse = (code: string) => {
     joinCourse(code, handleJoinCourseSuccess(code), handleJoinCourseFail);
   };
 
   return (
     <div className={cn("w-full h-fit grid grid-cols-3 gap-5 m-5", className)}>
-      <CourseJoiningCode onSubmitCode={handleSubmitCode} />
+      <CourseJoiningCode onSubmitCode={handleJoinCourse} />
 
       {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
-      ))}
-      {courses.map((course) => (
-        <StudentCourseCard key={course.id} course={course} />
+        <StudentCourseCard
+          key={course.id}
+          course={course}
+          onJoinCourse={handleJoinCourse}
+        />
       ))}
     </div>
   );

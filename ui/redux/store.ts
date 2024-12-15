@@ -3,6 +3,7 @@ import ProfileReducer from "./slices/profile";
 import ConfettiReducer from "./slices/confetti";
 import BreadcrumbReducer from "./slices/breadcrumb";
 import quizAttemptingReducer from "./slices/quiz-attempting";
+import CoursesReducer from "./slices/course";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     confetti: ConfettiReducer,
     breadcrumb: BreadcrumbReducer,
     quizAttempting: quizAttemptingReducer,
+    courses: CoursesReducer,
   },
 });
 

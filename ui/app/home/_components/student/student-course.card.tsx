@@ -3,26 +3,31 @@ import { Button } from "@/lib/shadcn/button";
 import { cn } from "@/lib/utils";
 import { Course } from "@/models/course";
 import { User } from "@/models/user";
+import { useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 interface Props {
   course: Course;
-  user?: User;
+  onJoinCourse?: (code: string) => void;
 }
-const StudentCourseCard = ({ course, user }: Props) => {
+const StudentCourseCard = ({ course, onJoinCourse }: Props) => {
   const router = useRouter();
+  const user = useAppSelector((state) => state.profile.value);
   const handleClick = () => {
-    router.push(`/course/${course.id}`);
+    if (onJoinCourse) onJoinCourse(course.id);
   };
-  let hasJoined = false;
-  if (!user) hasJoined = false;
-  else if (course.studentIds.includes(user.id)) hasJoined = true;
+  let hasJoined = useMemo(() => {
+    if (!user) return false;
+    const courseIdList = user.courses.map((course) => course.id);
+    return courseIdList.includes(course.id);
+  }, [user, course.id]);
 
   return (
     <div
       className={cn(
-        "flex flex-col min-w-[200px] h-fit rounded-lg overflow-hidden text-gray-700 border-[0.5px] border-gray-200 shadow hover:shadow-md transition-all duration-200 group",
+        "flex flex-col min-w-[200px] h-full rounded-lg overflow-hidden text-gray-700 border-[0.5px] border-gray-200 shadow hover:shadow-md transition-all duration-200 group",
         hasJoined && "cursor-pointer"
       )}
       onClick={hasJoined ? handleClick : undefined}

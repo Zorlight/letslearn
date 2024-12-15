@@ -2,16 +2,16 @@ import {
   AssignmentResponseData,
   StudentResponse,
 } from "@/models/student-response";
-import { User } from "@/models/user";
 import { convertCloudinaryFilesToRequestData } from "../cloudinary-file/cloudinary-file";
 
 export const convertAssignmentResponseToRequestData = (
   assignmentResponse: StudentResponse
 ) => {
-  const { submittedAt, files, mark, note } =
-    assignmentResponse.data as AssignmentResponseData;
+  const { id, data, topicId } = assignmentResponse;
+  const { submittedAt, files, mark, note } = data as AssignmentResponseData;
   return {
-    ...assignmentResponse,
+    id: id.length === 4 ? null : id,
+    topicId,
     submittedAt,
     cloudinaryFiles: convertCloudinaryFilesToRequestData(files),
     mark,

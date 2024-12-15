@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
   title: string;

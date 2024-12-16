@@ -1,48 +1,58 @@
-'use client';
-import { ConnectionDetails } from '@/app/meeting/[meetingID]/types';
-import { formatChatMessageLinks, LiveKitRoom, LocalUserChoices, PreJoin, VideoConference } from '@/components/meeting/livekit';
-import GLOBAL from '@/global';
+"use client";
+import { ConnectionDetails } from "@/app/meeting/[meetingID]/types";
+import {
+  formatChatMessageLinks,
+  LiveKitRoom,
+  LocalUserChoices,
+  PreJoin,
+  VideoConference,
+} from "@/components/meeting/livekit";
+import GLOBAL from "@/global";
 import {
   RoomOptions,
   VideoCodec,
   VideoPresets,
   Room,
   RoomConnectOptions,
-} from 'livekit-client';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+} from "livekit-client";
+import { useRouter } from "next/navigation";
+import React from "react";
 
-export function MeetingPageComponent(props: {
-    meetingID: string;
-}) {
-  const [preJoinChoices, setPreJoinChoices] = React.useState<LocalUserChoices | undefined>(
-    undefined,
-  );
+export function MeetingPageComponent(props: { meetingID: string }) {
+  const [preJoinChoices, setPreJoinChoices] = React.useState<
+    LocalUserChoices | undefined
+  >(undefined);
   const preJoinDefaults = React.useMemo(() => {
     return {
-      username: '',
+      username: "",
       videoEnabled: true,
       audioEnabled: true,
     };
   }, []);
-  const [connectionDetails, setConnectionDetails] = React.useState<ConnectionDetails | undefined>(
-    undefined,
-  );
+  const [connectionDetails, setConnectionDetails] = React.useState<
+    ConnectionDetails | undefined
+  >(undefined);
 
-  const handlePreJoinSubmit = React.useCallback(async (values: LocalUserChoices) => {
-    setPreJoinChoices(values);
-    const url = new URL(`/v1/meeting/${props.meetingID}`, GLOBAL.MEETING_URL);
-    url.searchParams.append('name', values.username);
-    const connectionDetailsResp = await fetch(url.toString());
-    const connectionDetailsData = await connectionDetailsResp.json();
-    setConnectionDetails(connectionDetailsData);
-  }, []);
-  const handlePreJoinError = React.useCallback((e: any) => console.error(e), []);
+  const handlePreJoinSubmit = React.useCallback(
+    async (values: LocalUserChoices) => {
+      setPreJoinChoices(values);
+      const url = new URL(`/v1/meeting/${props.meetingID}`, GLOBAL.MEETING_URL);
+      url.searchParams.append("name", values.username);
+      const connectionDetailsResp = await fetch(url.toString());
+      const connectionDetailsData = await connectionDetailsResp.json();
+      setConnectionDetails(connectionDetailsData);
+    },
+    []
+  );
+  const handlePreJoinError = React.useCallback(
+    (e: any) => console.error(e),
+    []
+  );
 
   return (
     <main data-lk-theme="default">
       {connectionDetails === undefined || preJoinChoices === undefined ? (
-        <div className='flex items-center justify-center w-screen h-screen bg-slate-600 rounded-lg'>
+        <div className="flex items-center justify-center w-screen h-screen bg-slate-600 rounded-lg">
           <PreJoin
             defaults={preJoinDefaults}
             onSubmit={handlePreJoinSubmit}
@@ -53,7 +63,7 @@ export function MeetingPageComponent(props: {
         <VideoConferenceComponent
           connectionDetails={connectionDetails}
           userChoices={preJoinChoices}
-            meetingID={props.meetingID}
+          meetingID={props.meetingID}
         />
       )}
     </main>
@@ -82,7 +92,7 @@ function VideoConferenceComponent(props: {
       audioCaptureDefaults: {
         deviceId: props.userChoices.audioDeviceId ?? undefined,
       },
-      adaptiveStream: { pixelDensity: 'screen' },
+      adaptiveStream: { pixelDensity: "screen" },
       dynacast: true,
       e2ee: undefined,
     };
@@ -90,7 +100,6 @@ function VideoConferenceComponent(props: {
 
   const room = React.useMemo(() => new Room(roomOptions), []);
 
-  
   const connectOptions = React.useMemo((): RoomConnectOptions => {
     return {
       autoSubscribe: true,
@@ -98,10 +107,10 @@ function VideoConferenceComponent(props: {
   }, []);
 
   const router = useRouter();
-  const handleOnLeave = React.useCallback(() => router.push('/'), [router]);
+  const handleOnLeave = React.useCallback(() => router.push("/home"), [router]);
 
   return (
-    <div className='h-screen w-screen'>
+    <div className="h-screen w-screen">
       <LiveKitRoom
         room={room}
         token={props.connectionDetails.participantToken}

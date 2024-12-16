@@ -17,6 +17,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
 const ToDoPage = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.profile.value);
+  const courses = useAppSelector((state) => state.courses.value);
 
   useEffect(() => {
     dispatch(setBreadcrumb(breadcrumbItems));
@@ -26,7 +27,7 @@ const ToDoPage = () => {
   return (
     <PageLayoutWithTab tabs={tabs}>
       <div className="max-w-4xl mx-auto">
-        <TabContent />
+        <TabContent courses={courses} />
       </div>
     </PageLayoutWithTab>
   );

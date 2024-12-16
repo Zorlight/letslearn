@@ -2,20 +2,26 @@
 import { useTab } from "@/hooks/useTab";
 import { notFound } from "next/navigation";
 import { Tab } from "../static-data";
+import AssignedTab from "./assigned-tab";
+import { Course } from "@/models/course";
+import OverdueTab from "./overdue-tab";
+import DoneTab from "./done-tab";
 
-interface Props {}
+interface Props {
+  courses: Course[];
+}
 
-const TabContent = ({}: Props) => {
+const TabContent = ({ courses }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
 
   switch (selectedTab) {
     case Tab.ASSIGNED:
-      return <div>Assigned</div>;
+      return <AssignedTab courses={courses} />;
     case Tab.OVERDUE:
-      return <div>Overdue</div>;
+      return <OverdueTab courses={courses} />;
     case Tab.DONE:
-      return <div>Done</div>;
+      return <DoneTab courses={courses} />;
     default:
       return notFound();
   }

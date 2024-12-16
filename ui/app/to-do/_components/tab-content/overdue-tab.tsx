@@ -3,12 +3,12 @@ import { Button } from "@/lib/shadcn/button";
 import { Course } from "@/models/course";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
-import AssignedList from "../activity-group/assigned-list";
+import OverdueList from "../activity-group/overdue-list";
 
 interface Props {
   courses: Course[];
 }
-export default function AssignedTab({ courses }: Props) {
+export default function OverdueTab({ courses }: Props) {
   const options = ["All courses", ...courses.map((course) => course.title)];
   const [selectedOption, setSelectedOption] = useState(options[0]);
   return (
@@ -27,7 +27,7 @@ export default function AssignedTab({ courses }: Props) {
           <ChevronDown size={20} />
         </Button>
       </Combobox>
-      <AssignedList />
+      <OverdueList />
     </div>
   );
 }

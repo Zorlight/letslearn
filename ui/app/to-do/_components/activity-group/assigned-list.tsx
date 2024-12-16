@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import CollapsibleList from "../collapsible/collapsible-list";
 import ActivityItem from "./activity-item";
 
-export default function ActivityList() {
+export default function AssignedList() {
   const [topics, setTopics] = useState<Topic[]>(fakeTopics);
   const [workingInProgressTopics, setWorkingInProgressTopics] = useState<
     Topic[]
   >([]);
-  const [overdueTopics, setOverdueTopics] = useState<Topic[]>([]);
-  const [doneTopics, setDoneTopics] = useState<Topic[]>([]);
+  const [noDueDateTopics, setNoDueDateTopics] = useState<Topic[]>([]);
   const [itemsPerGroup, setItemsPerGroup] = useState<number[]>([0, 0]);
 
   const isWorkingInProgressTopic = (topic: Topic) => {
@@ -25,39 +24,27 @@ export default function ActivityList() {
     }
     return false;
   };
-  const isOverDueTopic = (topic: Topic) => {
-    const { type } = topic;
-    const current = new Date();
-    if (type === TopicType.QUIZ) {
-      const { close } = topic.data;
-      return close && new Date(close) < current;
-    } else if (type === TopicType.ASSIGNMENT) {
-      const { close } = topic.data;
-      return close && new Date(close) < current;
-    }
-    return false;
-  };
-  const isDoneTopic = (topic: Topic) => {
+  const isNoDueDateTopic = (topic: Topic) => {
     const { type } = topic;
     if (type === TopicType.QUIZ) {
       const { close } = topic.data;
-      return close && new Date(close) < new Date();
+      return !close;
     } else if (type === TopicType.ASSIGNMENT) {
       const { close } = topic.data;
-      return close && new Date(close) < new Date();
+      return !close;
     }
     return false;
   };
 
   useEffect(() => {
     const workingInProgressTopics = topics.filter(isWorkingInProgressTopic);
-    const overdueTopics = topics.filter(isOverDueTopic);
+    const noDueDateTopics = topics.filter(isNoDueDateTopic);
     setWorkingInProgressTopics(workingInProgressTopics);
-    setOverdueTopics(overdueTopics);
-    setItemsPerGroup([workingInProgressTopics.length, overdueTopics.length]);
+    setNoDueDateTopics(noDueDateTopics);
+    setItemsPerGroup([workingInProgressTopics.length, noDueDateTopics.length]);
   }, [topics]);
 
-  const titles = ["Work in progress", "Overdue"];
+  const titles = ["Work in progress", "No due date"];
   return (
     <div className="w-full">
       <CollapsibleList titles={titles} itemsPerGroup={itemsPerGroup}>
@@ -67,7 +54,7 @@ export default function ActivityList() {
           ))}
         </div>
         <div>
-          {overdueTopics.map((topic) => (
+          {noDueDateTopics.map((topic) => (
             <ActivityItem key={topic.id} topic={topic} />
           ))}
         </div>

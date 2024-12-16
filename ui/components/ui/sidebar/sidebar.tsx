@@ -1,5 +1,10 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { Course } from "@/models/course";
+import { Role } from "@/models/user";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setCourses } from "@/redux/slices/course";
+import { getPublicCourses, getTeacherCourses } from "@/services/course";
 import {
   Calendar,
   ClipboardList,
@@ -9,19 +14,15 @@ import {
   Settings,
   Users,
 } from "lucide-react";
+import { CldImage } from "next-cloudinary";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
+import { toast } from "react-toastify";
 import SidebarCollapsibleItem from "./sidebar-colapsible-item";
 import SidebarCourseItem from "./sidebar-course-item";
 import SidebarItem from "./sidebar-item";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Role } from "@/models/user";
-import { CldImage } from "next-cloudinary";
-import { getPublicCourses, getTeacherCourses } from "@/services/course";
-import { Course } from "@/models/course";
-import { toast } from "react-toastify";
-import { setCourses } from "@/redux/slices/course";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import SidebarGroup from "./sidebar-group";
+import SidebarSkeleton from "./sidebar-skeleton";
 
 interface Props {
   className?: string;
@@ -70,113 +71,98 @@ export default function Sidebar({ className }: Props) {
     );
   }, [user]);
   return (
-    <div
-      className={cn(
-        "w-[350px] h-[calc(100%-60px)] flex flex-col border-r-[0.5px] border-gray-400 bg-white",
-        className
-      )}
-    >
-      <Group hasBorder={false}>
-        <SidebarItem title="Home" icon={<Home />} href="/home" />
-        <SidebarItem title="Calendar" icon={<Calendar />} href="/calendar" />
-        <SidebarItem title="Setting" icon={<Settings />} href="/setting" />
-      </Group>
-      <Group>
-        {role === Role.TEACHER && (
-          <SidebarCollapsibleItem
-            trigger={<SidebarItem title="Teaching" icon={<Users />} />}
-          >
-            <SidebarItem
-              title="To review"
-              icon={<ClipboardList />}
-              href="/to-review"
-            />
-            <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
-              {courses.map((course) => (
-                <SidebarCourseItem
-                  key={course.id}
-                  courseName={course.title}
-                  category={course.category}
-                  image={
-                    course.imageUrl ? (
-                      <CldImage
-                        src={course.imageUrl}
-                        alt={`${course.title} background`}
-                        width={100}
-                        height={100}
-                        className="w-8 h-8 rounded-full object-fill"
-                      />
-                    ) : (
-                      <Image
-                        src="/astronomy-bg.jpg"
-                        alt="Astronomy background"
-                        width={100}
-                        height={100}
-                        className="w-8 h-8 rounded-full object-fill"
-                      />
-                    )
-                  }
-                />
-              ))}
-            </div>
-          </SidebarCollapsibleItem>
+    <Suspense fallback={<SidebarSkeleton className={className} />}>
+      <div
+        className={cn(
+          "w-[350px] h-[calc(100%-60px)] flex flex-col border-r-[0.5px] border-gray-400 bg-white",
+          className
         )}
-        {role === Role.STUDENT && (
-          <SidebarCollapsibleItem
-            trigger={<SidebarItem title="Enrolled" icon={<GraduationCap />} />}
-          >
-            <SidebarItem title="To do" icon={<ListCheck />} href="/to-do" />
-            <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
-              {studentCourseList.map((course) => (
-                <SidebarCourseItem
-                  key={course.id}
-                  courseName={course.title}
-                  category={course.category}
-                  href={`/course/${course.id}`}
-                  image={
-                    course.imageUrl ? (
-                      <CldImage
-                        src={course.imageUrl}
-                        alt={`${course.title} background`}
-                        width={100}
-                        height={100}
-                        className="w-8 h-8 rounded-full object-fill"
-                      />
-                    ) : (
-                      <Image
-                        src="/astronomy-bg.jpg"
-                        alt="Astronomy background"
-                        width={100}
-                        height={100}
-                        className="w-8 h-8 rounded-full object-fill"
-                      />
-                    )
-                  }
-                />
-              ))}
-            </div>
-          </SidebarCollapsibleItem>
-        )}
-      </Group>
-    </div>
+      >
+        <SidebarGroup hasBorder={false}>
+          <SidebarItem title="Home" icon={<Home />} href="/home" />
+          <SidebarItem title="Calendar" icon={<Calendar />} href="/calendar" />
+          <SidebarItem title="Setting" icon={<Settings />} href="/setting" />
+        </SidebarGroup>
+        <SidebarGroup>
+          {role === Role.TEACHER && (
+            <SidebarCollapsibleItem
+              trigger={<SidebarItem title="Teaching" icon={<Users />} />}
+            >
+              <SidebarItem
+                title="To review"
+                icon={<ClipboardList />}
+                href="/to-review"
+              />
+              <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
+                {courses.map((course) => (
+                  <SidebarCourseItem
+                    key={course.id}
+                    courseName={course.title}
+                    category={course.category}
+                    image={
+                      course.imageUrl ? (
+                        <CldImage
+                          src={course.imageUrl}
+                          alt={`${course.title} background`}
+                          width={100}
+                          height={100}
+                          className="w-8 h-8 rounded-full object-fill"
+                        />
+                      ) : (
+                        <Image
+                          src="/astronomy-bg.jpg"
+                          alt="Astronomy background"
+                          width={100}
+                          height={100}
+                          className="w-8 h-8 rounded-full object-fill"
+                        />
+                      )
+                    }
+                  />
+                ))}
+              </div>
+            </SidebarCollapsibleItem>
+          )}
+          {role === Role.STUDENT && (
+            <SidebarCollapsibleItem
+              trigger={
+                <SidebarItem title="Enrolled" icon={<GraduationCap />} />
+              }
+            >
+              <SidebarItem title="To do" icon={<ListCheck />} href="/to-do" />
+              <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
+                {studentCourseList.map((course) => (
+                  <SidebarCourseItem
+                    key={course.id}
+                    courseName={course.title}
+                    category={course.category}
+                    href={`/course/${course.id}`}
+                    image={
+                      course.imageUrl ? (
+                        <CldImage
+                          src={course.imageUrl}
+                          alt={`${course.title} background`}
+                          width={100}
+                          height={100}
+                          className="w-8 h-8 rounded-full object-fill"
+                        />
+                      ) : (
+                        <Image
+                          src="/astronomy-bg.jpg"
+                          alt="Astronomy background"
+                          width={100}
+                          height={100}
+                          className="w-8 h-8 rounded-full object-fill"
+                        />
+                      )
+                    }
+                  />
+                ))}
+              </div>
+            </SidebarCollapsibleItem>
+          )}
+        </SidebarGroup>
+      </div>
+    </Suspense>
   );
 }
-
-interface GroupProps {
-  children: React.ReactNode;
-  className?: string;
-  hasBorder?: boolean;
-}
-const Group = ({ children, className, hasBorder = true }: GroupProps) => {
-  return (
-    <div
-      className={cn(
-        "w-full pr-5 py-3",
-        hasBorder && "border-t-[0.5px] border-gray-400",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-};

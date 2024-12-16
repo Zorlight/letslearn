@@ -6,14 +6,16 @@ import { cn } from "@/lib/utils";
 
 interface Props {
   onSubmitCode?: (code: string) => void;
+  disabled?: boolean;
 }
-const CourseJoiningCode = ({ onSubmitCode }: Props) => {
+const CourseJoiningCode = ({ disabled = false, onSubmitCode }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
       className={cn(
         "relative min-h-[200px] flex items-center justify-center border-[0.5px] border-dashed rounded-lg",
-        isOpen && "border-0"
+        isOpen && "border-0",
+        disabled && "pointer-events-none"
       )}
     >
       <JoinCodeButton open={isOpen} onOpenChange={setIsOpen} />

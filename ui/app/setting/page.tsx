@@ -1,4 +1,3 @@
-import React from "react";
 import SettingBoard from "./components/setting-board";
 
 export default function SettingPage() {

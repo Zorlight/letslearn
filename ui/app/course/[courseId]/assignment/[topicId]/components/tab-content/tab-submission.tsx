@@ -9,11 +9,11 @@ import {
 } from "@/models/student-response";
 import { AssignmentTopic } from "@/models/topic";
 import {
-  getAssignmentResponses,
+  getAllAssignmentResponsesOfTopic,
   updateAssignmentResponse,
 } from "@/services/assignment-response";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { submisisonFilterKeys } from "../static-data";
 import FilterButton from "../submission/filter-button";
@@ -120,7 +120,7 @@ export function TabSubmission({ className, assignment }: Props) {
   };
 
   useEffect(() => {
-    getAssignmentResponses(
+    getAllAssignmentResponsesOfTopic(
       assignment.id,
       handleGetAssignmentResponsesSuccess,
       handleGetAssignmentResponsesFail
@@ -132,6 +132,7 @@ export function TabSubmission({ className, assignment }: Props) {
     handleFilter(debounceInputValue, filterKey);
   }, [debounceInputValue, assignmentResponses]);
 
+  const canGrade = true;
   return (
     <div className={cn(className)}>
       <h4 className="font-bold text-orange-500">Submissions</h4>
@@ -168,6 +169,7 @@ export function TabSubmission({ className, assignment }: Props) {
               onResponseSelect={handleResponseSelect}
               onSelectedStudentResponseChange={setSelectedStudentResponse}
               onEnter={handleUpdateResponse}
+              canGrade={canGrade}
             />
           </div>
         </div>

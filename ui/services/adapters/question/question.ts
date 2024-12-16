@@ -1,7 +1,6 @@
 import {
   ChoiceQuestion,
   Question,
-  QuestionChoice,
   QuestionType,
   ShortAnswerQuestion,
   TrueFalseQuestion,

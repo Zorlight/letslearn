@@ -71,14 +71,21 @@ const SubmissionStatusTable = ({ assignment, assignmentResponse }: Props) => {
     return "Submitted early by " + getDurationText(close, submittedAt, 1);
   };
 
-  const getUIFileSubmitted = (file: CloudinaryFile) => {
+  const getUIFileSubmitted = (files: CloudinaryFile[]) => {
     return (
-      <a
-        href={file.downloadUrl}
-        className="font-semibold text-cyan-500 hover:underline underline-offset-2 decoration-cyan-500"
-      >
-        {file.name}
-      </a>
+      <div className="flex flex-col gap-2">
+        {files.map((file, index) => (
+          <span key={file.id}>
+            <a
+              href={file.downloadUrl}
+              className="font-semibold text-cyan-500 hover:underline underline-offset-2 decoration-cyan-500"
+            >
+              {file.name}
+            </a>
+            {index !== files.length - 1 && ","}
+          </span>
+        ))}
+      </div>
     );
   };
 
@@ -99,7 +106,7 @@ const SubmissionStatusTable = ({ assignment, assignmentResponse }: Props) => {
     lastModified = format(new Date(submittedAt), "EEEE, d MMMM yyyy, h:mm a");
 
     // file submitted
-    fileSubmitted = files.map(getUIFileSubmitted);
+    fileSubmitted = getUIFileSubmitted(files);
   }
 
   return (

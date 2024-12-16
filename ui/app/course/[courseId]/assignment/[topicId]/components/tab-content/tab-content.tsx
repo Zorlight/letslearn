@@ -1,7 +1,7 @@
 "use client";
 import { useTab } from "@/hooks/useTab";
 import { AssignmentTopic } from "@/models/topic";
-import { User } from "@/models/user";
+import { Role, User } from "@/models/user";
 import { notFound } from "next/navigation";
 import { Tab } from "../static-data";
 import TabAssignment from "./tab-assignment";
@@ -24,6 +24,7 @@ const TabContent = ({ user, assignment, onAssignmentChange }: Props) => {
         <TabAssignment user={user} assignment={assignment} className="h-full" />
       );
     case Tab.SETTINGS:
+      if (user.role !== Role.TEACHER) return notFound();
       return (
         <TabSetting
           assignment={assignment}
@@ -31,6 +32,7 @@ const TabContent = ({ user, assignment, onAssignmentChange }: Props) => {
         />
       );
     case Tab.SUBMISSIONS:
+      if (user.role !== Role.TEACHER) return notFound();
       return <TabSubmission assignment={assignment} className="h-full" />;
     default:
       return notFound();

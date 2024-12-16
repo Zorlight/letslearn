@@ -16,7 +16,7 @@ export default function Part({
   return (
     <div className={cn("w-full flex flex-col gap-4", className)}>
       <h5 className={cn("text-blue-700", titleClassName)}>{title}</h5>
-      <div className="w-full h-full">{children}</div>
+      <div className="w-full h-full default-scrollbar">{children}</div>
     </div>
   );
 }

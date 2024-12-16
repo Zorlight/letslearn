@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 interface Props {
   assignmentResponse: StudentResponse;
   selected: boolean;
+  canGrade?: boolean;
   onClick?: () => void;
   onInputChange?: (value: number) => void;
   onEnter?: () => void;
@@ -19,6 +20,7 @@ interface Props {
 export default function SubmissionItem({
   assignmentResponse,
   selected,
+  canGrade = false,
   onClick,
   onInputChange,
   onEnter,
@@ -81,6 +83,7 @@ export default function SubmissionItem({
                 className="h-fit w-[40px] bg-transparent border-0 border-b-[0.5px] rounded-none py-0 px-1 text-center"
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
+                disabled={!canGrade}
               />
             </div>
           )}

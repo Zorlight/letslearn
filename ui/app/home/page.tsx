@@ -7,6 +7,7 @@ import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { useEffect } from "react";
 import StudentCourseList from "./_components/student/student-course-list";
 import TeacherCourseList from "./_components/teacher/teacher-course-list";
+import CourseListSkeleton from "./_components/skeleton/course-list-skeleton";
 
 const breadcrumbItems: BreadcrumbItem[] = [
   {
@@ -24,7 +25,7 @@ const HomePage = () => {
     dispatch(setBreadcrumb(breadcrumbItems));
   }, []);
 
-  if (!user) return null;
+  if (!user) return <CourseListSkeleton />;
   return (
     <PageLayout>
       {user.role === Role.TEACHER && <TeacherCourseList courses={courses} />}

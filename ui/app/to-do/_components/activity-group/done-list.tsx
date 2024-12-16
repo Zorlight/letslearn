@@ -1,12 +1,12 @@
-import { fakeTopics } from "@/fake-data/topic";
 import { Topic, TopicType } from "@/models/topic";
 import { useEffect, useState } from "react";
 import CollapsibleList from "../collapsible/collapsible-list";
 import ActivityItem from "./activity-item";
 
-export default function DoneList() {
-  const [topics, setTopics] = useState<Topic[]>(fakeTopics);
-
+interface Props {
+  topics: Topic[];
+}
+export default function DoneList({ topics }: Props) {
   const [doneTopics, setDoneTopics] = useState<Topic[]>([]);
   const [itemsPerGroup, setItemsPerGroup] = useState<number[]>([0, 0]);
 

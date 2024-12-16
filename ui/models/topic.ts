@@ -10,6 +10,7 @@ import { QuizData } from "./quiz";
 import { AssignmentData } from "./assignment";
 import { CloudinaryFile } from "./cloudinary-file";
 import { MeetingData } from "./meeting";
+import { StudentResponse } from "./student-response";
 
 interface BaseTopic {
   id: string;
@@ -30,10 +31,12 @@ export enum TopicType {
 export interface QuizTopic extends BaseTopic {
   type: TopicType.QUIZ;
   data: QuizData;
+  response?: StudentResponse;
 }
 export interface AssignmentTopic extends BaseTopic {
   type: TopicType.ASSIGNMENT;
   data: AssignmentData;
+  response?: StudentResponse;
 }
 export interface MeetingTopic extends BaseTopic {
   type: TopicType.MEETING;

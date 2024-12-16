@@ -9,7 +9,7 @@ import {
 import { AssignmentTopic } from "@/models/topic";
 import { updateAssignmentResponse } from "@/services/assignment-response";
 import { Check, RefreshCcw } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Part from "../part";
 interface Props {
@@ -24,11 +24,11 @@ export default function NoteView({
   className,
   onStudentResponseChange,
 }: Props) {
-  const { note } = studentResponse.data as AssignmentResponseData;
+  const [noteToRefresh, setNoteToRefresh] = useState<string>("");
+  const [noteInput, setNoteInput] = useState<string>("");
   const noteInputRef = useRef<HTMLTextAreaElement>(null);
   const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!noteInputRef.current) return;
-    noteInputRef.current.value = e.target.value;
+    setNoteInput(e.target.value);
   };
   const handleSaveSuccess = (data: StudentResponse) => {
     toast.success("Note saved");
@@ -38,26 +38,32 @@ export default function NoteView({
     toast.error(err);
   };
   const handleSave = () => {
-    if (!noteInputRef.current) return;
-    const updatedAssignmentResponse: StudentResponse = {
+    const updatedStudentResponse: StudentResponse = {
       ...studentResponse,
       data: {
         ...studentResponse.data,
-        note: noteInputRef.current.value,
+        note: noteInput,
       },
     };
-
     updateAssignmentResponse(
       assignment.id,
-      updatedAssignmentResponse,
+      updatedStudentResponse,
       handleSaveSuccess,
       handleSaveFail
     );
   };
   const handleReset = () => {
-    if (!noteInputRef.current) return;
-    noteInputRef.current.value = note;
+    setNoteInput(noteToRefresh);
+    if (noteInputRef.current) noteInputRef.current.value = noteToRefresh;
   };
+
+  useEffect(() => {
+    const { note } = studentResponse.data as AssignmentResponseData;
+    setNoteToRefresh(note);
+    setNoteInput(note);
+    if (noteInputRef.current) noteInputRef.current.value = note;
+  }, [studentResponse]);
+
   return (
     <Part
       title="Note"
@@ -70,7 +76,7 @@ export default function NoteView({
       <div className="h-full flex flex-row items-start gap-2">
         <Textarea
           ref={noteInputRef}
-          defaultValue={note}
+          defaultValue={noteInput}
           className="h-full border-0 resize-none default-scrollbar p-0 placeholder:italic rounded-none"
           placeholder="Write a note here..."
           onChange={handleNoteChange}
@@ -78,14 +84,14 @@ export default function NoteView({
         <div
           className={cn(
             "flex flex-col opacity-0 transition-all duration-200",
-            noteInputRef.current?.value !== note && "opacity-100"
+            noteToRefresh !== noteInput && "opacity-100"
           )}
         >
           <IconButton onClick={handleSave} className="hover:bg-green-50">
-            <Check className="text-green-500" size={20} />
+            <Check className="text-green-500" size={16} />
           </IconButton>
           <IconButton onClick={handleReset}>
-            <RefreshCcw className="text-gray-500" size={20} />
+            <RefreshCcw className="text-gray-500" size={16} />
           </IconButton>
         </div>
       </div>

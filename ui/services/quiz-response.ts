@@ -18,18 +18,28 @@ export const createQuizResponse = (
   POST(`/topic/${topicId}/quiz-response`, reqData, handleSuccess, onFail);
 };
 
-export const getQuizResponses = (
+export const getAllQuizResponsesOfTopic = (
   topicId: string,
   onSuccess: (data: StudentResponse[]) => void,
   onFail: (err?: any) => void
 ) => {
   const handleSuccess = (data: any) => {
-    console.log("data get", data);
     const quizResponses = data.map(convertQuizResponseFromResponseData);
-    console.log("quizResponses", quizResponses);
     onSuccess(quizResponses);
   };
   GET(`/topic/${topicId}/quiz-response`, handleSuccess, onFail);
+};
+
+export const getAllQuizResponsesOfUser = (
+  userId: string,
+  onSuccess: (data: StudentResponse[]) => void,
+  onFail: (err?: any) => void
+) => {
+  const handleSuccess = (data: any) => {
+    const quizResponses = data.map(convertQuizResponseFromResponseData);
+    onSuccess(quizResponses);
+  };
+  GET(`/user/${userId}/quiz-responses`, handleSuccess, onFail);
 };
 
 export const getQuizResponse = (

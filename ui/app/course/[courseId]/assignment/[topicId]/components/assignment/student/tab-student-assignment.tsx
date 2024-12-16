@@ -2,13 +2,20 @@
 import React, { useEffect, useState } from "react";
 import TabAssignmentLayout from "../util/tab-assignment-layout";
 import SubmissionView from "./submission-view";
-import { StudentResponse } from "@/models/student-response";
+import {
+  AssignmentResponseData,
+  StudentResponse,
+} from "@/models/student-response";
 import { AssignmentTopic } from "@/models/topic";
 import { User } from "@/models/user";
 import { CloudinaryFile } from "@/models/cloudinary-file";
 import { defaultAssignmentResponse } from "./static-data";
-import { createAssignmentResponse } from "@/services/assignment-response";
+import {
+  createAssignmentResponse,
+  deleteAssignmentResponse,
+} from "@/services/assignment-response";
 import { toast } from "react-toastify";
+import { deleteFiles } from "@/services/cloudinary";
 
 interface Props {
   user: User;
@@ -23,8 +30,8 @@ export default function TabStudentAssignment({
   const [assignmentResponse, setAssignmentResponse] =
     useState<StudentResponse>();
   useEffect(() => {
-    // fetch assignment response of the student by assignment id and user id
-  }, []);
+    if (assignment.response) setAssignmentResponse(assignment.response);
+  }, [assignment.response]);
 
   const handleCreateAssignmentResponseSuccess = (data: StudentResponse) => {
     setAssignmentResponse(data);
@@ -51,6 +58,40 @@ export default function TabStudentAssignment({
       handleCreateAssignmentResponseFail
     );
   };
+
+  const handleRemoveUploadedSuccess = (data: any) => {
+    toast.success("Removed successfully");
+  };
+  const handleRemoveUploadedFail = (err: any) => {
+    toast.error(err);
+  };
+  const handleRemoveUploaded = (files: CloudinaryFile[]) => {
+    const publicUrlList = files.map((file) => file.displayUrl);
+    deleteFiles(
+      publicUrlList,
+      handleRemoveUploadedSuccess,
+      handleRemoveUploadedFail
+    );
+  };
+
+  const handleRemoveAssignmentResponseSuccess = () => {
+    setAssignmentResponse(undefined);
+    toast.success("Assignment removed successfully");
+  };
+  const handleRemoveAssignmentResponseFail = (err: any) => {
+    toast.error(err);
+  };
+  const handleRemoveSubmission = () => {
+    if (!assignmentResponse) return;
+    const { files } = assignmentResponse.data as AssignmentResponseData;
+    handleRemoveUploaded(files);
+    deleteAssignmentResponse(
+      assignment.id,
+      assignmentResponse.id,
+      handleRemoveAssignmentResponseSuccess,
+      handleRemoveAssignmentResponseFail
+    );
+  };
   return (
     <TabAssignmentLayout
       assignment={assignment}
@@ -61,6 +102,7 @@ export default function TabStudentAssignment({
         assignment={assignment}
         assignmentResponse={assignmentResponse}
         onUploaded={handleUploaded}
+        onRemove={handleRemoveSubmission}
       />
     </TabAssignmentLayout>
   );

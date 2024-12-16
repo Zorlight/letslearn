@@ -50,7 +50,8 @@ export const makeRequest = async (
     try {
       const data = await res.json();
       onSuccess(data);
-    } catch {
+    } catch (e: any) {
+      console.log("Error in parsing data", e);
       handleParseDataError();
     }
   } catch {

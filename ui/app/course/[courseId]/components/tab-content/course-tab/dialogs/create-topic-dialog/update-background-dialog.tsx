@@ -10,7 +10,7 @@ import {
 } from "@/lib/shadcn/dialog";
 import { getFileInput, resetFileInput } from "@/lib/utils";
 import { Course } from "@/models/course";
-import { uploadImage } from "@/services/cloudinary";
+import { uploadFile } from "@/services/cloudinary";
 import { Spinner } from "@nextui-org/spinner";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -76,7 +76,7 @@ export default function UpdateBackgroundDialog({
       return;
     }
     setIsUploading(true);
-    uploadImage(imageFile, handleSaveImageSuccess, handleSaveImageFail);
+    uploadFile(imageFile, handleSaveImageSuccess, handleSaveImageFail);
   };
 
   return (

@@ -1,11 +1,10 @@
 import { ChoiceQuestion, Question, QuestionType } from "@/models/question";
-import {
-  convertChoiceQuestionToRequestData,
-  convertQuestionFromResponseData,
-  convertShortAnswerQuestionToRequestData,
-  convertTrueFalseQuestionToRequestData,
-} from "./adapters/question/question";
+
 import { GET, POST, PUT } from "@/lib/http-handle/http-handle";
+import { convertChoiceQuestionToRequestData } from "./adapters/question/choice-question";
+import { convertShortAnswerQuestionToRequestData } from "./adapters/question/short-answer-question";
+import { convertTrueFalseQuestionToRequestData } from "./adapters/question/true-false-question";
+import { convertQuestionFromResponseData } from "./adapters/question/question";
 
 export const createQuestion = (
   question: Question,

@@ -5,7 +5,7 @@ import { User } from "@/models/user";
 import TabAssignmentLayout from "../util/tab-assignment-layout";
 import GradingView from "./grading-view";
 import { useEffect, useState } from "react";
-import { getAssignmentResponses } from "@/services/assignment-response";
+import { getAllAssignmentResponsesOfTopic } from "@/services/assignment-response";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -29,7 +29,7 @@ export default function TabTeacherAssignment({
   };
   useEffect(() => {
     // fetch assignment responses
-    getAssignmentResponses(
+    getAllAssignmentResponsesOfTopic(
       assignment.id,
       handleGetAssignmentResponsesSuccess,
       handleGetAssignmentResponsesFail

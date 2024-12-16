@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
+import { Role } from "@/models/user";
 
 interface Props {
   params: {
@@ -80,7 +81,9 @@ export default function AssignmentPage({ params }: Props) {
   };
 
   const Icon = iconMap["assignment"];
-  const tabs = Object.values(Tab);
+
+  const teacherTabs = Object.values(Tab);
+  const studentTabs = [Tab.ASSIGNMENT];
 
   if (!assignment || !user) return null;
 
@@ -94,7 +97,7 @@ export default function AssignmentPage({ params }: Props) {
               <h3>Assignment</h3>
             </div>
             <TabList
-              tabs={tabs}
+              tabs={user.role === Role.TEACHER ? teacherTabs : studentTabs}
               variant="white-text"
               onTabSelected={handleTabSelected}
             />

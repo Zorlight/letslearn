@@ -45,11 +45,15 @@ export default function Navbar({ className }: Props) {
     router.push("/setting");
   };
 
+  const handleClearLocalStorage = () => {
+    localStorage.clear();
+  };
   const handleLogout = () => {
     logout(
       () => {},
       () => {}
     );
+    handleClearLocalStorage();
     toast.success("Logout successfully");
     router.push("/login");
   };

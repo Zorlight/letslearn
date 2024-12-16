@@ -18,7 +18,7 @@ export default function SubmissionFileUploadView({
 
   const title = files.length > 1 ? "Files uploaded" : "File uploaded";
   return (
-    <Part title={title} className={cn("default-scrollbar gap-0", className)}>
+    <Part title={title} className={cn("max-h-full gap-0", className)}>
       <div className="flex flex-col gap-2 py-3">
         {files.map((file, i) => (
           <SubmittedFile key={i} file={file} />

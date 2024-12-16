@@ -1,4 +1,4 @@
-import { GET, POST, PUT } from "@/lib/http-handle/http-handle";
+import { DELETE, GET, POST, PUT } from "@/lib/http-handle/http-handle";
 import { StudentResponse } from "@/models/student-response";
 import {
   convertAssignmentResponseFromResponseData,
@@ -37,7 +37,7 @@ export const updateAssignmentResponse = (
   );
 };
 
-export const getAssignmentResponses = (
+export const getAllAssignmentResponsesOfTopic = (
   topicId: string,
   onSuccess: (data: StudentResponse[]) => void,
   onFail: (err?: any) => void
@@ -49,6 +49,20 @@ export const getAssignmentResponses = (
     onSuccess(assignmentResponses);
   };
   GET(`/topic/${topicId}/assignment-response`, handleSuccess, onFail);
+};
+
+export const getAllAssignmentResponsesOfUser = (
+  userId: string,
+  onSuccess: (data: StudentResponse[]) => void,
+  onFail: (err?: any) => void
+) => {
+  const handleSuccess = (data: any) => {
+    const assignmentResponses = data.map(
+      convertAssignmentResponseFromResponseData
+    );
+    onSuccess(assignmentResponses);
+  };
+  GET(`/user/${userId}/assignment-responses`, handleSuccess, onFail);
 };
 
 export const getAssignmentResponse = (
@@ -64,6 +78,19 @@ export const getAssignmentResponse = (
   GET(
     `/topic/${topicId}/assignment-response/${assignmentResponseId}`,
     handleSuccess,
+    onFail
+  );
+};
+
+export const deleteAssignmentResponse = (
+  topicId: string,
+  assignmentResponseId: string,
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  DELETE(
+    `/topic/${topicId}/assignment-response/${assignmentResponseId}`,
+    onSuccess,
     onFail
   );
 };

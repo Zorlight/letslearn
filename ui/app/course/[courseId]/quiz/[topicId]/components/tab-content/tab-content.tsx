@@ -16,8 +16,7 @@ import { getQuestionBank } from "@/services/question";
 import { toast } from "react-toastify";
 import { getTopic, updateTopic } from "@/services/topic";
 import { nanoid } from "@reduxjs/toolkit";
-import { getQuizResponses } from "@/services/quiz-response";
-import { error } from "console";
+import { getAllQuizResponsesOfTopic } from "@/services/quiz-response";
 
 interface Props {
   className?: string;
@@ -56,7 +55,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
     );
   }, [courseId]);
   useEffect(() => {
-    getQuizResponses(
+    getAllQuizResponsesOfTopic(
       quiz.id,
       handleGetQuizResponsesSuccess,
       handleGetQuizResponsesFail

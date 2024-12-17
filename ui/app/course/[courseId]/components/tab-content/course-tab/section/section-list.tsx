@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Section } from "@/models/course";
 import {
   AssignmentTopic,
+  FileTopic,
   MeetingTopic,
   QuizTopic,
   Topic,
@@ -15,7 +16,12 @@ import { nanoid } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import SectionContent from "./section-content";
 import SectionLayout from "./section-layout";
-import { initAssignment, initMeeting, initQuiz } from "./static/init-topic";
+import {
+  initAssignment,
+  initFileTopic,
+  initMeeting,
+  initQuiz,
+} from "./static/init-topic";
 
 interface Props {
   initShowContent?: string[];
@@ -80,6 +86,7 @@ const SectionList = ({
     else if (type === TopicType.ASSIGNMENT)
       handleCreateAssignmentTopic(section);
     else if (type === TopicType.MEETING) handleCreateMeetingTopic(section);
+    else if (type === TopicType.FILE) handleCreateFileTopic(section);
   };
 
   const handleCreateQuizTopic = (section: Section) => {
@@ -117,6 +124,19 @@ const SectionList = ({
     const newSection: Section = {
       ...section,
       topics: [...section.topics, newMeeting],
+    };
+    onSectionChange(newSection);
+  };
+
+  const handleCreateFileTopic = (section: Section) => {
+    const newFileTopic: FileTopic = {
+      ...initFileTopic,
+      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+      sectionId: section.id,
+    };
+    const newSection: Section = {
+      ...section,
+      topics: [...section.topics, newFileTopic],
     };
     onSectionChange(newSection);
   };

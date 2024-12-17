@@ -9,7 +9,7 @@ import CollapsibleContent from "./collapsible-content";
 interface Props {
   titles: string[];
   initShowContent?: string[];
-  children: ReactNode[];
+  children: ReactNode[] | ReactNode;
   listClassName?: string;
   contentClassName?: string;
   onItemTrigger?: (value: string) => void;
@@ -34,6 +34,8 @@ const CollapsibleList = ({
     handleItemTrigger(value);
   };
 
+  const itemUIs = Array.isArray(children) ? children : [children];
+
   return (
     <div>
       <div className="w-full flex justify-end">
@@ -46,7 +48,7 @@ const CollapsibleList = ({
         type="multiple"
         className={cn("w-full flex flex-col gap-4", listClassName)}
       >
-        {children.map((child, index) => (
+        {itemUIs.map((child, index) => (
           <CollapsibleContent
             key={index}
             title={titles[index]}

@@ -22,15 +22,6 @@ export default function SidebarSkeleton({ className }: Props) {
         <SidebarItem title="Calendar" icon={<Calendar />} href="/calendar" />
         <SidebarItem title="Setting" icon={<Settings />} href="/setting" />
       </SidebarGroup>
-      <SidebarGroup>
-        <SidebarCollapsibleItem trigger={<TriggerSkeleton />}>
-          <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar space-y-2 mt-2">
-            {[...Array(8).keys()].map((_, index) => (
-              <ItemSkeleton key={index} />
-            ))}
-          </div>
-        </SidebarCollapsibleItem>
-      </SidebarGroup>
     </div>
   );
 }

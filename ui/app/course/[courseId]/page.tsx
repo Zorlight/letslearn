@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import CoursePageSkeleton from "./components/skeletons/course-page";
 import { Tab } from "./components/static/tabs";
 import TabContent from "./components/tab-content/tab-content";
+import Loading from "./loading";
 
 interface Props {
   params: {
@@ -52,9 +53,9 @@ export default function CoursePage({ params }: Props) {
 
   const tabs = Object.values(Tab);
 
+  if (!course) return <Loading />;
   return (
     <PageLayoutWithTab tabs={tabs}>
-      {!course && <CoursePageSkeleton />}
       {course && (
         <TabContent course={course} onCourseChange={handleCourseChange} />
       )}

@@ -4,6 +4,7 @@ import {
   convertAssignmentResponseFromResponseData,
   convertAssignmentResponseToRequestData,
 } from "./adapters/student-response/assignment-response";
+import { getUserWork } from "./user";
 
 export const createAssignmentResponse = (
   topicId: string,

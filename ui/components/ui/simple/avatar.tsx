@@ -11,8 +11,8 @@ export default function Avatar({ src, className, onClick }: Props) {
     <Image
       src={src || "/default-user.png"}
       alt="avatar"
-      width={1000}
-      height={1000}
+      width={64}
+      height={64}
       className={cn(
         "w-16 rounded-full object-cover overflow-hidden transition-all duration-200 cursor-pointer select-none",
         className

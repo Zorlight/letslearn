@@ -14,6 +14,7 @@ import { Course } from "@/models/course";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
 import { fakeMeeting } from "@/fake-data/meeting";
+import Loading from "./loading";
 
 interface Props {
   params: {
@@ -81,10 +82,10 @@ export default function MeetingPage({ params }: Props) {
     toast.error(error);
   };
 
-  const Icon = iconMap.quiz;
+  const Icon = iconMap.meeting;
   const tabs = Object.values(Tab);
 
-  if (!meeting) return null;
+  if (!meeting) return <Loading />;
   return (
     <PageLayout className="relative bg-blue-50 !overflow-y-hidden">
       <TabProvider initTab={initTab}>

@@ -72,3 +72,12 @@ export const joinCourse = (
 ) => {
   PATCH(`/course/${courseId}/join`, null, onSuccess, onFail);
 };
+
+export const getCourseWork = (
+  courseId: string,
+  type: "quiz" | "assignment" | "meeting",
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  GET(`/course/${courseId}/work?type=${type}`, onSuccess, onFail);
+};

@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/lib/shadcn/dropdown-menu";
 import { logout } from "@/services/auth";
+import NavbarSkeleton from "./navbar-skeleton";
 interface Props {
   className?: string;
 }
@@ -67,6 +68,7 @@ export default function Navbar({ className }: Props) {
   useEffect(() => {
     getMyInfo(handleGetMyInfoSuccess, handleGetMyInfoFail);
   }, []);
+  if (!user) return <NavbarSkeleton className={className} />;
   return (
     <div
       className={cn(
@@ -103,7 +105,7 @@ export default function Navbar({ className }: Props) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div>
-              <Avatar className="hover:scale-110" />
+              <Avatar className="hover:scale-110" src={user?.image} />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-white font-sans z-50">

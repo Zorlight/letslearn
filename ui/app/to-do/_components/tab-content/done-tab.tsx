@@ -1,13 +1,17 @@
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
 import { Course } from "@/models/course";
-import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import OverdueList from "../activity-group/overdue-list";
-import DoneList from "../activity-group/done-list";
+import { StudentResponse } from "@/models/student-response";
+import { AssignmentTopic, MeetingTopic, QuizTopic } from "@/models/topic";
 import { useAppSelector } from "@/redux/hooks";
 import { getAllAssignmentResponsesOfUser } from "@/services/assignment-response";
-import { StudentResponse } from "@/models/student-response";
+import {
+  getAllAssignmentOfUser,
+  getAllMeetingOfUser,
+  getAllQuizOfUser,
+} from "@/services/topic";
+import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -27,8 +31,29 @@ export default function DoneTab({ courses }: Props) {
   const handleGetAssignmentResponseFail = (error: any) => {
     toast.error(error);
   };
+  const handleGetAllAssignmentOfUserSuccess = (data: AssignmentTopic[]) => {
+    console.log("assignments: ", data);
+  };
+
+  const handleGetAllQuizOfUserSuccess = (data: QuizTopic[]) => {
+    console.log("quizzes: ", data);
+  };
+  const handleGetAllMeetingOfUserSuccess = (data: MeetingTopic[]) => {
+    console.log("meetings: ", data);
+  };
+
+  const handleGetDataFail = (error: any) => {
+    toast.error(error);
+  };
+
   useEffect(() => {
     if (!user) return;
+    getAllAssignmentOfUser(
+      handleGetAllAssignmentOfUserSuccess,
+      handleGetDataFail
+    );
+    getAllQuizOfUser(handleGetAllQuizOfUserSuccess, handleGetDataFail);
+    getAllMeetingOfUser(handleGetAllMeetingOfUserSuccess, handleGetDataFail);
     getAllAssignmentResponsesOfUser(
       user.id,
       handleGetAssignmentResponseSuccess,

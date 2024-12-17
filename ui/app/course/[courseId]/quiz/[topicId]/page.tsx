@@ -13,6 +13,7 @@ import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
 import { getCourse } from "@/services/course";
 import { Course } from "@/models/course";
+import Loading from "./loading";
 
 interface Props {
   params: {
@@ -84,7 +85,7 @@ export default function QuizPage({ params }: Props) {
   const Icon = iconMap.quiz;
   const tabs = Object.values(Tab);
 
-  if (!quiz) return null;
+  if (!quiz) return <Loading />;
   return (
     <PageLayout className="relative bg-pink-50 !overflow-y-hidden">
       <TabProvider initTab={initTab}>

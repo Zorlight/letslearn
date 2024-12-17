@@ -70,99 +70,96 @@ export default function Sidebar({ className }: Props) {
       handleGetTeacherCourseFail
     );
   }, [user]);
+  if (!user) return <SidebarSkeleton className={className} />;
   return (
-    <Suspense fallback={<SidebarSkeleton className={className} />}>
-      <div
-        className={cn(
-          "w-[350px] h-[calc(100%-60px)] flex flex-col border-r-[0.5px] border-gray-400 bg-white",
-          className
+    <div
+      className={cn(
+        "w-[350px] h-[calc(100%-60px)] flex flex-col border-r-[0.5px] border-gray-400 bg-white",
+        className
+      )}
+    >
+      <SidebarGroup hasBorder={false}>
+        <SidebarItem title="Home" icon={<Home />} href="/home" />
+        <SidebarItem title="Calendar" icon={<Calendar />} href="/calendar" />
+        <SidebarItem title="Setting" icon={<Settings />} href="/setting" />
+      </SidebarGroup>
+      <SidebarGroup>
+        {role === Role.TEACHER && (
+          <SidebarCollapsibleItem
+            trigger={<SidebarItem title="Teaching" icon={<Users />} />}
+          >
+            <SidebarItem
+              title="To review"
+              icon={<ClipboardList />}
+              href="/to-review"
+            />
+            <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
+              {courses.map((course) => (
+                <SidebarCourseItem
+                  key={course.id}
+                  courseName={course.title}
+                  category={course.category}
+                  image={
+                    course.imageUrl ? (
+                      <CldImage
+                        src={course.imageUrl}
+                        alt={`${course.title} background`}
+                        width={100}
+                        height={100}
+                        className="w-8 h-8 rounded-full object-fill"
+                      />
+                    ) : (
+                      <Image
+                        src="/astronomy-bg.jpg"
+                        alt="Astronomy background"
+                        width={100}
+                        height={100}
+                        className="w-8 h-8 rounded-full object-fill"
+                      />
+                    )
+                  }
+                />
+              ))}
+            </div>
+          </SidebarCollapsibleItem>
         )}
-      >
-        <SidebarGroup hasBorder={false}>
-          <SidebarItem title="Home" icon={<Home />} href="/home" />
-          <SidebarItem title="Calendar" icon={<Calendar />} href="/calendar" />
-          <SidebarItem title="Setting" icon={<Settings />} href="/setting" />
-        </SidebarGroup>
-        <SidebarGroup>
-          {role === Role.TEACHER && (
-            <SidebarCollapsibleItem
-              trigger={<SidebarItem title="Teaching" icon={<Users />} />}
-            >
-              <SidebarItem
-                title="To review"
-                icon={<ClipboardList />}
-                href="/to-review"
-              />
-              <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
-                {courses.map((course) => (
-                  <SidebarCourseItem
-                    key={course.id}
-                    courseName={course.title}
-                    category={course.category}
-                    image={
-                      course.imageUrl ? (
-                        <CldImage
-                          src={course.imageUrl}
-                          alt={`${course.title} background`}
-                          width={100}
-                          height={100}
-                          className="w-8 h-8 rounded-full object-fill"
-                        />
-                      ) : (
-                        <Image
-                          src="/astronomy-bg.jpg"
-                          alt="Astronomy background"
-                          width={100}
-                          height={100}
-                          className="w-8 h-8 rounded-full object-fill"
-                        />
-                      )
-                    }
-                  />
-                ))}
-              </div>
-            </SidebarCollapsibleItem>
-          )}
-          {role === Role.STUDENT && (
-            <SidebarCollapsibleItem
-              trigger={
-                <SidebarItem title="Enrolled" icon={<GraduationCap />} />
-              }
-            >
-              <SidebarItem title="To do" icon={<ListCheck />} href="/to-do" />
-              <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
-                {studentCourseList.map((course) => (
-                  <SidebarCourseItem
-                    key={course.id}
-                    courseName={course.title}
-                    category={course.category}
-                    href={`/course/${course.id}`}
-                    image={
-                      course.imageUrl ? (
-                        <CldImage
-                          src={course.imageUrl}
-                          alt={`${course.title} background`}
-                          width={100}
-                          height={100}
-                          className="w-8 h-8 rounded-full object-fill"
-                        />
-                      ) : (
-                        <Image
-                          src="/astronomy-bg.jpg"
-                          alt="Astronomy background"
-                          width={100}
-                          height={100}
-                          className="w-8 h-8 rounded-full object-fill"
-                        />
-                      )
-                    }
-                  />
-                ))}
-              </div>
-            </SidebarCollapsibleItem>
-          )}
-        </SidebarGroup>
-      </div>
-    </Suspense>
+        {role === Role.STUDENT && (
+          <SidebarCollapsibleItem
+            trigger={<SidebarItem title="Enrolled" icon={<GraduationCap />} />}
+          >
+            <SidebarItem title="To do" icon={<ListCheck />} href="/to-do" />
+            <div className="max-h-[calc(100vh-350px)] min-h-fit default-scrollbar">
+              {studentCourseList.map((course) => (
+                <SidebarCourseItem
+                  key={course.id}
+                  courseName={course.title}
+                  category={course.category}
+                  href={`/course/${course.id}`}
+                  image={
+                    course.imageUrl ? (
+                      <CldImage
+                        src={course.imageUrl}
+                        alt={`${course.title} background`}
+                        width={100}
+                        height={100}
+                        className="w-8 h-8 rounded-full object-fill"
+                      />
+                    ) : (
+                      <Image
+                        src="/astronomy-bg.jpg"
+                        alt="Astronomy background"
+                        width={100}
+                        height={100}
+                        className="w-8 h-8 rounded-full object-fill"
+                      />
+                    )
+                  }
+                />
+              ))}
+            </div>
+          </SidebarCollapsibleItem>
+        )}
+      </SidebarGroup>
+    </div>
   );
 }

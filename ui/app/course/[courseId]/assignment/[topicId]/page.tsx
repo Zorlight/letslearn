@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
 import { Role } from "@/models/user";
+import TopicSkeleton from "../../components/skeletons/topic-skeleton";
+import Loading from "./loading";
 
 interface Props {
   params: {
@@ -85,7 +87,7 @@ export default function AssignmentPage({ params }: Props) {
   const teacherTabs = Object.values(Tab);
   const studentTabs = [Tab.ASSIGNMENT];
 
-  if (!assignment || !user) return null;
+  if (!assignment || !user) return <Loading />;
 
   return (
     <PageLayout className="relative bg-purple-50 !overflow-y-hidden">
@@ -94,7 +96,7 @@ export default function AssignmentPage({ params }: Props) {
           <div className="w-full space-y-8">
             <div className="w-full px-5 flex flex-row gap-4">
               <Icon size={32} />
-              <h3>Assignment</h3>
+              <h3>{assignment.title}</h3>
             </div>
             <TabList
               tabs={user.role === Role.TEACHER ? teacherTabs : studentTabs}

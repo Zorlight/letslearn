@@ -2,6 +2,7 @@ import { FileSizeOption } from "@/models/assignment";
 import { GradingMethod, TimeLimitType } from "@/models/quiz";
 import {
   AssignmentTopic,
+  FileTopic,
   MeetingTopic,
   QuizTopic,
   TopicType,
@@ -52,5 +53,17 @@ export const initMeeting: MeetingTopic = {
   data: {
     open: nextWeek.toISOString(),
     description: "This is an important meeting. Please attend on time.",
+  },
+};
+export const initFileTopic: FileTopic = {
+  id: "",
+  sectionId: "",
+  title: "New File",
+  type: TopicType.FILE,
+  file: {
+    id: "",
+    name: "",
+    displayUrl: "",
+    downloadUrl: "",
   },
 };

@@ -3,7 +3,7 @@ import { Button } from "@/lib/shadcn/button";
 import { cn } from "@/lib/utils";
 
 import { Input } from "@/lib/shadcn/input";
-import { Topic, TopicMap } from "@/models/topic";
+import { Topic, TopicMap, TopicType } from "@/models/topic";
 import { Trash2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import TopicFileExtension from "./topic-file-extension";
@@ -48,7 +48,9 @@ const CourseTopic = ({
 
   const handleFileAction = () => {
     //download file
-    router.push(`${path}/file/${topic.id}`);
+    if (topic.type !== TopicType.FILE) return;
+    const downloadUrl = topic.file.downloadUrl;
+    router.push(downloadUrl);
   };
 
   const handleQuizAction = () => {
@@ -69,13 +71,7 @@ const CourseTopic = ({
   };
 
   const handleTopicClick = () => {
-    let action;
-    if (type === "file") {
-      //logic to get file type from the url
-      // let fileType = "document";
-      // action = actionMap.file[fileType as keyof TopicMap["file"]];
-      // action = actionMap[type];
-    } else action = actionMap[type];
+    const action = actionMap[type];
     action();
   };
 

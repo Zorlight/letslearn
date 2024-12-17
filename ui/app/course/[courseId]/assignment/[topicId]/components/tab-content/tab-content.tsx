@@ -11,7 +11,7 @@ import { TabSubmission } from "./tab-submission";
 interface Props {
   assignment: AssignmentTopic;
   user: User;
-  onAssignmentChange?: (quiz: AssignmentTopic) => void;
+  onAssignmentChange?: (assignment: AssignmentTopic) => void;
 }
 
 const TabContent = ({ user, assignment, onAssignmentChange }: Props) => {

@@ -1,33 +1,31 @@
 "use client";
-import React from "react";
+import { generateDateRange } from "@/lib/utils";
+import { Topic } from "@/models/topic";
+import React, { useState } from "react";
 import DateLayout from "./date-layout";
+import { CalendarRange, DateItem } from "./static-data";
+import { handleGetDateItems } from "./utils";
 
-export type CalendarRange = {
-  start: Date;
-  end: Date;
-};
 interface Props {
   range: CalendarRange;
+  topics: Topic[];
 }
-export default function Calendar({ range }: Props) {
-  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
-  const getDateListFromRange = (start: Date, end: Date) => {
-    const dateList = [new Date(start)];
-    let currentDate = start;
-    while (currentDate < end) {
-      currentDate.setDate(currentDate.getDate() + 1);
-      dateList.push(new Date(currentDate));
-    }
-    return dateList;
-  };
-  const dateList = getDateListFromRange(range.start, range.end);
+export default function Calendar({ range, topics }: Props) {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [shareId, setShareId] = useState<string | undefined>(undefined);
+
+  const dateRange = generateDateRange(range.start, range.end);
+  const dateList: DateItem[] = handleGetDateItems(dateRange, topics);
+
   return (
     <div className="h-full flex flex-row border-1 border-blue-800 rounded-md overflow-hidden">
-      {dateList.map((date) => (
+      {dateList.map((dateItem) => (
         <DateLayout
-          key={date.toISOString()}
-          date={date}
+          key={dateItem.date.toString()}
           selectedDate={selectedDate}
+          dateItem={dateItem}
+          shareId={shareId}
+          onShareIdChange={setShareId}
         />
       ))}
     </div>

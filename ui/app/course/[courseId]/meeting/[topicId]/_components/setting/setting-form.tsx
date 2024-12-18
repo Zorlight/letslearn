@@ -54,6 +54,7 @@ export default function SettingForm({ meeting, className, onSubmit }: Props) {
     setValue(key, e.target.value);
   };
   const handleDatePickerChange = (zoneDatetime: ZonedDateTime) => {
+    if (!zoneDatetime) return;
     const date = zonedDateTimeToDate(zoneDatetime);
     setValue("open", date.toISOString());
   };

@@ -3,7 +3,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
 import { Input } from "@/lib/shadcn/input";
 import { ChevronDown } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { AssignmentSettingForm } from "../setting-list";
 import { dateToZonedDateTime, zonedDateTimeToDate } from "@/lib/nextui/utils";
@@ -11,6 +11,7 @@ import { getLocalTimeZone, now, ZonedDateTime } from "@internationalized/date";
 import { Checkbox } from "@/lib/shadcn/checkbox";
 import { DatePicker } from "@nextui-org/date-picker";
 import { nanoid } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 export type AvailabilitySettingForm = {
   open: {
@@ -56,12 +57,17 @@ export default function AvailabilitySetting({ formData, onChange }: Props) {
     key: keyof AvailabilitySettingForm,
     zoneDatetime: ZonedDateTime
   ) => {
+    if (!zoneDatetime) return;
     const date = zonedDateTimeToDate(zoneDatetime);
     handleSettingChange({
       ...formData,
       [key]: { ...formData[key], value: date.toISOString() },
     });
   };
+
+  useEffect(() => {
+    if (errors) toast.error(errors.message);
+  }, [errors]);
 
   return (
     <div className="w-full flex flex-col p-4 gap-8">
@@ -94,6 +100,7 @@ interface RowSettingWithDatePickerProps {
   title: string;
   keyProp: keyof AvailabilitySettingForm;
   form: AvailabilitySettingForm;
+  errors?: any;
   showMonthAndYearPickers?: boolean;
   handleEnableChange: (
     key: keyof AvailabilitySettingForm,
@@ -108,6 +115,7 @@ const RowSettingWithDatePicker = ({
   title,
   keyProp,
   form,
+  errors,
   showMonthAndYearPickers = true,
   handleEnableChange,
   handleDatePickerChange,
@@ -151,6 +159,11 @@ const RowSettingWithDatePicker = ({
           }}
         />
       </div>
+      {/* {errors?[keyProp] && (
+        <p className="absolute top-full text-red-500 text-xs font-semibold">
+          {errors.title.message}
+        </p>
+      )} */}
     </div>
   );
 };

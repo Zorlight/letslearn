@@ -14,3 +14,14 @@ export const getUserWork = (
 ) => {
   GET(`/user/work?type=${type}`, onSuccess, onFail);
 };
+
+export const getAllUserWork = (
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void,
+  start?: string,
+  end?: string
+) => {
+  const url =
+    start && end ? `/user/work?start=${start}&end=${end}` : "/user/work";
+  GET(url, onSuccess, onFail);
+};

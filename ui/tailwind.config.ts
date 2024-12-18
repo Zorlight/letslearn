@@ -28,7 +28,7 @@ const config = {
         link: "#14B8A6",
         quiz: "#DB2777",
         file: "#60A5FA",
-        meeting: "#4338CA",
+        meeting: "#1e40af",
       },
       fontFamily: {
         nunito: ["var(--font-nunito)"],

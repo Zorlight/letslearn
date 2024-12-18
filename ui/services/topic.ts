@@ -3,6 +3,7 @@ import {
   MeetingTopic,
   QuizTopic,
   Topic,
+  TopicType,
 } from "@/models/topic";
 import {
   convertTopicFromResponseData,
@@ -10,7 +11,7 @@ import {
 } from "./adapters/topic/topic";
 import { GET, PUT } from "@/lib/http-handle/http-handle";
 import { convertAssignmentResponseFromResponseData } from "./adapters/student-response/assignment-response";
-import { getUserWork } from "./user";
+import { getAllUserWork, getUserWork } from "./user";
 import { convertQuizFromResponseData } from "./adapters/topic/convert-quiz";
 import { convertMeetingFromResponseData } from "./adapters/topic/convert-meeting";
 import { getCourseWork } from "./course";
@@ -47,14 +48,9 @@ export const getAllAssignmentOfUser = (
   onSuccess: (data: AssignmentTopic[]) => void,
   onFail: (err?: any) => void
 ) => {
-  const handleSuccess = (data: any) => {
-    const assignmentsJSONArray = data[0].data;
-    const assignments = assignmentsJSONArray
-      .map(JSON.parse)
-      .map(convertAssignmentFromResponseData);
-    console.log("assignments after convert", assignments);
-    // const assignment = data.map(convertAssignmentResponseFromResponseData);
-    // onSuccess(assignment);
+  const handleSuccess = (data: any[]) => {
+    const assignments = data.map(convertAssignmentFromResponseData);
+    onSuccess(assignments);
   };
   getUserWork("assignment", handleSuccess, onFail);
 };
@@ -63,10 +59,9 @@ export const getAllQuizOfUser = (
   onSuccess: (data: QuizTopic[]) => void,
   onFail: (err?: any) => void
 ) => {
-  const handleSuccess = (data: any) => {
-    console.log("data in get quizzes", data);
-    const quiz = data.map(convertQuizFromResponseData);
-    onSuccess(quiz);
+  const handleSuccess = (data: any[]) => {
+    const quizzes = data.map(convertQuizFromResponseData);
+    onSuccess(quizzes);
   };
   getUserWork("quiz", handleSuccess, onFail);
 };
@@ -75,11 +70,32 @@ export const getAllMeetingOfUser = (
   onSuccess: (data: MeetingTopic[]) => void,
   onFail: (err?: any) => void
 ) => {
-  const handleSuccess = (data: any) => {
-    const meeting = data.map(convertMeetingFromResponseData);
-    onSuccess(meeting);
+  const handleSuccess = (data: any[]) => {
+    const meetings = data.map(convertMeetingFromResponseData);
+    onSuccess(meetings);
   };
   getUserWork("meeting", handleSuccess, onFail);
+};
+
+export const getAllWorkOfUser = (
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void,
+  start?: string,
+  end?: string
+) => {
+  const handleSuccess = (data: any[]) => {
+    const converted = data.map((item) => {
+      if (item.type === TopicType.ASSIGNMENT)
+        return convertAssignmentFromResponseData(item);
+      if (item.type === TopicType.QUIZ)
+        return convertQuizFromResponseData(item);
+      if (item.type === TopicType.MEETING)
+        return convertMeetingFromResponseData(item);
+      return item;
+    });
+    onSuccess(converted);
+  };
+  getAllUserWork(handleSuccess, onFail, start, end);
 };
 
 export const getAllAssignmentOfCourse = (

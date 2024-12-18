@@ -8,17 +8,18 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import CourseBackground from "./course-tab/course-background";
 import SectionList from "./course-tab/section/section-list";
+import { useAppSelector } from "@/redux/hooks";
 
 interface Props {
   course: Course;
   onCourseChange?: (course: Course) => void;
 }
 export default function CourseTab({ course, onCourseChange }: Props) {
-  const { sections } = course;
+  const { sections, creator } = course;
+  const user = useAppSelector((state) => state.profile.value);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSectionChange = (section: Section) => {
-    console.log("section changed", section);
     const updatedSections = sections.map((s) =>
       s.id === section.id ? section : s
     );
@@ -82,6 +83,7 @@ export default function CourseTab({ course, onCourseChange }: Props) {
         sections={sections}
         onSectionChange={handleSectionChange}
         onSave={handleSaveSection}
+        canEdit={user?.id === creator.id}
       />
       <div className="mt-4 w-full flex flex-row items-center justify-center gap-2">
         <Button

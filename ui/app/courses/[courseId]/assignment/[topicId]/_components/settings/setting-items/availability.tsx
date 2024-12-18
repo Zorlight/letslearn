@@ -92,6 +92,7 @@ const AvailabilitySetting = ({
     key: keyof AvailabilitySettingForm,
     zoneDatetime: ZonedDateTime
   ) => {
+    if (!zoneDatetime) return;
     const date = zonedDateTimeToDate(zoneDatetime);
     setValue(key, { ...getValues(key), value: date.toISOString() });
     handleSettingChange({

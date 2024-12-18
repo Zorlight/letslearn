@@ -31,29 +31,10 @@ export default function DoneTab({ courses }: Props) {
   const handleGetAssignmentResponseFail = (error: any) => {
     toast.error(error);
   };
-  const handleGetAllAssignmentOfUserSuccess = (data: AssignmentTopic[]) => {
-    console.log("assignments: ", data);
-  };
-
-  const handleGetAllQuizOfUserSuccess = (data: QuizTopic[]) => {
-    console.log("quizzes: ", data);
-  };
-  const handleGetAllMeetingOfUserSuccess = (data: MeetingTopic[]) => {
-    console.log("meetings: ", data);
-  };
-
-  const handleGetDataFail = (error: any) => {
-    toast.error(error);
-  };
 
   useEffect(() => {
     if (!user) return;
-    getAllAssignmentOfUser(
-      handleGetAllAssignmentOfUserSuccess,
-      handleGetDataFail
-    );
-    getAllQuizOfUser(handleGetAllQuizOfUserSuccess, handleGetDataFail);
-    getAllMeetingOfUser(handleGetAllMeetingOfUserSuccess, handleGetDataFail);
+
     getAllAssignmentResponsesOfUser(
       user.id,
       handleGetAssignmentResponseSuccess,

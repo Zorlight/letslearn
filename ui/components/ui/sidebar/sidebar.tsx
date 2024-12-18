@@ -99,6 +99,7 @@ export default function Sidebar({ className }: Props) {
                   key={course.id}
                   courseName={course.title}
                   category={course.category}
+                  href={`/course/${course.id}`}
                   image={
                     course.imageUrl ? (
                       <CldImage

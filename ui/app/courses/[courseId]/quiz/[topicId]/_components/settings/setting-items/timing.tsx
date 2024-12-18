@@ -55,6 +55,7 @@ const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
     key: keyof TimingSettingForm,
     zoneDatetime: ZonedDateTime
   ) => {
+    if (!zoneDatetime) return;
     const date = zonedDateTimeToDate(zoneDatetime);
     handleSettingChange({
       ...formData,

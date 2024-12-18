@@ -6,6 +6,9 @@ import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { useEffect, useState } from "react";
 import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
+import { AssignmentTopic, QuizTopic } from "@/models/topic";
+import { toast } from "react-toastify";
+import { getAllAssignmentOfUser, getAllQuizOfUser } from "@/services/topic";
 
 const breadcrumbItems: BreadcrumbItem[] = [
   {
@@ -19,9 +22,24 @@ const ToDoPage = () => {
   const user = useAppSelector((state) => state.profile.value);
   const courses = useAppSelector((state) => state.courses.value);
   const [initTab, setInitTab] = useState<string>(Tab.ASSIGNED);
+  const [assignmentsOfUser, setAssignmentsOfUser] = useState<AssignmentTopic[]>(
+    []
+  );
+  const [quizzesOfUser, setQuizzesOfUser] = useState<QuizTopic[]>([]);
 
   const handleTabSelected = (tab: string) => {
     localStorage.setItem("to-do", tab);
+  };
+  const handleGetAllAssignmentOfUserSuccess = (data: AssignmentTopic[]) => {
+    setAssignmentsOfUser(data);
+  };
+
+  const handleGetAllQuizOfUserSuccess = (data: QuizTopic[]) => {
+    setQuizzesOfUser(data);
+  };
+
+  const handleGetDataFail = (error: any) => {
+    toast.error(error);
   };
 
   useEffect(() => {
@@ -31,7 +49,13 @@ const ToDoPage = () => {
     dispatch(setBreadcrumb(breadcrumbItems));
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getAllAssignmentOfUser(
+      handleGetAllAssignmentOfUserSuccess,
+      handleGetDataFail
+    );
+    getAllQuizOfUser(handleGetAllQuizOfUserSuccess, handleGetDataFail);
+  }, []);
 
   const tabs = Object.values(Tab);
   return (
@@ -41,7 +65,11 @@ const ToDoPage = () => {
       onTabSelected={handleTabSelected}
     >
       <div className="max-w-4xl mx-auto">
-        <TabContent courses={courses} />
+        <TabContent
+          courses={courses}
+          assignmentsOfUser={assignmentsOfUser}
+          quizzesOfUser={quizzesOfUser}
+        />
       </div>
     </PageLayoutWithTab>
   );

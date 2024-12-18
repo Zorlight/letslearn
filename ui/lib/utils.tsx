@@ -218,6 +218,28 @@ const getFileTypeColor = (ex: string) => {
   }
   return fileTypeColorMap.default;
 };
+const getDateAfterNDays = (days?: number, current?: Date) => {
+  const previousDay = new Date(current || new Date());
+  previousDay.setDate(previousDay.getDate() + (days || 0));
+  return previousDay;
+};
+
+const generateDateRange = (start: Date, end: Date) => {
+  const dateList = [];
+  const currentDate = new Date(start);
+  while (currentDate <= end) {
+    dateList.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  return dateList;
+};
+const isInDate = (date: Date, toCompare: Date) => {
+  return (
+    date.getFullYear() === toCompare.getFullYear() &&
+    date.getMonth() === toCompare.getMonth() &&
+    date.getDate() === toCompare.getDate()
+  );
+};
 export {
   cn,
   displayNumber,
@@ -239,4 +261,7 @@ export {
   isDocumentExtension,
   isArchiveExtension,
   getFileTypeColor,
+  getDateAfterNDays,
+  generateDateRange,
+  isInDate,
 };

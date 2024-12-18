@@ -22,6 +22,7 @@ import {
   initMeeting,
   initQuiz,
 } from "./static/init-topic";
+import { useAppSelector } from "@/redux/hooks";
 
 interface Props {
   initShowContent?: string[];
@@ -32,6 +33,7 @@ interface Props {
   onItemTrigger?: (value: string) => void;
   onEdit?: (id: string) => void;
   onSave?: (section: Section) => void;
+  canEdit?: boolean;
 }
 const SectionList = ({
   sections,
@@ -42,6 +44,7 @@ const SectionList = ({
   onItemTrigger,
   onEdit,
   onSave,
+  canEdit,
 }: Props) => {
   const { showContent, handleItemTrigger, collapseAll, setShowContent } =
     useCollapsibleList();
@@ -191,6 +194,7 @@ const SectionList = ({
               onEdit={() => handleEdit(id)}
               onSave={handleSaveSection(section)}
               onRefresh={handleRefreshSection(id)}
+              canEdit={canEdit}
               className={contentClassName}
             >
               <SectionContent

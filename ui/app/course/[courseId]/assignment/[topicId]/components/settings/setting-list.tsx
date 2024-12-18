@@ -27,20 +27,48 @@ const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
   description: z.string(),
 });
 
-const availabilitySettingSchema: ZodType<AvailabilitySettingForm> = z.object({
-  open: z.object({
-    enabled: z.boolean(),
-    value: z.string(),
-  }),
-  close: z.object({
-    enabled: z.boolean(),
-    value: z.string(),
-  }),
-  remindToGrade: z.object({
-    enabled: z.boolean(),
-    value: z.string(),
-  }),
-});
+const availabilitySettingSchema: ZodType<AvailabilitySettingForm> = z
+  .object({
+    open: z.object({
+      enabled: z.boolean(),
+      value: z.string(),
+    }),
+    close: z.object({
+      enabled: z.boolean(),
+      value: z.string(),
+    }),
+    remindToGrade: z.object({
+      enabled: z.boolean(),
+      value: z.string(),
+    }),
+  })
+  .refine(
+    (data) => {
+      if (data.open.enabled && data.close.enabled) {
+        return new Date(data.open.value) < new Date(data.close.value);
+      }
+      return true;
+    },
+    { message: "Close date must be after open date" }
+  )
+  .refine(
+    (data) => {
+      if (data.remindToGrade.enabled && data.close.enabled) {
+        return new Date(data.close.value) < new Date(data.remindToGrade.value);
+      }
+      return true;
+    },
+    { message: "Close date must be before remind to grade date" }
+  )
+  .refine(
+    (data) => {
+      if (data.open.enabled && data.remindToGrade.enabled) {
+        return new Date(data.open.value) < new Date(data.remindToGrade.value);
+      }
+      return true;
+    },
+    { message: "Remind to grade date must be after open date" }
+  );
 
 const submissionSettingSchema: ZodType<SubmissionSettingForm> = z.object({
   maximumFile: z.object({

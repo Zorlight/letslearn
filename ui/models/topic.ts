@@ -11,12 +11,14 @@ import { AssignmentData } from "./assignment";
 import { CloudinaryFile } from "./cloudinary-file";
 import { MeetingData } from "./meeting";
 import { StudentResponse } from "./student-response";
+import { Course } from "./course";
 
 interface BaseTopic {
   id: string;
   sectionId: string;
   title: string;
   type: TopicType;
+  course?: Course;
 }
 
 export enum TopicType {

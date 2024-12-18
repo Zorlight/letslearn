@@ -1,11 +1,12 @@
-import { fakeTopics } from "@/fake-data/topic";
 import { Topic, TopicType } from "@/models/topic";
 import { useEffect, useState } from "react";
 import CollapsibleList from "../collapsible/collapsible-list";
 import ActivityItem from "./activity-item";
 
-export default function AssignedList() {
-  const [topics, setTopics] = useState<Topic[]>(fakeTopics);
+interface Props {
+  topics: Topic[];
+}
+export default function AssignedList({ topics }: Props) {
   const [workingInProgressTopics, setWorkingInProgressTopics] = useState<
     Topic[]
   >([]);

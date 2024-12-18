@@ -9,8 +9,8 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { nanoid } from "@reduxjs/toolkit";
 import { ChevronDown } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { QuizSettingForm } from "../setting-list";
 import { TimeLimitType } from "@/models/quiz";
+import { CourseSettingForm } from "../setting-list";
 
 export type TimingSettingForm = {
   open: {
@@ -34,11 +34,9 @@ interface TimingSettingProps {
 }
 
 const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
-  const form = useFormContext<QuizSettingForm>();
+  const form = useFormContext<CourseSettingForm>();
   const { register } = form;
-  const {
-    errors: { timingSettingForm: errors },
-  } = form.formState;
+
   const { open, close, timeLimit } = formData;
   const handleSettingChange = (data: TimingSettingForm) => {
     if (onChange) onChange(data);
@@ -55,6 +53,7 @@ const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
     key: keyof TimingSettingForm,
     zoneDatetime: ZonedDateTime
   ) => {
+    if (!zoneDatetime) return;
     const date = zonedDateTimeToDate(zoneDatetime);
     handleSettingChange({
       ...formData,

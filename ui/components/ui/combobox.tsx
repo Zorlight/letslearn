@@ -20,7 +20,7 @@ interface Props {
   initialValue?: string | null;
   options: string[];
   renderItem?: (item: string, index: number) => ReactNode;
-  onChange?: (value: string) => void;
+  onChange?: (value: string, index: number) => void;
   onMultipleChange?: (value: string[]) => void;
   children: React.ReactNode;
   optionDescription?: string[];
@@ -51,11 +51,11 @@ export function Combobox({
     if (initialValue) setValue([initialValue]);
   }, []);
 
-  const handleSelected = (currentValue: string) => {
+  const handleSelected = (index: number) => (currentValue: string) => {
     if (!multiple) {
       const newValue = currentValue === value[0] ? [] : [currentValue];
       setValue(newValue);
-      if (onChange) onChange(currentValue);
+      if (onChange) onChange(currentValue, index);
       setOpen(false);
     } else {
       let newValue;
@@ -116,7 +116,7 @@ export function Combobox({
                   <CommandItem
                     key={option}
                     value={option}
-                    onSelect={handleSelected}
+                    onSelect={handleSelected(index)}
                     className="space-x-2"
                   >
                     <Check

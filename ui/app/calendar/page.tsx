@@ -80,18 +80,9 @@ export default function CalendarPage() {
     if (selectedIndex === 0) return workOfUser;
 
     const selectedCourseId = options[selectedIndex].key;
-    let checkIds: string[] = [];
-    return workOfUser.filter((topic) => {
-      if (!topic.course) return false;
-      if (
-        topic.course.id === selectedCourseId &&
-        !checkIds.includes(topic.id)
-      ) {
-        checkIds.push(topic.id);
-        return true;
-      }
-      return false;
-    });
+    return workOfUser.filter(
+      (topic) => topic.course && topic.course.id === selectedCourseId
+    );
   }, [selectedIndex, workOfUser, options]);
   return (
     <div className="w-full p-5 text-gray-700 space-y-2">
@@ -115,7 +106,7 @@ export default function CalendarPage() {
           <IconButton onClick={handlePreviosRange}>
             <ChevronLeft />
           </IconButton>
-          <span className="font-semibold">
+          <span className="font-semibold select-none">
             {formatCalendarRange(calendarRange)}
           </span>
           <IconButton onClick={handleNextRange}>

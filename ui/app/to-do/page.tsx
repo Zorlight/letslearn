@@ -19,8 +19,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const ToDoPage = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.profile.value);
-  const courses = useAppSelector((state) => state.courses.value);
   const [initTab, setInitTab] = useState<string>(Tab.ASSIGNED);
   const [assignmentsOfUser, setAssignmentsOfUser] = useState<AssignmentTopic[]>(
     []
@@ -65,11 +63,7 @@ const ToDoPage = () => {
       onTabSelected={handleTabSelected}
     >
       <div className="max-w-4xl mx-auto">
-        <TabContent
-          courses={courses}
-          assignmentsOfUser={assignmentsOfUser}
-          quizzesOfUser={quizzesOfUser}
-        />
+        <TabContent topics={[...assignmentsOfUser, ...quizzesOfUser]} />
       </div>
     </PageLayoutWithTab>
   );

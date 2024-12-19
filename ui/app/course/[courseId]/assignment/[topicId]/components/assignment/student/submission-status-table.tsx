@@ -20,7 +20,7 @@ const SubmissionStatusTable = ({ assignment, assignmentResponse }: Props) => {
   const { close } = data;
   let submissionStatus = SubmissionStatus.NOT_SUBMITTED;
   let gradingStatus = GradingStatus.NOT_GRADED;
-  let timeRemaining = "3 days 4 hours";
+  let timeRemaining = "No due date";
   let lastModified = "Not modified";
   let fileSubmitted: any = "No file submitted";
   let submissionStatusTextColor = "";
@@ -30,23 +30,30 @@ const SubmissionStatusTable = ({ assignment, assignmentResponse }: Props) => {
 
   const handleGetSubmissionStatus = (
     close: string | null,
-    submittedAt: string | undefined
+    submittedAt: string | null
   ) => {
-    if (!submittedAt) return SubmissionStatus.NOT_SUBMITTED;
-    else if (submittedAt && close && new Date(submittedAt) < new Date(close)) {
-      submissionStatusTextColor = TextColor.GREEN;
-      submissionStatusBackgroundColor = BackgroundColor.GREEN;
-      return SubmissionStatus.SUBMITTED_EARLY;
-    } else {
+    if (!close) {
+      return !!submittedAt
+        ? SubmissionStatus.SUBMITTED_EARLY
+        : SubmissionStatus.NOT_SUBMITTED;
+    }
+
+    if (!submittedAt && new Date() < new Date(close))
+      return SubmissionStatus.NOT_SUBMITTED;
+    else if (!submittedAt && new Date() > new Date(close)) {
       submissionStatusTextColor = TextColor.RED;
       submissionStatusBackgroundColor = BackgroundColor.RED;
       return SubmissionStatus.SUBMITTED_LATE;
+    } else {
+      submissionStatusTextColor = TextColor.GREEN;
+      submissionStatusBackgroundColor = BackgroundColor.GREEN;
+      return SubmissionStatus.SUBMITTED_EARLY;
     }
   };
 
   const handleGetTimeRemaining = (
     close: string | null,
-    submittedAt: string | undefined
+    submittedAt: string | null
   ) => {
     if (!close) return "No due date";
 
@@ -57,14 +64,6 @@ const SubmissionStatusTable = ({ assignment, assignmentResponse }: Props) => {
       timeRemainingTextColor = TextColor.RED;
       timeRemainingBackgroundColor = BackgroundColor.RED;
       return "Overdue by " + getDurationText(new Date(close), new Date(), 1);
-    } else if (submittedAt && new Date(submittedAt) > new Date(close)) {
-      timeRemainingTextColor = TextColor.RED;
-      timeRemainingBackgroundColor = BackgroundColor.RED;
-      return `Submitted late by ${getDurationText(
-        new Date(close),
-        new Date(submittedAt),
-        1
-      )}`;
     }
     timeRemainingTextColor = TextColor.GREEN;
     timeRemainingBackgroundColor = BackgroundColor.GREEN;
@@ -107,6 +106,12 @@ const SubmissionStatusTable = ({ assignment, assignmentResponse }: Props) => {
 
     // file submitted
     fileSubmitted = getUIFileSubmitted(files);
+  } else {
+    // submission status
+    submissionStatus = handleGetSubmissionStatus(close, null);
+
+    // time remaining
+    timeRemaining = handleGetTimeRemaining(close, null);
   }
 
   return (

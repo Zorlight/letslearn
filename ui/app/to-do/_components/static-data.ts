@@ -3,3 +3,8 @@ export enum Tab {
   OVERDUE = "Overdue",
   DONE = "Done",
 }
+
+export type CourseOption = {
+  key: string;
+  value: string;
+};

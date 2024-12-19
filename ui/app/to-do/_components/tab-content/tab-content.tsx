@@ -1,38 +1,28 @@
 "use client";
 import { useTab } from "@/hooks/useTab";
+import { Course } from "@/models/course";
+import { Topic } from "@/models/topic";
 import { notFound } from "next/navigation";
 import { Tab } from "../static-data";
 import AssignedTab from "./assigned-tab";
-import { Course } from "@/models/course";
-import OverdueTab from "./overdue-tab";
 import DoneTab from "./done-tab";
-import { useState } from "react";
-import { AssignmentTopic, QuizTopic } from "@/models/topic";
+import OverdueTab from "./overdue-tab";
 
 interface Props {
-  courses: Course[];
-  assignmentsOfUser: AssignmentTopic[];
-  quizzesOfUser: QuizTopic[];
+  topics: Topic[];
 }
 
-const TabContent = ({ courses, assignmentsOfUser, quizzesOfUser }: Props) => {
+const TabContent = ({ topics }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
 
   switch (selectedTab) {
     case Tab.ASSIGNED:
-      return (
-        <AssignedTab
-          courses={courses}
-          assignmentsOfUser={assignmentsOfUser}
-          quizzesOfUser={quizzesOfUser}
-        />
-      );
-
+      return <AssignedTab topics={topics} />;
     case Tab.OVERDUE:
-      return <OverdueTab courses={courses} />;
+      return <OverdueTab topics={topics} />;
     case Tab.DONE:
-      return <DoneTab courses={courses} />;
+      return <DoneTab topics={topics} />;
     default:
       return notFound();
   }

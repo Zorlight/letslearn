@@ -1,32 +1,12 @@
-import { Topic, TopicType } from "@/models/topic";
-import { useEffect, useState } from "react";
+import { Topic } from "@/models/topic";
 import CollapsibleList from "../collapsible/collapsible-list";
 import ActivityItem from "./activity-item";
 
 interface Props {
-  topics: Topic[];
+  doneTopics: Topic[];
 }
-export default function DoneList({ topics }: Props) {
-  const [doneTopics, setDoneTopics] = useState<Topic[]>([]);
-  const [itemsPerGroup, setItemsPerGroup] = useState<number[]>([0, 0]);
-
-  const isDoneTopic = (topic: Topic) => {
-    const { type } = topic;
-    if (type === TopicType.QUIZ) {
-      const { close } = topic.data;
-      return close && new Date(close) < new Date();
-    } else if (type === TopicType.ASSIGNMENT) {
-      const { close } = topic.data;
-      return close && new Date(close) < new Date();
-    }
-    return false;
-  };
-
-  useEffect(() => {
-    const doneTopics = topics.filter(isDoneTopic);
-    setDoneTopics(doneTopics);
-    setItemsPerGroup([doneTopics.length]);
-  }, [topics]);
+export default function DoneList({ doneTopics }: Props) {
+  const itemsPerGroup = [doneTopics.length];
 
   const titles = ["Done"];
   return (

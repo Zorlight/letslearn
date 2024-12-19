@@ -1,53 +1,55 @@
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
-import { Course } from "@/models/course";
-import { StudentResponse } from "@/models/student-response";
-import { AssignmentTopic, MeetingTopic, QuizTopic } from "@/models/topic";
-import { useAppSelector } from "@/redux/hooks";
-import { getAllAssignmentResponsesOfUser } from "@/services/assignment-response";
-import {
-  getAllAssignmentOfUser,
-  getAllMeetingOfUser,
-  getAllQuizOfUser,
-} from "@/services/topic";
+import { Topic } from "@/models/topic";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useMemo, useState } from "react";
+import DoneList from "../activity-group/done-list";
+import { isDoneTopic } from "../activity-group/utils";
+import { CourseOption } from "../static-data";
 
 interface Props {
-  courses: Course[];
+  topics: Topic[];
 }
-export default function DoneTab({ courses }: Props) {
-  const options = ["All courses", ...courses.map((course) => course.title)];
-  const [selectedOption, setSelectedOption] = useState(options[0]);
-  const user = useAppSelector((state) => state.profile.value);
-  const [assignmentResponses, setAssignmentResponses] = useState<
-    StudentResponse[]
-  >([]);
-  const handleGetAssignmentResponseSuccess = (data: StudentResponse[]) => {
-    console.log(data);
-    setAssignmentResponses(data);
-  };
-  const handleGetAssignmentResponseFail = (error: any) => {
-    toast.error(error);
-  };
+export default function DoneTab({ topics }: Props) {
+  const options: CourseOption[] = useMemo(() => {
+    let init = [{ key: "all", value: "All courses" }];
+    let checkIds: string[] = [];
+    topics.forEach((topic) => {
+      if (topic.course && !checkIds.includes(topic.course.id)) {
+        init.push({ key: topic.course.id, value: topic.course.title });
+        checkIds.push(topic.course.id);
+      }
+    });
+    return init;
+  }, [topics]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [selectedOption, setSelectedOption] = useState<string>(
+    options[0].value
+  );
 
-  useEffect(() => {
-    if (!user) return;
+  const filteredDoneTopics = useMemo(() => {
+    if (selectedIndex === 0) return topics.filter(isDoneTopic);
 
-    getAllAssignmentResponsesOfUser(
-      user.id,
-      handleGetAssignmentResponseSuccess,
-      handleGetAssignmentResponseFail
+    const selectedCourseId = options[selectedIndex].key;
+    return topics.filter(
+      (topic) =>
+        topic.course &&
+        topic.course.id === selectedCourseId &&
+        isDoneTopic(topic)
     );
-  }, [user]);
+  }, [selectedIndex, topics, options]);
+  const handleComboboxChange = (courseName: string, index: number) => {
+    setSelectedIndex(index);
+    setSelectedOption(courseName);
+  };
   return (
     <div className="flex flex-col items-center">
       <Combobox
         name="course"
-        options={options}
-        initialValue={options[0]}
+        options={options.map((option) => option.value)}
+        initialValue={options[0].value}
         popoverClassName="min-w-[400px]"
+        onChange={handleComboboxChange}
       >
         <Button
           variant="outline"
@@ -57,7 +59,7 @@ export default function DoneTab({ courses }: Props) {
           <ChevronDown size={20} />
         </Button>
       </Combobox>
-      {/* <DoneList topics={}/> */}
+      <DoneList doneTopics={filteredDoneTopics} />
     </div>
   );
 }

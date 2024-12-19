@@ -1,49 +1,19 @@
-import { Topic, TopicType } from "@/models/topic";
-import { useEffect, useState } from "react";
+import { Topic } from "@/models/topic";
 import CollapsibleList from "../collapsible/collapsible-list";
 import ActivityItem from "./activity-item";
 
 interface Props {
-  topics: Topic[];
+  workingInProgressTopics: Topic[];
+  noDueDateTopics: Topic[];
 }
-export default function AssignedList({ topics }: Props) {
-  const [workingInProgressTopics, setWorkingInProgressTopics] = useState<
-    Topic[]
-  >([]);
-  const [noDueDateTopics, setNoDueDateTopics] = useState<Topic[]>([]);
-  const [itemsPerGroup, setItemsPerGroup] = useState<number[]>([0, 0]);
-
-  const isWorkingInProgressTopic = (topic: Topic) => {
-    const { type } = topic;
-    const current = new Date();
-    if (type === TopicType.QUIZ) {
-      const { close } = topic.data;
-      return close && new Date(close) > current;
-    } else if (type === TopicType.ASSIGNMENT) {
-      const { close } = topic.data;
-      return close && new Date(close) > current;
-    }
-    return false;
-  };
-  const isNoDueDateTopic = (topic: Topic) => {
-    const { type } = topic;
-    if (type === TopicType.QUIZ) {
-      const { close } = topic.data;
-      return !close;
-    } else if (type === TopicType.ASSIGNMENT) {
-      const { close } = topic.data;
-      return !close;
-    }
-    return false;
-  };
-
-  useEffect(() => {
-    const workingInProgressTopics = topics.filter(isWorkingInProgressTopic);
-    const noDueDateTopics = topics.filter(isNoDueDateTopic);
-    setWorkingInProgressTopics(workingInProgressTopics);
-    setNoDueDateTopics(noDueDateTopics);
-    setItemsPerGroup([workingInProgressTopics.length, noDueDateTopics.length]);
-  }, [topics]);
+export default function AssignedList({
+  workingInProgressTopics,
+  noDueDateTopics,
+}: Props) {
+  const itemsPerGroup = [
+    workingInProgressTopics.length,
+    noDueDateTopics.length,
+  ];
 
   const titles = ["Work in progress", "No due date"];
   return (

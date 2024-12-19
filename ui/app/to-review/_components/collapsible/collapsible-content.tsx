@@ -32,9 +32,9 @@ const CollapsibleContent = ({
   };
   return (
     <AccordionItem value={value} className={className}>
-      <AccordionTrigger className="w-full decoration-indigo-800 text-indigo-800">
+      <AccordionTrigger className="w-full decoration-indigo-800 text-indigo-800 p-0">
         <div
-          className="w-full flex flex-row items-center justify-between gap-4 cursor-pointer"
+          className="w-full p-4 hover:bg-gray-50 flex flex-row items-center justify-between gap-4 cursor-pointer transition-all duration-200"
           onClick={handleTrigger}
         >
           <h5>{title}</h5>

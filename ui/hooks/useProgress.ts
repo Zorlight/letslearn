@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 const useProgress = () => {
   const [progress, setProgress] = React.useState(0);
   const [isloading, setIsLoading] = React.useState(false);
-  const [intervalId, setIntervalId] = React.useState<NodeJS.Timeout>();
+  const intervalIdRef = useRef<NodeJS.Timeout>();
 
   const start = (totalSize: number) => {
     if (totalSize === 0) return;
@@ -20,21 +20,23 @@ const useProgress = () => {
         return prev + 5;
       });
     }, 20);
-    setIntervalId(id);
+    console.log("start", id);
+    intervalIdRef.current = id;
   };
 
   const finish = async () => {
     return await new Promise((resolve) => {
       setProgress(100);
       setIsLoading(false);
-      clearInterval(intervalId);
+      clearInterval(intervalIdRef.current);
       resolve(true);
     });
   };
 
   const error = async () => {
     return await new Promise((resolve) => {
-      clearInterval(intervalId);
+      console.log("error", intervalIdRef.current);
+      clearInterval(intervalIdRef.current);
       setProgress((prev) => -prev);
       setIsLoading(false);
       resolve(true);

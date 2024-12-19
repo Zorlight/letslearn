@@ -1,4 +1,6 @@
 import { Question } from "./question";
+import { QuizResponseData } from "./student-response";
+import { QuizTopic } from "./topic";
 
 export type QuizData = {
   description: string;

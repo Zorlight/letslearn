@@ -20,6 +20,24 @@ const videoType = [
   "audio/webm",
 ];
 
+const imageType = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/svg+xml",
+];
+
+const documentType = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+];
+
 export async function UploadFile(formData: FormData) {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const uploadPreset = process.env.UPLOAD_PRESET_NAME;
@@ -29,7 +47,10 @@ export async function UploadFile(formData: FormData) {
     };
   }
   const file = formData.get("file") as File;
-  const resourceType = videoType.includes(file.type) ? "video" : "image";
+  let resourceType = "";
+  if (imageType.includes(file.type)) resourceType = "image";
+  else if (videoType.includes(file.type)) resourceType = "video";
+  else resourceType = "raw";
   if (file === null) {
     return {
       error: "File not found",

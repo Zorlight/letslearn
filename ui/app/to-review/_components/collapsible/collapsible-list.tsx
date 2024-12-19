@@ -46,7 +46,7 @@ const CollapsibleList = ({
       <Accordion
         value={showContent}
         type="multiple"
-        className={cn("w-full flex flex-col gap-4", listClassName)}
+        className={cn("w-full flex flex-col", listClassName)}
       >
         {children.map((child, index) => (
           <CollapsibleContent

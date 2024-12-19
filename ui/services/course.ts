@@ -1,10 +1,11 @@
 import { GET, PATCH, POST, PUT } from "@/lib/http-handle/http-handle";
 import { Course } from "@/models/course";
 import { Role, User } from "@/models/user";
+import { convertCourseFromResponseData } from "./adapters/course/course";
 
 export const createCourse = (
   data: any,
-  onSuccess: (data: any) => void,
+  onSuccess: (data: Course) => void,
   onFail: () => void
 ) => {
   let reqData = {
@@ -17,7 +18,12 @@ export const createCourse = (
     isPublished: data.isPublished,
   };
 
-  POST("/course", reqData, onSuccess, onFail);
+  const handleSuccess = (data: any) => {
+    const res = convertCourseFromResponseData(data);
+    onSuccess(res);
+  };
+
+  POST("/course", reqData, handleSuccess, onFail);
 };
 
 export const getPublicCourses = (
@@ -30,26 +36,35 @@ export const getPublicCourses = (
 
 export const getTeacherCourses = (
   user: User,
-  onSuccess: (data: any) => void,
+  onSuccess: (data: Course[]) => void,
   onFail: (err?: any) => void
 ) => {
   if (user.role !== Role.TEACHER) return;
 
+  const handleSuccess = (data: any[]) => {
+    const res = data.map(convertCourseFromResponseData);
+    onSuccess(res);
+  };
+
   const url = `/course?userId=${user.id}`;
-  GET(url, onSuccess, onFail);
+  GET(url, handleSuccess, onFail);
 };
 
 export const getCourse = (
   id: string,
-  onSuccess: (data: any) => void,
+  onSuccess: (data: Course) => void,
   onFail: (err?: any) => void
 ) => {
-  GET(`/course/${id}`, onSuccess, onFail);
+  const handleSuccess = (data: any) => {
+    const res = convertCourseFromResponseData(data);
+    onSuccess(res);
+  };
+  GET(`/course/${id}`, handleSuccess, onFail);
 };
 
 export const updateCourse = (
   data: Course,
-  onSuccess: (data: any) => void,
+  onSuccess: (data: Course) => void,
   onFail: (err?: any) => void
 ) => {
   const { id, title, price, category, level, isPublished, imageUrl } = data;
@@ -62,7 +77,11 @@ export const updateCourse = (
     imageUrl,
   };
 
-  PUT(`/course/${id}`, reqData, onSuccess, onFail);
+  const handleSuccess = (data: any) => {
+    const res = convertCourseFromResponseData(data);
+    onSuccess(res);
+  };
+  PUT(`/course/${id}`, reqData, handleSuccess, onFail);
 };
 
 export const joinCourse = (

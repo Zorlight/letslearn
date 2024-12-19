@@ -46,11 +46,12 @@ export interface MeetingTopic extends BaseTopic {
 }
 export interface LinkTopic extends BaseTopic {
   type: TopicType.LINK;
+  url: string;
 }
 
 export interface FileTopic extends BaseTopic {
   type: TopicType.FILE;
-  file: CloudinaryFile;
+  file: CloudinaryFile[];
 }
 export interface PageTopic extends BaseTopic {
   type: TopicType.PAGE;

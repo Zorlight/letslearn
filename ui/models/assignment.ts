@@ -1,3 +1,6 @@
+import { AssignmentResponseData } from "./student-response";
+import { AssignmentTopic } from "./topic";
+
 export type AssignmentData = {
   description: string;
   open: string | null;

@@ -42,9 +42,11 @@ export default function FileUpload({
     const newFiles = getMultipleFileInput(inputRef);
     if (!newFiles || newFiles.length == 0) return;
 
-    const allowedFiles = newFiles.filter((file) =>
-      config.allowedTypes.includes(file.type)
-    );
+    const { allowedTypes } = config;
+
+    const allowedFiles = allowedTypes
+      ? newFiles.filter((file) => allowedTypes.includes(file.type))
+      : newFiles;
     // set files to upload to cloudinary (type: File)
     setCloudinaryFilesToUpload(allowedFiles);
 
@@ -110,7 +112,12 @@ export default function FileUpload({
             files={cloudinaryFilesToUpload.map((file) => file)}
             className="w-full"
           />
-          <Button variant="default" size="sm" onClick={handleUpload}>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            onClick={handleUpload}
+          >
             {`Upload ${cloudinaryFilesToUpload.length} ${
               cloudinaryFilesToUpload.length > 1 ? "files" : "file"
             }`}
@@ -139,6 +146,7 @@ export default function FileUpload({
             </p>
           </div>
           <Button
+            type="button"
             variant="default"
             size="sm"
             onClick={() => inputRef.current?.click()}

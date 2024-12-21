@@ -20,9 +20,10 @@ export const makeRequest = async (
     handleUnauthorizedError,
   } = ErrorHandle(onFail);
 
+  const url = host + uri;
   try {
     const fetchData = () => {
-      return fetch(host + uri, {
+      return fetch(url, {
         headers: HEADER,
         method,
         body: reqData ? JSON.stringify(reqData) : undefined,

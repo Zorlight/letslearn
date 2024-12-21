@@ -8,6 +8,8 @@ import { Trash2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import TopicFileExtension from "./topic-file-extension";
 import { colorMap, iconMap, isValidType } from "@/models/topic";
+import { useAppSelector } from "@/redux/hooks";
+import { Role } from "@/models/user";
 
 interface Props {
   topic: Topic;
@@ -24,6 +26,7 @@ const CourseTopic = ({
 }: Props) => {
   const router = useRouter();
   const path = usePathname();
+  const user = useAppSelector((state) => state.profile.value);
   const { title, type } = topic;
 
   const getTopicIcon = (type: keyof TopicMap) => {
@@ -49,8 +52,13 @@ const CourseTopic = ({
   const handleFileAction = () => {
     //download file
     if (topic.type !== TopicType.FILE) return;
-    const downloadUrl = topic.file.downloadUrl;
-    router.push(downloadUrl);
+    if (!user) return;
+    if (user.role === Role.STUDENT) {
+      const downloadUrl = topic.file.downloadUrl;
+      router.push(downloadUrl);
+    } else {
+      router.push(`${path}/file/${topic.id}`);
+    }
   };
 
   const handleQuizAction = () => {

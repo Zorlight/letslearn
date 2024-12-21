@@ -1,19 +1,13 @@
 "use client";
 import { Input } from "@/lib/shadcn/input";
+import { cn } from "@/lib/utils";
 import { nanoid } from "@reduxjs/toolkit";
 import { useFormContext } from "react-hook-form";
-import { FileSettingForm } from "../setting-list";
-import { CloudinaryFile } from "@/models/cloudinary-file";
-import FileUpload from "@/lib/cloudinary/cloudinary-file-upload";
-import { cn } from "@/lib/utils";
-import FileUploadProgress from "@/lib/cloudinary/file-upload-progress";
-import { useEffect, useState } from "react";
-import { getFile } from "@/services/cloudinary";
-import { toast } from "react-toastify";
+import { LinkSettingForm } from "../setting-list";
 
 export type GeneralSettingForm = {
   title: string;
-  file: CloudinaryFile | null;
+  url: string | null;
   description: string;
 };
 
@@ -26,13 +20,12 @@ export default function GeneralSetting({
   formData,
   onChange,
 }: GeneralSettingProps) {
-  const form = useFormContext<FileSettingForm>();
+  const form = useFormContext<LinkSettingForm>();
   const { register } = form;
   const {
     errors: { generalSettingForm: errors },
   } = form.formState;
-  const { title, description, file } = formData;
-  const [fileData, setFileData] = useState<File | null>(null);
+  const { title, description, url } = formData;
 
   const handleSettingChange = (data: GeneralSettingForm) => {
     if (onChange) onChange(data);
@@ -40,29 +33,10 @@ export default function GeneralSetting({
   const handleInputChange = (key: keyof GeneralSettingForm, data: string) => {
     handleSettingChange({ ...formData, [key]: data });
   };
-  const handleFileUpload = (files: CloudinaryFile[]) => {
-    handleSettingChange({ ...formData, file: files[0] });
-  };
-
-  const handleGetFileSuccess = (file: File) => {
-    console.log(file);
-    setFileData(file);
-  };
-  const handleGetFileFail = (err?: string) => {
-    toast.error(err);
-  };
-  useEffect(() => {
-    if (!file) return;
-    getFile(
-      file.displayUrl,
-      handleGetFileSuccess,
-      handleGetFileFail,
-      file.name
-    );
-  }, [file]);
 
   const nameHtmlfor = nanoid();
   const descriptionHtmlfor = nanoid();
+  const urlHtmlfor = nanoid();
 
   return (
     <div className="w-full flex flex-col p-4 gap-8">
@@ -80,6 +54,19 @@ export default function GeneralSetting({
           </p>
         )}
       </RowSetting>
+      <RowSetting title="External URL" htmlFor={urlHtmlfor}>
+        <Input
+          placeholder="URL here"
+          defaultValue={url || ""}
+          {...register("generalSettingForm.url")}
+          onChange={(e) => handleInputChange("url", e.target.value)}
+        />
+        {errors?.url && (
+          <p className="absolute top-full text-red-500 text-xs font-semibold">
+            {errors.url.message}
+          </p>
+        )}
+      </RowSetting>
       <RowSetting title="Decription" htmlFor={descriptionHtmlfor}>
         <Input
           id={descriptionHtmlfor}
@@ -91,27 +78,6 @@ export default function GeneralSetting({
         {errors?.description && (
           <p className="absolute top-full text-red-500 text-xs font-semibold">
             {errors.description.message}
-          </p>
-        )}
-      </RowSetting>
-      <RowSetting title="File upload" className="items-start">
-        {!file && (
-          <FileUpload
-            config={{
-              multiple: false,
-            }}
-            onUploaded={handleFileUpload}
-          />
-        )}
-
-        {fileData && (
-          <div className="w-full h-fit rounded-md overflow-hidden border flex flex-col items-center justify-center gap-4 p-4">
-            <FileUploadProgress files={[fileData]} />
-          </div>
-        )}
-        {errors?.file && (
-          <p className="absolute top-full text-red-500 text-xs font-semibold">
-            {errors.file.message}
           </p>
         )}
       </RowSetting>

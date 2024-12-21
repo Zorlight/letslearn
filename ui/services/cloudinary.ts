@@ -3,6 +3,7 @@ import {
   DeleteFiles,
   UploadFile,
 } from "@/lib/cloudinary/cloudinary-handler";
+import { makeRequest } from "@/lib/http-handle/http-handle";
 
 export const uploadFile = async (
   file: File,
@@ -46,5 +47,22 @@ export const deleteFiles = async (
     if (res.message) onSuccess(res.message);
   } catch (err: any) {
     onFail(err);
+  }
+};
+
+export const getFile = async (
+  url: string,
+  onSuccess: (data: File) => void,
+  onFail: (err?: string) => void,
+  fileNameToSet?: string
+) => {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    console.log("blob", blob);
+    const file = new File([blob], fileNameToSet || "file");
+    onSuccess(file);
+  } catch (err: any) {
+    onFail(err.message);
   }
 };

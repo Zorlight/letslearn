@@ -7,22 +7,22 @@ import { Section } from "@/models/course";
 import {
   AssignmentTopic,
   FileTopic,
+  LinkTopic,
   MeetingTopic,
   QuizTopic,
   Topic,
   TopicType,
 } from "@/models/topic";
-import { nanoid } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import SectionContent from "./section-content";
 import SectionLayout from "./section-layout";
 import {
   initAssignment,
   initFileTopic,
+  initLink,
   initMeeting,
   initQuiz,
 } from "./static/init-topic";
-import { useAppSelector } from "@/redux/hooks";
 
 interface Props {
   initShowContent?: string[];
@@ -90,12 +90,12 @@ const SectionList = ({
       handleCreateAssignmentTopic(section);
     else if (type === TopicType.MEETING) handleCreateMeetingTopic(section);
     else if (type === TopicType.FILE) handleCreateFileTopic(section);
+    else if (type === TopicType.LINK) handleCreateLinkTopic(section);
   };
 
   const handleCreateQuizTopic = (section: Section) => {
     const newQuiz: QuizTopic = {
       ...initQuiz,
-      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
       sectionId: section.id,
     };
     const newSection: Section = {
@@ -108,7 +108,6 @@ const SectionList = ({
   const handleCreateAssignmentTopic = (section: Section) => {
     const newAssignment: AssignmentTopic = {
       ...initAssignment,
-      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
       sectionId: section.id,
     };
     const newSection: Section = {
@@ -121,7 +120,6 @@ const SectionList = ({
   const handleCreateMeetingTopic = (section: Section) => {
     const newMeeting: MeetingTopic = {
       ...initMeeting,
-      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
       sectionId: section.id,
     };
     const newSection: Section = {
@@ -134,12 +132,22 @@ const SectionList = ({
   const handleCreateFileTopic = (section: Section) => {
     const newFileTopic: FileTopic = {
       ...initFileTopic,
-      id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
       sectionId: section.id,
     };
     const newSection: Section = {
       ...section,
       topics: [...section.topics, newFileTopic],
+    };
+    onSectionChange(newSection);
+  };
+  const handleCreateLinkTopic = (section: Section) => {
+    const newLink: LinkTopic = {
+      ...initLink,
+      sectionId: section.id,
+    };
+    const newSection: Section = {
+      ...section,
+      topics: [...section.topics, newLink],
     };
     onSectionChange(newSection);
   };

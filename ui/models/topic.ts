@@ -6,12 +6,13 @@ import {
   ScrollText,
   Video,
 } from "lucide-react";
-import { QuizData } from "./quiz";
 import { AssignmentData } from "./assignment";
-import { CloudinaryFile } from "./cloudinary-file";
-import { MeetingData } from "./meeting";
-import { StudentResponse } from "./student-response";
 import { Course } from "./course";
+import { FileTopicData } from "./file-topic";
+import { MeetingData } from "./meeting";
+import { QuizData } from "./quiz";
+import { StudentResponse } from "./student-response";
+import { LinkData } from "./link";
 
 interface BaseTopic {
   id: string;
@@ -46,12 +47,12 @@ export interface MeetingTopic extends BaseTopic {
 }
 export interface LinkTopic extends BaseTopic {
   type: TopicType.LINK;
-  url: string;
+  data: LinkData;
 }
 
 export interface FileTopic extends BaseTopic {
   type: TopicType.FILE;
-  file: CloudinaryFile[];
+  data: FileTopicData;
 }
 export interface PageTopic extends BaseTopic {
   type: TopicType.PAGE;

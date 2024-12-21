@@ -3,14 +3,16 @@ import { GradingMethod, TimeLimitType } from "@/models/quiz";
 import {
   AssignmentTopic,
   FileTopic,
+  LinkTopic,
   MeetingTopic,
   QuizTopic,
   TopicType,
 } from "@/models/topic";
+import { nanoid } from "@reduxjs/toolkit";
 
 export const initQuiz: QuizTopic = {
-  id: "",
-  sectionId: "",
+  id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+  sectionId: nanoid(4),
   title: "Quiz",
   type: TopicType.QUIZ,
   data: {
@@ -28,8 +30,8 @@ export const initQuiz: QuizTopic = {
 };
 
 export const initAssignment: AssignmentTopic = {
-  id: "",
-  sectionId: "",
+  id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+  sectionId: nanoid(4),
   title: "Assignment",
   type: TopicType.ASSIGNMENT,
   data: {
@@ -46,8 +48,8 @@ export const initAssignment: AssignmentTopic = {
 const current = new Date();
 const nextWeek = new Date(current.getTime() + 7 * 24 * 60 * 60 * 1000);
 export const initMeeting: MeetingTopic = {
-  id: "",
-  sectionId: "",
+  id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+  sectionId: nanoid(4),
   title: "Meeting",
   type: TopicType.MEETING,
   data: {
@@ -56,14 +58,23 @@ export const initMeeting: MeetingTopic = {
   },
 };
 export const initFileTopic: FileTopic = {
-  id: "",
-  sectionId: "",
+  id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+  sectionId: nanoid(4),
   title: "New File",
   type: TopicType.FILE,
-  file: {
-    id: "",
-    name: "",
-    displayUrl: "",
-    downloadUrl: "",
+  data: {
+    description: "",
+    file: null,
+  },
+};
+
+export const initLink: LinkTopic = {
+  id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+  sectionId: nanoid(4),
+  title: "New Link",
+  type: TopicType.LINK,
+  data: {
+    description: "",
+    url: null,
   },
 };

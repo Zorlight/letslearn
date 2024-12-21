@@ -21,19 +21,24 @@ export const fakeTopics: Topic[] = [
     sectionId: "1",
     type: TopicType.LINK,
     title: "Topic Link",
+    data: {
+      description: "Link description",
+      url: "https://www.google.com",
+    },
   },
   {
     id: "5",
     sectionId: "1",
     type: TopicType.FILE,
     title: "PMBOK book",
-    file: {
-      id: nanoid(),
-      name: "PMBOK book",
-      displayUrl:
-        "https://res.cloudinary.com/dggtc5ucv/image/upload/v1721188025/mfbsuoavvzmil8gud9a2.jpg",
-      downloadUrl:
-        "https://res.cloudinary.com/dggtc5ucv/image/upload/fl_attachment/v1721188025/mfbsuoavvzmil8gud9a2.jpg",
+    data: {
+      description: "PMBOK description",
+      file: {
+        id: nanoid(4),
+        name: "PMBOK",
+        downloadUrl: "https://www.google.com",
+        displayUrl: "https://www.google.com",
+      },
     },
   },
   {

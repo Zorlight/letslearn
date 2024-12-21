@@ -2,59 +2,43 @@
 import CollapsibleList from "@/app/course/[courseId]/components/collapsible/collapsible-list";
 import { useDebounceFunction } from "@/hooks/useDebounce";
 import { Button } from "@/lib/shadcn/button";
-import { FileTopic } from "@/models/topic";
+import { FileTopic, LinkTopic } from "@/models/topic";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z, ZodType } from "zod";
 import GeneralSetting, { GeneralSettingForm } from "./setting-items/general";
-import { defaultCloudinaryFile, defaultGeneralSetting } from "./static-data";
+import { defaultGeneralSetting } from "./static-data";
 
-const generalSettingSchema: ZodType<GeneralSettingForm> = z
-  .object({
-    title: z.string().min(1, "File name must be at least 1 character"),
-    // file type CloudinaryFile
-    file: z
-      .object({
-        id: z.string(),
-        name: z.string(),
-        downloadUrl: z.string(),
-        displayUrl: z.string(),
-      })
-      .nullable(),
-    description: z.string(),
-  })
-  .refine(
-    (data) => {
-      if (!data.file) return true;
-      return data.file.id !== "" && data.file.name !== "";
-    },
-    { message: "Please upload a file" }
-  );
-
-export type FileSettingForm = {
+const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
+  title: z.string().min(1, "File name must be at least 1 character"),
+  // file type CloudinaryFile
+  url: z.string().nullable(),
+  description: z.string(),
+});
+export type LinkSettingForm = {
   generalSettingForm: GeneralSettingForm;
 };
 
 // Combine child schemas into one
-const schema: ZodType<FileSettingForm> = z.object({
+const schema: ZodType<LinkSettingForm> = z.object({
   generalSettingForm: generalSettingSchema,
 });
 
 interface Props {
-  topic: FileTopic;
-  onSubmitFileSetting?: (data: FileTopic) => void;
+  topic: LinkTopic;
+  onSubmitFileSetting?: (data: LinkTopic) => void;
 }
 const SettingList = ({ topic, onSubmitFileSetting }: Props) => {
-  const handleGetGeneralSetting = (topic: FileTopic) => {
+  const handleGetGeneralSetting = (topic: LinkTopic) => {
     const { title, data } = topic;
-    const { description, file } = data;
+    const { description, url } = data;
 
     const generalSetting: GeneralSettingForm = {
       title,
       description,
-      file,
+      url,
     };
     return generalSetting;
   };
@@ -77,39 +61,42 @@ const SettingList = ({ topic, onSubmitFileSetting }: Props) => {
     (data: GeneralSettingForm) => setValue("generalSettingForm", data)
   );
 
-  const handleGetFileToUpdate = (form: FileSettingForm) => {
+  const handleGetFileToUpdate = (form: LinkSettingForm) => {
     const { generalSettingForm } = form;
-    const { title, description, file } = generalSettingForm;
-    const topicToUpdate: FileTopic = {
+    const { title, description, url } = generalSettingForm;
+    const topicToUpdate: LinkTopic = {
       ...topic,
       title,
       data: {
         ...topic.data,
         description,
-        file,
+        url,
       },
     };
 
     return topicToUpdate;
   };
 
-  const compareTopicFile = (topic1: FileTopic, topic2: FileTopic) => {
+  const compareTopicFile = (topic1: LinkTopic, topic2: LinkTopic) => {
     const topic1JSON = JSON.stringify(topic1);
     const topic2JSON = JSON.stringify(topic2);
     return topic1JSON === topic2JSON;
   };
 
-  const onSubmit = (data: FileSettingForm) => {
+  const onSubmit = (data: LinkSettingForm) => {
     const toSubmit = handleGetFileToUpdate(data);
     if (!isSettingChange) {
       toast.info("No changes to submit");
       return;
     }
+    console.log("ToSubmit", toSubmit);
     if (onSubmitFileSetting) onSubmitFileSetting(toSubmit);
   };
 
   const titles = ["General", "Availability", "Submission"];
   const isSettingChange = useMemo(() => {
+    console.log("topic", topic);
+    console.log("form", form.getValues());
     return !compareTopicFile(topic, handleGetFileToUpdate(form.getValues()));
   }, [topic, form.getValues()]);
 

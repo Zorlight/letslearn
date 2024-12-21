@@ -1,21 +1,22 @@
-import { AssignmentTopic, FileTopic } from "@/models/topic";
+import { AssignmentTopic, FileTopic, LinkTopic } from "@/models/topic";
 import SettingList from "../settings/setting-list";
 import { updateTopic } from "@/services/topic";
 import { toast } from "react-toastify";
 
 interface Props {
-  topic: FileTopic;
-  onTopicChange?: (data: FileTopic) => void;
+  topic: LinkTopic;
+  onTopicChange?: (data: LinkTopic) => void;
 }
 const TabSetting = ({ topic, onTopicChange }: Props) => {
-  const handleUpdateTopicSuccess = (data: FileTopic) => {
+  const handleUpdateTopicSuccess = (data: LinkTopic) => {
     if (onTopicChange) onTopicChange(data);
-    toast.success("Update topic successfully");
+    toast.success("Update successfully");
   };
   const handleUpdateTopicFail = (error: any) => {
     toast.error(error);
   };
-  const handleSubmitTopicSetting = (data: FileTopic) => {
+  const handleSubmitTopicSetting = (data: LinkTopic) => {
+    console.log("data", data);
     updateTopic(data, handleUpdateTopicSuccess, handleUpdateTopicFail);
   };
 

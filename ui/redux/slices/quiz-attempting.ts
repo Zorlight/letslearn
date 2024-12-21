@@ -1,4 +1,3 @@
-import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import { StudentResponse } from "@/models/student-response";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 

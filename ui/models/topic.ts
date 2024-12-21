@@ -13,6 +13,7 @@ import { MeetingData } from "./meeting";
 import { QuizData } from "./quiz";
 import { StudentResponse } from "./student-response";
 import { LinkData } from "./link";
+import { PageData } from "./page";
 
 interface BaseTopic {
   id: string;
@@ -56,6 +57,7 @@ export interface FileTopic extends BaseTopic {
 }
 export interface PageTopic extends BaseTopic {
   type: TopicType.PAGE;
+  data: PageData;
 }
 
 export type Topic =

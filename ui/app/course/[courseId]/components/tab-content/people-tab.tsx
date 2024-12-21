@@ -37,9 +37,6 @@ export default function PeopleTab({ course }: Props) {
           {students.map((student) => (
             <UserRow key={student.id} user={student} />
           ))}
-          {students.map((student) => (
-            <UserRow key={student.id} user={student} />
-          ))}
         </div>
       </div>
     </div>

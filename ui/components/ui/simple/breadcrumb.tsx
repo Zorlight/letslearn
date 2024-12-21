@@ -16,7 +16,7 @@ const BreadCrumb = ({ items }: Props) => {
     router.push(href);
   };
   return (
-    <div className="flex flex-row items-center gap-4">
+    <div className="flex flex-row items-center gap-4 select-none">
       {items.map((item, index) => (
         <div
           key={index}

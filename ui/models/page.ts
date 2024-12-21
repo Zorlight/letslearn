@@ -1,6 +1,4 @@
-export type Page = {
-  id: string;
-  name: string;
+export type PageData = {
   description: string;
   content: string;
 };

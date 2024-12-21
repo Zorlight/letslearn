@@ -4,6 +4,7 @@ import ConfettiReducer from "./slices/confetti";
 import BreadcrumbReducer from "./slices/breadcrumb";
 import quizAttemptingReducer from "./slices/quiz-attempting";
 import CoursesReducer from "./slices/course";
+import SidebarReducer from "./slices/sidebar";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     breadcrumb: BreadcrumbReducer,
     quizAttempting: quizAttemptingReducer,
     courses: CoursesReducer,
+    sidebar: SidebarReducer,
   },
 });
 

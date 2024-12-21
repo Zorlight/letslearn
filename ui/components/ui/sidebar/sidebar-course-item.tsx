@@ -9,6 +9,7 @@ interface Props {
   image: React.ReactNode;
   className?: string;
   href?: string;
+  isSidebarOpen?: boolean;
 }
 export default function SidebarCourseItem({
   courseName,
@@ -16,6 +17,7 @@ export default function SidebarCourseItem({
   image,
   className,
   href,
+  isSidebarOpen = true,
 }: Props) {
   const router = useRouter();
   const path = usePathname();
@@ -28,6 +30,8 @@ export default function SidebarCourseItem({
       className={cn(
         "relative flex flex-row items-center gap-6 text-gray-500 pl-8 py-2 hover:bg-blue-50 hover:text-blue-700 rounded-r-full transition-all duration-200 cursor-pointer",
         isSelected && "bg-blue-50 text-blue-700",
+        !isSidebarOpen && "pl-2",
+        "max-lg:pl-2",
         className
       )}
       onClick={handleClick}

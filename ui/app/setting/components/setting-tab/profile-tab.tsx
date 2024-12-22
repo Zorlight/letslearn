@@ -31,7 +31,6 @@ const initForm = {
 export default function ProfileTab() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const user = useAppSelector((state) => state.profile.value);
   const form = useForm({
     resolver: zodResolver(schema),
@@ -64,10 +63,15 @@ export default function ProfileTab() {
     setImageUrl(url);
   };
 
-  const onSubmit = (data: ProfileForm) => {};
+  const onSubmit = (data: ProfileForm) => {
+    if (!isDataChanged) return;
+  };
 
+  const isDataChanged = useMemo(() => {
+    if (!user) return false;
+    return username !== user.username || imageFile !== null;
+  }, [username, imageFile, user]);
   const usernameHtmlfor = nanoid();
-  if (isLoading) return <div>Loading...</div>;
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -101,7 +105,10 @@ export default function ProfileTab() {
           />
           <ImageGuiding requirements={requirements} />
         </div>
-        <Button className="bg-blue-50 text-blue-700 border-[0.5px] border-blue-700 font-bold rounded-lg hover:bg-blue-100 hover:text-blue-800">
+        <Button
+          disabled={!isDataChanged}
+          className="bg-blue-50 text-blue-700 border-[0.5px] border-blue-700 font-bold rounded-lg hover:bg-blue-100 hover:text-blue-800"
+        >
           Save profile
         </Button>
       </form>

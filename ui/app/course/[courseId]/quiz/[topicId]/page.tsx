@@ -1,19 +1,20 @@
 "use client";
-import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import TabList from "@/components/ui/tab-list";
 import PageLayout from "@/components/ui/util-layout/page-layout";
+import { Course } from "@/models/course";
 import { iconMap, QuizTopic } from "@/models/topic";
 import { TabProvider } from "@/provider/tab-provider";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
+import { getCourse } from "@/services/course";
 import { getTopic } from "@/services/topic";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
-import { getCourse } from "@/services/course";
-import { Course } from "@/models/course";
+import { getQuizBreadcrumb } from "./components/utils";
 import Loading from "./loading";
+import { Role } from "@/models/user";
 
 interface Props {
   params: {
@@ -27,26 +28,11 @@ export default function QuizPage({ params }: Props) {
   const [quiz, setQuiz] = useState<QuizTopic>();
   const [initTab, setInitTab] = useState<string>(Tab.QUIZ);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.profile.value);
 
   useEffect(() => {
     if (!quiz || !course) return;
-    //this useEffect is used for setting breadcrumb when the page is loaded
-    const breadcrumbItems: BreadcrumbItem[] = [
-      {
-        label: "Home",
-        href: `/home`,
-      },
-      {
-        label: course.title,
-        href: `/course/${courseId}`,
-      },
-      {
-        label: quiz.title,
-        href: `/course/${courseId}/quiz/${topicId}`,
-      },
-    ];
-
-    dispatch(setBreadcrumb(breadcrumbItems));
+    dispatch(setBreadcrumb(getQuizBreadcrumb(course, quiz)));
   }, [course, quiz]);
 
   useEffect(() => {
@@ -83,9 +69,10 @@ export default function QuizPage({ params }: Props) {
   };
 
   const Icon = iconMap.quiz;
-  const tabs = Object.values(Tab);
+  const teacherTabs = Object.values(Tab);
+  const studentTabs = [Tab.QUIZ];
 
-  if (!quiz) return <Loading />;
+  if (!quiz || !user) return <Loading />;
   return (
     <PageLayout className="relative bg-pink-50 !overflow-y-hidden">
       <TabProvider initTab={initTab}>
@@ -96,7 +83,7 @@ export default function QuizPage({ params }: Props) {
               <h3>{quiz.title}</h3>
             </div>
             <TabList
-              tabs={tabs}
+              tabs={user.role === Role.TEACHER ? teacherTabs : studentTabs}
               variant="white-text"
               onTabSelected={handleTabSelected}
             />

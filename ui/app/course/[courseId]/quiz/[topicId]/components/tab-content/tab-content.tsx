@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import { getTopic, updateTopic } from "@/services/topic";
 import { nanoid } from "@reduxjs/toolkit";
 import { getAllQuizResponsesOfTopic } from "@/services/quiz-response";
+import { useAppSelector } from "@/redux/hooks";
+import { Role } from "@/models/user";
 
 interface Props {
   className?: string;
@@ -28,14 +30,10 @@ interface Props {
 const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
-  const { data } = quiz;
-  const { questions } = data as QuizData;
+  const { questions } = quiz.data as QuizData;
   const [questionsBank, setQuestionsBank] = useState<Question[]>([]);
-
   const [quizResponses, setQuizResponses] = useState<StudentResponse[]>([]);
-  const [selectedQuizResponse, setSelectedQuizResponse] = useState<
-    StudentResponse | undefined
-  >();
+  const user = useAppSelector((state) => state.profile.value);
 
   const handleQuestionBankChange = (questions: Question[]) => {
     setQuestionsBank(questions);
@@ -126,13 +124,14 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
           quiz={quiz}
           quizResponses={quizResponses}
           onQuizResponsesChange={setQuizResponses}
-          onSelectQuizResponse={setSelectedQuizResponse}
           className={className}
         />
       );
     case Tab.SETTINGS:
+      if (user?.role !== Role.TEACHER) return notFound();
       return <TabSetting quiz={quiz} onQuizChange={onQuizChange} />;
     case Tab.QUESTION:
+      if (user?.role !== Role.TEACHER) return notFound();
       return (
         <TabQuestion
           quiz={quiz}
@@ -146,6 +145,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
         />
       );
     case Tab.QUESTION_BANK:
+      if (user?.role !== Role.TEACHER) return notFound();
       return (
         <TabQuestionBank
           questions={questionsBank}
@@ -153,6 +153,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
         />
       );
     case Tab.RESULTS:
+      if (user?.role !== Role.TEACHER) return notFound();
       return <TabResults studentResponses={quizResponses} />;
     default:
       return notFound();

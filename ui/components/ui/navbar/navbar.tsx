@@ -83,7 +83,7 @@ export default function Navbar({
         className
       )}
     >
-      <div className="flex flex-row items-center gap-6">
+      <div className="flex flex-row items-center gap-3">
         <IconButton onClick={toggleSidebar}>
           <Menu />
         </IconButton>

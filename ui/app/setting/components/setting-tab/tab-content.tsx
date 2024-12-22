@@ -5,7 +5,7 @@ import ProfileTab from "./profile-tab";
 import PasswordTab from "./password-tab";
 
 export default function TabContent() {
-  const { selectedTab, handleTabSelected } = useTab<Tab>();
+  const { selectedTab } = useTab<Tab>();
   switch (selectedTab) {
     case Tab.PROFILE:
       return (

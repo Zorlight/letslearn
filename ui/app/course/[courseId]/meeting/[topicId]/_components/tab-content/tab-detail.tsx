@@ -10,6 +10,8 @@ import { useAppSelector } from "@/redux/hooks";
 import { Role } from "@/models/user";
 import { startMeeting } from "@/services/meeting";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import { Spinner } from "@nextui-org/spinner";
 
 interface Props {
   meeting: MeetingTopic;
@@ -17,6 +19,7 @@ interface Props {
 export default function TabDetail({ meeting }: Props) {
   const user = useAppSelector((state) => state.profile.value);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { open, description } = meeting.data;
   const handleGetOpenText = (openISOString: string) => {
     const openDate = new Date(openISOString);
@@ -24,6 +27,7 @@ export default function TabDetail({ meeting }: Props) {
   };
 
   const handleStartMeetingSuccess = () => {
+    setLoading(false);
     router.push(`/meeting/${meeting.id}`);
   };
   const handleStartMeetingFail = () => {
@@ -31,6 +35,7 @@ export default function TabDetail({ meeting }: Props) {
     router.push(`/meeting/${meeting.id}`);
   };
   const handleStartMeeting = () => {
+    setLoading(true);
     startMeeting(meeting.id, handleStartMeetingSuccess, handleStartMeetingFail);
   };
   const handleJoinMeeting = () => {
@@ -50,19 +55,23 @@ export default function TabDetail({ meeting }: Props) {
         {user.role === Role.TEACHER && (
           <Button
             variant="cyan"
-            className="w-fit rounded-lg font-bold"
+            disabled={loading}
+            className="w-[120px] rounded-lg font-bold"
             onClick={handleStartMeeting}
           >
-            Start meeting
+            {loading && <Spinner size="sm" color="white" />}
+            {!loading && <span>Start meeting</span>}
           </Button>
         )}
         {user.role === Role.STUDENT && (
           <Button
             variant="cyan"
-            className="w-fit rounded-lg font-bold"
+            disabled={loading}
+            className="w-[120px] rounded-lg font-bold"
             onClick={handleJoinMeeting}
           >
-            Join meeting
+            {loading && <Spinner size="sm" color="white" />}
+            {!loading && <span>Join meeting</span>}
           </Button>
         )}
       </div>

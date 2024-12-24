@@ -19,6 +19,7 @@ import { nanoid } from "@reduxjs/toolkit";
 import { getAllQuizResponsesOfTopic } from "@/services/quiz-response";
 import { useAppSelector } from "@/redux/hooks";
 import { Role } from "@/models/user";
+import TabDashboard from "./tab-dashboard";
 
 interface Props {
   className?: string;
@@ -155,6 +156,15 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
     case Tab.RESULTS:
       if (user?.role !== Role.TEACHER) return notFound();
       return <TabResults studentResponses={quizResponses} />;
+    case Tab.DASHBOARD:
+      if (user?.role !== Role.TEACHER) return notFound();
+      return (
+        <TabDashboard
+          quiz={quiz}
+          quizResponses={quizResponses}
+          onQuizResponsesChange={setQuizResponses}
+        />
+      );
     default:
       return notFound();
   }

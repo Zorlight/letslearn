@@ -1,5 +1,7 @@
 import {
   AssignmentTopic,
+  FileTopic,
+  LinkTopic,
   MeetingTopic,
   QuizTopic,
   Topic,
@@ -17,6 +19,14 @@ import {
   convertMeetingFromResponseData,
   convertMeetingToRequestData,
 } from "./convert-meeting";
+import {
+  convertFileFromResponseData,
+  convertFileToRequestData,
+} from "./convert-file";
+import {
+  convertLinkFromResponseData,
+  convertLinkToRequestData,
+} from "./convert-link";
 
 export const convertTopicToRequestData = (topic: Topic) => {
   const { type } = topic;
@@ -27,6 +37,10 @@ export const convertTopicToRequestData = (topic: Topic) => {
     reqData = convertAssignmentToRequestData(topic as AssignmentTopic);
   } else if (type === TopicType.MEETING) {
     reqData = convertMeetingToRequestData(topic as MeetingTopic);
+  } else if (type === TopicType.FILE) {
+    reqData = convertFileToRequestData(topic as FileTopic);
+  } else if (type === TopicType.LINK) {
+    reqData = convertLinkToRequestData(topic as LinkTopic);
   }
   return reqData;
 };
@@ -40,6 +54,10 @@ export const convertTopicFromResponseData = (topic: any) => {
     res = convertAssignmentFromResponseData(topic);
   } else if (type === TopicType.MEETING) {
     res = convertMeetingFromResponseData(topic);
+  } else if (type === TopicType.FILE) {
+    res = convertFileFromResponseData(topic);
+  } else if (type === TopicType.LINK) {
+    res = convertLinkFromResponseData(topic);
   }
   return res;
 };

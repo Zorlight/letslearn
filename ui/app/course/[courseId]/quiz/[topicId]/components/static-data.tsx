@@ -8,6 +8,7 @@ export enum Tab {
   QUESTION = "Question",
   QUESTION_BANK = "Question Bank",
   RESULTS = "Results",
+  DASHBOARD = "Dashboard",
 }
 
 export enum QuestionType {

@@ -45,6 +45,7 @@ const QuizAttempting = ({
   const [hasAnswers, setHasAnswers] = useState<boolean[]>(
     questions.map(() => false)
   );
+  const [hasSentTheResponse, setHasSentTheResponse] = useState(false);
 
   useEffect(() => {
     if (quizResponseData.status === QuizStatus.NOT_STARTED) startQuiz();
@@ -84,6 +85,8 @@ const QuizAttempting = ({
   };
 
   const handleFinishQuizResponse = () => {
+    if (hasSentTheResponse) return;
+    setHasSentTheResponse(true);
     const completedTime = new Date();
 
     // Stop timer

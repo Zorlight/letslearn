@@ -1,14 +1,14 @@
 "use client";
 import { BreadcrumbItem } from "@/components/ui/simple/breadcrumb";
 import PageLayout from "@/components/ui/util-layout/page-layout";
+import { cn } from "@/lib/utils";
 import { Role } from "@/models/user";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { useEffect } from "react";
+import CourseListSkeleton from "./_components/skeleton/course-list-skeleton";
 import StudentCourseList from "./_components/student/student-course-list";
 import TeacherCourseList from "./_components/teacher/teacher-course-list";
-import CourseListSkeleton from "./_components/skeleton/course-list-skeleton";
-import { cn } from "@/lib/utils";
 
 const breadcrumbItems: BreadcrumbItem[] = [
   {

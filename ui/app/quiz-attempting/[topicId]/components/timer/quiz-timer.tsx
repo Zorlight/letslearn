@@ -37,13 +37,8 @@ export default function QuizTimer({
   useEffect(() => {
     if (countdownTimer <= 0) stopCountdown(onCountDownEnd);
   }, [countdownTimer]);
-  useEffect(() => {
-    console.log(timer);
-  }, [timer]);
 
   useEffect(() => {
-    console.log("isTimerRunning", isTimerRunning);
-    console.log("timeLimit", timeLimit);
     if (isTimerRunning) {
       if (timeLimit) startCountdown();
       else startTimer();

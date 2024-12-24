@@ -113,12 +113,12 @@ const CourseTopic = ({
             onClick={handleTopicClick}
           >
             {title}
-            {type === TopicType.FILE && topic.data.file && (
+            {/* {type === TopicType.FILE && topic.data.file && (
               <TopicFileExtension
                 fileName={topic.data.file.name}
                 className="no-underline"
               />
-            )}
+            )} */}
           </Button>
         )}
 

@@ -101,7 +101,7 @@ const TabStudentQuiz = ({
       (quizResponse) =>
         (quizResponse.data as QuizResponseData).status === QuizStatus.FINISHED
     );
-    return sortQuizResponsesByCompletedDate(filteredQuizResponses);
+    return sortQuizResponsesByCompletedDate(filteredQuizResponses, false);
   }, [quizResponses]);
 
   const timeLimitString = useMemo(() => {

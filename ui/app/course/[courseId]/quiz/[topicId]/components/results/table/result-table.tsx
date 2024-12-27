@@ -11,6 +11,7 @@ import {
   resultColumnVisibility,
   resultTableColumns,
 } from "./columns";
+import { Role } from "@/models/user";
 
 interface OtherFunctions {
   onEdit?: (id: string) => void;
@@ -39,14 +40,16 @@ const ResultTable = ({
   const router = useRouter();
   const [filteredData, setFilteredData] = useState<StudentResponse[]>([]);
   const filterOptionKeys = Object.keys(resultColumnTitles).map((key) => key);
-  console.log("data", data);
 
   useEffect(() => {
     if (error) toast.error(error);
   }, [error]);
 
   useEffect(() => {
-    setFilteredData(data);
+    const removeTeacherResponses = data.filter(
+      (response) => response.student.role !== Role.TEACHER
+    );
+    setFilteredData(removeTeacherResponses);
   }, [data]);
 
   //   const handlePublishFilter = (filterInput: string, data: Question[]) => {
@@ -78,7 +81,7 @@ const ResultTable = ({
 
   return (
     <>
-      <CustomDatatable<StudentResponse>
+      <CustomDatatable<any>
         data={filteredData}
         pagination={pagination}
         columns={resultTableColumns({

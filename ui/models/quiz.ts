@@ -1,6 +1,4 @@
 import { Question } from "./question";
-import { QuizResponseData } from "./student-response";
-import { QuizTopic } from "./topic";
 
 export type QuizData = {
   description: string;
@@ -71,3 +69,7 @@ export const attemptsAllowedOptions = [
   "9",
   "10",
 ];
+
+export const getQuizTotalMark = (questions: Question[]) => {
+  return questions.reduce((acc, question) => acc + question.defaultMark, 0);
+};

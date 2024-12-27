@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import QuestionList from "../question/question-list";
 import { QuizOpenCloseState } from "../../../../../../quiz-attempting/[topicId]/components/anotation/static-data";
+import { getQuizTotalMark } from "@/models/quiz";
 
 interface Props {
   quiz: QuizTopic;
@@ -89,9 +90,7 @@ const TabQuestion = ({
   const attempts = useMemo(() => {
     return quizResponses.length;
   }, [quizResponses]);
-  const totalMarks = useMemo(() => {
-    return questions.reduce((acc, question) => acc + question.defaultMark, 0);
-  }, [questions]);
+  const totalMarks = useMemo(() => getQuizTotalMark(questions), [questions]);
 
   return (
     <div className="w-full space-y-4">

@@ -8,6 +8,7 @@ interface Props {
   initTab?: string;
   tabs: string[];
   className?: string;
+  tabContentClassName?: string;
   onTabSelected?: (tab: string) => void;
 }
 export default function PageLayoutWithTab({
@@ -15,6 +16,7 @@ export default function PageLayoutWithTab({
   initTab,
   tabs,
   className,
+  tabContentClassName,
   onTabSelected,
 }: Props) {
   return (
@@ -27,7 +29,12 @@ export default function PageLayoutWithTab({
           className="sticky top-0 h-[40px] bg-white shadow-md"
           onTabSelected={onTabSelected}
         />
-        <div className="relative w-full h-full p-5 overflow-y-scroll default-scrollbar">
+        <div
+          className={cn(
+            "relative w-full h-full p-5 overflow-y-scroll default-scrollbar",
+            tabContentClassName
+          )}
+        >
           {children}
         </div>
       </TabProvider>

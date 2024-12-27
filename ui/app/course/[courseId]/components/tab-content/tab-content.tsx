@@ -6,6 +6,7 @@ import { Course } from "@/models/course";
 import ActivitiesTab from "./activities-tab";
 import SettingsTab from "./settings-tab";
 import PeopleTab from "./people-tab";
+import DashboardTab from "./dashboard-tab";
 
 interface Props {
   course: Course;
@@ -17,15 +18,31 @@ export default function TabContent({ course, onCourseChange }: Props) {
 
   switch (selectedTab) {
     case Tab.COURSE:
-      return <CourseTab course={course} onCourseChange={onCourseChange} />;
+      return (
+        <div className="p-5">
+          <CourseTab course={course} onCourseChange={onCourseChange} />
+        </div>
+      );
     case Tab.ACTIVITIES:
-      return <ActivitiesTab />;
+      return (
+        <div className="p-5">
+          <ActivitiesTab />
+        </div>
+      );
     case Tab.PEOPLE:
-      return <PeopleTab course={course} />;
-    case Tab.GRADES:
-      return <div>Settings</div>;
+      return (
+        <div className="p-5">
+          <PeopleTab course={course} />
+        </div>
+      );
+    case Tab.DASHBOARD:
+      return <DashboardTab course={course} />;
     case Tab.SETTINGS:
-      return <SettingsTab course={course} onCourseChange={onCourseChange} />;
+      return (
+        <div className="p-5">
+          <SettingsTab course={course} onCourseChange={onCourseChange} />
+        </div>
+      );
     default:
       return <div>Overview</div>;
   }

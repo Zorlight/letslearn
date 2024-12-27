@@ -15,7 +15,6 @@ import TabContent from "./components/tab-content/tab-content";
 import { getQuizBreadcrumb } from "./components/utils";
 import Loading from "./loading";
 import { Role } from "@/models/user";
-import { getReportTest } from "@/services/report";
 
 interface Props {
   params: {
@@ -40,23 +39,11 @@ export default function QuizPage({ params }: Props) {
     getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
   }, [courseId]);
 
-  const handleGetReportSuccess = (data: any) => {
-    console.log(data);
-  };
-  const handleGetReportFail = (error: any) => {
-    toast.error(error);
-  };
   useEffect(() => {
     //this useEffect is used for updating tab based on local storage
     let storageTab = localStorage.getItem(`quiz-${topicId}`);
     if (storageTab) setInitTab(storageTab);
 
-    getReportTest(
-      topicId,
-      courseId,
-      handleGetReportSuccess,
-      handleGetReportFail
-    );
     getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
   }, [topicId]);
 

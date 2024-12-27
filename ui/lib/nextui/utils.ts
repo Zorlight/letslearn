@@ -1,4 +1,9 @@
-import { getLocalTimeZone, Time, ZonedDateTime } from "@internationalized/date";
+import {
+  CalendarDate,
+  getLocalTimeZone,
+  Time,
+  ZonedDateTime,
+} from "@internationalized/date";
 function zonedDateTimeToDate(zonedDateTime: ZonedDateTime): Date {
   const { year, month, day, hour, minute, second, millisecond } = zonedDateTime;
   return new Date(year, month - 1, day, hour, minute, second, millisecond);
@@ -45,9 +50,15 @@ const DateToTimeValue = (date: Date) => {
   );
 };
 
+const CalendarDateToDate = (calendarDate: CalendarDate) => {
+  const { year, month, day } = calendarDate;
+  return new Date(year, month - 1, day);
+};
+
 export {
   dateToZonedDateTime,
   zonedDateTimeToDate,
   TimeValueToDate,
   DateToTimeValue,
+  CalendarDateToDate,
 };

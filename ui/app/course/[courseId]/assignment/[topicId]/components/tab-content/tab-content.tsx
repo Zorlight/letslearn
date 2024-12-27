@@ -7,6 +7,7 @@ import { Tab } from "../static-data";
 import TabAssignment from "./tab-assignment";
 import TabSetting from "./tab-setting";
 import { TabSubmission } from "./tab-submission";
+import TabDashboard from "./tab-dashboard";
 
 interface Props {
   assignment: AssignmentTopic;
@@ -34,6 +35,8 @@ const TabContent = ({ user, assignment, onAssignmentChange }: Props) => {
     case Tab.SUBMISSIONS:
       if (user.role !== Role.TEACHER) return notFound();
       return <TabSubmission assignment={assignment} className="h-full" />;
+    case Tab.DASHBOARD:
+      return <TabDashboard assignment={assignment} className="h-full" />;
     default:
       return notFound();
   }

@@ -128,6 +128,37 @@ const getTimeStringByDuration = (duration: number, fixed: number = 6) => {
 
   return time;
 };
+const getShortTimeStringByDuration = (duration: number, fixed: number = 6) => {
+  const years = Math.floor(duration / 31536000);
+  duration -= years * 31536000;
+  const months = Math.floor(duration / 2628000);
+  duration -= months * 2628000;
+  const days = Math.floor(duration / 86400);
+  duration -= days * 86400;
+  const hours = Math.floor(duration / 3600);
+  duration -= hours * 3600;
+  const minutes = Math.floor((duration % 3600) / 60);
+  duration -= minutes * 60;
+  const seconds = duration % 60;
+  // any value that is 0 will not be displayed
+  const time = [
+    years && `${years}Y`,
+    months && `${months}M`,
+    days && `${days}D`,
+    hours && `${hours}h`,
+    minutes && `${minutes}m`,
+    seconds && `${seconds}s`,
+  ]
+    .filter((value) => {
+      if (value && fixed > 0) {
+        fixed -= 1;
+        return value;
+      }
+    })
+    .join(" ");
+
+  return time;
+};
 
 const getTextFromHtml = (html: string) => {
   if (DOMParser === undefined) return "";
@@ -264,4 +295,5 @@ export {
   getDateAfterNDays,
   generateDateRange,
   isInDate,
+  getShortTimeStringByDuration,
 };

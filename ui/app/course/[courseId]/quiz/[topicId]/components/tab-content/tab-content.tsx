@@ -158,13 +158,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
       return <TabResults studentResponses={quizResponses} />;
     case Tab.DASHBOARD:
       if (user?.role !== Role.TEACHER) return notFound();
-      return (
-        <TabDashboard
-          quiz={quiz}
-          quizResponses={quizResponses}
-          onQuizResponsesChange={setQuizResponses}
-        />
-      );
+      return <TabDashboard quiz={quiz} courseId={courseId} />;
     default:
       return notFound();
   }

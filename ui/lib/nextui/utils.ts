@@ -55,10 +55,19 @@ const CalendarDateToDate = (calendarDate: CalendarDate) => {
   return new Date(year, month - 1, day);
 };
 
+const DateToCalendarDate = (date: Date) => {
+  return new CalendarDate(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate()
+  );
+};
+
 export {
   dateToZonedDateTime,
   zonedDateTimeToDate,
   TimeValueToDate,
   DateToTimeValue,
   CalendarDateToDate,
+  DateToCalendarDate,
 };

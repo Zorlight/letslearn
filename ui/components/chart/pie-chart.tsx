@@ -22,10 +22,18 @@ interface Props {
   data: PieChartData[];
   title: string;
   className?: string;
+  unitForPlural: string;
+  unitForSingular: string;
 }
-export default function CustomPieChart({ data, title, className }: Props) {
-  console.log("data", data);
+export default function CustomPieChart({
+  data,
+  title,
+  className,
+  unitForPlural,
+  unitForSingular,
+}: Props) {
   const total = data.reduce((acc, cur) => acc + cur.value, 0);
+  console.log("total", total);
   const filterId = nanoid();
   return (
     <div
@@ -62,7 +70,7 @@ export default function CustomPieChart({ data, title, className }: Props) {
             innerRadius={70}
             outerRadius={100}
             dataKey="value"
-            paddingAngle={2}
+            paddingAngle={0.5}
             cornerRadius={10}
             startAngle={90} // Start at 12 o'clock
             endAngle={-270} // Rotate clockwise
@@ -76,14 +84,22 @@ export default function CustomPieChart({ data, title, className }: Props) {
               />
             ))}
           </Pie>
-          <Tooltip content={<CustomTooltip total={40} />} />
+          <Tooltip
+            content={
+              <CustomTooltip
+                total={total}
+                unitForPlural={unitForPlural}
+                unitForSingular={unitForSingular}
+              />
+            }
+          />
         </PieChart>
         <div className="absolute z-0 bg-white flex flex-col items-center justify-center rounded-full w-[100px] h-[100px] shadow-[0px_0px_12px_0px_#00000025]">
           <span className="text-xs font-bold text-gray-500 w-full text-center px-1">
             {title}
           </span>
           <span className="text-2xl font-bold text-gray-700 text-center">
-            {total}
+            {total || 0}
           </span>
         </div>
       </div>

@@ -20,6 +20,9 @@ import QuestionDisplay from "./question-display/question-display";
 import QuestionBlock from "./question-navigation-box/question-block";
 import StickyCard from "./sticky-card/sticky-card";
 import QuizTimer from "./timer/quiz-timer";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { savePreviewQuizResponse } from "@/redux/slices/quiz-attempting";
+import { Role } from "@/models/user";
 
 interface Props {
   className?: string;
@@ -36,6 +39,8 @@ const QuizAttempting = ({
   onQuizAnswerChange,
 }: Props) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.profile.value);
   const quizResponseData = quizResponse.data as QuizResponseData;
   const { answers: studentAnswers, status } = quizResponseData;
   const { questions, timeLimit, timeLimitUnit } = quiz.data;
@@ -115,14 +120,25 @@ const QuizAttempting = ({
   const handleCreateQuizResponseFail = (error: any) => {
     toast.error(error);
   };
+  const handleCreateQuizResponseForPreview = (
+    quizResponse: StudentResponse
+  ) => {
+    dispatch(savePreviewQuizResponse(quizResponse));
+    router.replace(`/quiz-attempting/${quiz.id}/review/${quizResponse.id}`);
+  };
 
   const saveQuizResponse = (quizResponse: StudentResponse) => {
-    createQuizResponse(
-      quiz.id,
-      quizResponse,
-      handleCreateQuizResponseSuccess,
-      handleCreateQuizResponseFail
-    );
+    if (!user) return;
+    if (user.role === Role.STUDENT) {
+      createQuizResponse(
+        quiz.id,
+        quizResponse,
+        handleCreateQuizResponseSuccess,
+        handleCreateQuizResponseFail
+      );
+    } else {
+      handleCreateQuizResponseForPreview(quizResponse);
+    }
   };
 
   const handleQuizAnswerChange = (answer: QuizAnswer) => {

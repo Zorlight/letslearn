@@ -271,6 +271,16 @@ const isInDate = (date: Date, toCompare: Date) => {
     date.getDate() === toCompare.getDate()
   );
 };
+
+const getStartDateOfCurrentMonth = () => {
+  const date = new Date();
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+};
+
+const getEndDateOfCurrentMonth = () => {
+  const date = new Date();
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+};
 export {
   cn,
   displayNumber,
@@ -296,4 +306,6 @@ export {
   generateDateRange,
   isInDate,
   getShortTimeStringByDuration,
+  getStartDateOfCurrentMonth,
+  getEndDateOfCurrentMonth,
 };

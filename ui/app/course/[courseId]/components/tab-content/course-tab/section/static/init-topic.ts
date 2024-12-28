@@ -1,3 +1,4 @@
+import { getDateAfterNDays } from "@/lib/utils";
 import { FileSizeOption } from "@/models/assignment";
 import { GradingMethod, TimeLimitType } from "@/models/quiz";
 import {
@@ -10,14 +11,54 @@ import {
 } from "@/models/topic";
 import { nanoid } from "@reduxjs/toolkit";
 
+const today = new Date();
+const todayAt9 = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate(),
+  9,
+  0,
+  0,
+  0
+);
+const todayAt17 = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate(),
+  14,
+  0,
+  0,
+  0
+);
+const todayAt20 = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate(),
+  20,
+  0,
+  0,
+  0
+);
+
+const nextWeek = getDateAfterNDays(7, today);
+const nextWeekAt9 = new Date(
+  nextWeek.getFullYear(),
+  nextWeek.getMonth(),
+  nextWeek.getDate(),
+  9,
+  0,
+  0,
+  0
+);
+
 export const initQuiz: QuizTopic = {
   id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
   sectionId: nanoid(4),
   title: "Quiz",
   type: TopicType.QUIZ,
   data: {
-    open: new Date(2024, 11, 10, 10, 30, 0, 0).toISOString(),
-    close: new Date(2024, 11, 10, 14, 30, 0, 0).toISOString(),
+    open: todayAt9.toISOString(),
+    close: todayAt17.toISOString(),
     description:
       "This quiz contains a variety of questions to test your knowledge. At the end of the quiz you will be given your score with suggestions for improvement.",
     timeLimit: 1,
@@ -35,25 +76,23 @@ export const initAssignment: AssignmentTopic = {
   title: "Assignment",
   type: TopicType.ASSIGNMENT,
   data: {
-    open: new Date(2024, 11, 10, 10, 30, 0, 0).toISOString(),
-    close: new Date(2024, 11, 10, 14, 30, 0, 0).toISOString(),
+    open: todayAt9.toISOString(),
+    close: todayAt17.toISOString(),
     description:
       "This quiz contains a variety of questions to test your knowledge. At the end of the quiz you will be given your score with suggestions for improvement.",
-    remindToGrade: new Date(2024, 11, 10, 14, 30, 0, 0).toISOString(),
+    remindToGrade: todayAt20.toISOString(),
     maximumFile: 5,
     maximumFileSize: FileSizeOption["5MB"],
   },
 };
 
-const current = new Date();
-const nextWeek = new Date(current.getTime() + 7 * 24 * 60 * 60 * 1000);
 export const initMeeting: MeetingTopic = {
   id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
   sectionId: nanoid(4),
   title: "Meeting",
   type: TopicType.MEETING,
   data: {
-    open: nextWeek.toISOString(),
+    open: nextWeekAt9.toISOString(),
     description: "This is an important meeting. Please attend on time.",
   },
 };

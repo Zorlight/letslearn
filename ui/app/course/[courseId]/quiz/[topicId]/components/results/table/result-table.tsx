@@ -14,9 +14,7 @@ import {
 import { Role } from "@/models/user";
 
 interface OtherFunctions {
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
-  onDeleteMany?: (questions: StudentResponse[]) => Promise<any>;
+  onView?: (responseId: string) => void;
 }
 
 interface Props {
@@ -49,6 +47,7 @@ const ResultTable = ({
     const removeTeacherResponses = data.filter(
       (response) => response.student.role !== Role.TEACHER
     );
+    console.log("filtered", removeTeacherResponses);
     setFilteredData(removeTeacherResponses);
   }, [data]);
 
@@ -85,8 +84,7 @@ const ResultTable = ({
         data={filteredData}
         pagination={pagination}
         columns={resultTableColumns({
-          onEdit: otherFunctions?.onEdit,
-          onDelete: otherFunctions?.onDelete,
+          onView: otherFunctions?.onView,
         })}
         columnTitles={resultColumnTitles}
         buttons={buttons}
@@ -97,7 +95,6 @@ const ResultTable = ({
           showDataTableViewOptions: true,
           showRowSelectedCounter: true,
           onFilterChange: handleFilterChange,
-          onDeleteRowsBtnClick: otherFunctions?.onDeleteMany,
         }}
       />
     </>

@@ -15,6 +15,7 @@ import TabContent from "./_components/tab-content/tab-content";
 import Loading from "./loading";
 import { getLinkBreadcrumb } from "./_components/utils";
 import { getCourse } from "@/services/course";
+import { getTopic } from "@/services/topic";
 
 interface Props {
   params: {
@@ -45,7 +46,7 @@ export default function LinkPage({ params }: Props) {
   useEffect(() => {
     let storageTab = localStorage.getItem(`link-${topicId}`);
     if (storageTab) setInitTab(storageTab);
-    // getTopic(topicId, handleGetLinkTopicSuccess, handleGetLinkTopicFail);
+    getTopic(topicId, handleGetLinkTopicSuccess, handleGetLinkTopicFail);
   }, [topicId]);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function LinkPage({ params }: Props) {
 
   const tabs = Object.values(Tab);
 
-  // if (!topic || !user) return <Loading />;
+  if (!topic || !user) return <Loading />;
   if (!user) return <Loading />;
 
   return (
@@ -79,7 +80,7 @@ export default function LinkPage({ params }: Props) {
           <div className="w-full space-y-8">
             <div className="w-full px-5 flex flex-row gap-4">
               <Icon size={32} />
-              <h3>Link</h3>
+              <h3>{topic.title}</h3>
             </div>
             <TabList
               tabs={tabs}
@@ -92,7 +93,7 @@ export default function LinkPage({ params }: Props) {
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
             <TabContent
               user={user}
-              topic={fakeLink}
+              topic={topic}
               onTopicChange={handleTopicChange}
             />
           </div>

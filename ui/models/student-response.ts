@@ -48,7 +48,6 @@ export const getQuizResponseMark = (quizResponse: QuizResponseData) => {
 
 export const getQuizResponseTotalMark = (quizResponse: QuizResponseData) => {
   let totalMark = 0;
-  console.log("quizResponse", quizResponse);
   quizResponse.answers.forEach((answer) => {
     totalMark += answer.question.defaultMark;
   });

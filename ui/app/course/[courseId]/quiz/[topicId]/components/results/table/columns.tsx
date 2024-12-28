@@ -1,6 +1,7 @@
 "use client";
 import { DataTableColumnHeader } from "@/components/table/my_table_column_header";
 import {
+  defaultColumn,
   defaultIndexColumn,
   defaultSelectColumn,
 } from "@/components/table/my_table_default_column";
@@ -48,8 +49,8 @@ const resultColumnVisibility = {
   completedAt: false,
 };
 
-const imageColumn = (title: string): ColumnDef<any> => {
-  const col: ColumnDef<any> = {
+const imageColumn = (title: string): ColumnDef<StudentResponse> => {
+  const col: ColumnDef<StudentResponse> = {
     accessorKey: "student",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
@@ -78,7 +79,7 @@ const imageColumn = (title: string): ColumnDef<any> => {
 
 const studentNameColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: "student",
+    accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
@@ -95,7 +96,7 @@ const studentNameColumn = (title: string): ColumnDef<StudentResponse> => {
 };
 const emailColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: "student",
+    accessorKey: "email",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
@@ -131,7 +132,7 @@ const statusColumn = (title: string): ColumnDef<StudentResponse> => {
 };
 const durationColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: "data",
+    accessorKey: "duration",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
@@ -153,7 +154,7 @@ const durationColumn = (title: string): ColumnDef<StudentResponse> => {
 
 const gradeColumn = (title: string): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    accessorKey: "data",
+    accessorKey: "grade",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title} />
     ),
@@ -171,22 +172,17 @@ const gradeColumn = (title: string): ColumnDef<StudentResponse> => {
 };
 
 interface ActionColumnProps {
-  onEdit?: (questionId: string) => void;
-  onDelete?: (questionId: string) => void;
+  onView?: (responseId: string) => void;
 }
 const actionColumn = ({
-  onEdit,
-  onDelete,
+  onView,
 }: ActionColumnProps): ColumnDef<StudentResponse> => {
   const col: ColumnDef<StudentResponse> = {
-    id: "Action",
+    id: "action",
     cell: ({ row }) => {
       let id: string = row.getValue("id");
-      const handleEdit = () => {
-        if (onEdit) onEdit(id);
-      };
-      const handleDelete = () => {
-        if (onDelete) onDelete(id);
+      const handleView = () => {
+        if (onView) onView(id);
       };
 
       return (
@@ -199,17 +195,10 @@ const actionColumn = ({
           <DropdownMenuContent align="end" className="bg-white font-sans z-50">
             <DropdownMenuItem
               className="flex flex-row items-center gap-1 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer ease-linear duration-100"
-              onClick={handleEdit}
+              onClick={handleView}
             >
               <Eye size={14} />
               <span>View</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="flex flex-row items-center gap-1 text-red-500 focus:bg-red-50 focus:text-red-600 cursor-pointer ease-linear duration-100"
-              onClick={handleDelete}
-            >
-              <Trash2 size={14} />
-              <span>Delete</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -221,23 +210,20 @@ const actionColumn = ({
 };
 
 interface ResultTableProps {
-  onEdit?: (questionId: string) => void;
-  onDelete?: (questionId: string) => void;
+  onView?: (questionId: string) => void;
 }
-const resultTableColumns = ({
-  onEdit,
-  onDelete,
-}: ResultTableProps): ColumnDef<any>[] => {
-  const columns: ColumnDef<any>[] = [
+const resultTableColumns = ({ onView }: ResultTableProps): ColumnDef<any>[] => {
+  const columns: ColumnDef<StudentResponse>[] = [
     defaultSelectColumn<StudentResponse>(),
     defaultIndexColumn<StudentResponse>(),
+    defaultColumn<StudentResponse>("id", resultColumnTitles),
     imageColumn(resultColumnTitles.image),
     studentNameColumn(resultColumnTitles.name),
     emailColumn(resultColumnTitles.email),
     statusColumn(resultColumnTitles.status),
     durationColumn(resultColumnTitles.duration),
     gradeColumn(resultColumnTitles.grade),
-    actionColumn({ onEdit, onDelete }),
+    actionColumn({ onView }),
   ];
 
   return columns;

@@ -1,30 +1,82 @@
 import AssignmentOverallDashboard from "@/components/dashboard/assignment/assignment-overall-dashboard";
 import QuizOverallDashboard from "@/components/dashboard/quiz/quiz-overall-dashboard";
-import { cn } from "@/lib/utils";
+import {
+  cn,
+  getEndDateOfCurrentMonth,
+  getStartDateOfCurrentMonth,
+} from "@/lib/utils";
 import { Course } from "@/models/course";
 import { TopicType } from "@/models/topic";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardTabList from "./dashboard-tab/tab-list";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { parseDate } from "@internationalized/date";
-import { CalendarDateToDate } from "@/lib/nextui/utils";
+import { CalendarDateToDate, DateToCalendarDate } from "@/lib/nextui/utils";
 import { Calendar } from "lucide-react";
+import {
+  getAssignmentOverallReport,
+  getQuizOverallReport,
+} from "@/services/report";
+import { toast } from "react-toastify";
+import { AssignmentOverallReport, QuizOverallReport } from "@/models/report";
 
 interface Props {
   course: Course;
 }
 export default function DashboardTab({ course }: Props) {
   const tabs = [TopicType.QUIZ, TopicType.ASSIGNMENT];
-  const [selectedTab, setSelectedTab] = React.useState(tabs[0]);
+  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const [range, setRange] = useState<{ startDate: Date; endDate: Date }>({
+    startDate: getStartDateOfCurrentMonth(),
+    endDate: getEndDateOfCurrentMonth(),
+  });
+  const [quizOverallReport, setQuizOverallReport] =
+    useState<QuizOverallReport>();
+  const [assignmentOverallReport, setAssignmentOverallReport] =
+    useState<AssignmentOverallReport>();
+
   const handleDatePickerRangeChange = (value: any) => {
     if (!value) return;
-    const startDate = CalendarDateToDate(value.start);
-    const endDate = CalendarDateToDate(value.end);
-
-    console.log("startDate: ", startDate);
-    console.log("endDate: ", endDate);
+    const newRange = {
+      startDate: CalendarDateToDate(value.start),
+      endDate: CalendarDateToDate(value.end),
+    };
+    setRange(newRange);
   };
 
+  const handleGetQuizOverallReportSuccess = (data: QuizOverallReport) => {
+    console.log("overall report: ", data);
+    setQuizOverallReport(data);
+  };
+  const handleGetAssignmentOverallReportSuccess = (
+    data: AssignmentOverallReport
+  ) => {
+    console.log("overall report: ", data);
+    setAssignmentOverallReport(data);
+  };
+  const handleGetReportFail = (error: any) => {
+    toast.error(error);
+  };
+  useEffect(() => {
+    const startDateISO = range.startDate.toISOString();
+    const endDateISO = range.endDate.toISOString();
+    getQuizOverallReport(
+      course.id,
+      startDateISO,
+      endDateISO,
+      handleGetQuizOverallReportSuccess,
+      handleGetReportFail
+    );
+    getAssignmentOverallReport(
+      course.id,
+      startDateISO,
+      endDateISO,
+      handleGetAssignmentOverallReportSuccess,
+      handleGetReportFail
+    );
+  }, [course.id, range]);
+
+  if (!quizOverallReport || !assignmentOverallReport) return null;
   return (
     <div
       className={cn(
@@ -43,8 +95,8 @@ export default function DashboardTab({ course }: Props) {
           hideTimeZone
           showMonthAndYearPickers
           defaultValue={{
-            start: parseDate("2024-08-01"),
-            end: parseDate("2024-08-31"),
+            start: DateToCalendarDate(range.startDate),
+            end: DateToCalendarDate(range.endDate),
           }}
           radius="sm"
           selectorIcon={
@@ -67,8 +119,12 @@ export default function DashboardTab({ course }: Props) {
         />
       </div>
       <div className="w-full">
-        {selectedTab === TopicType.QUIZ && <QuizOverallDashboard />}
-        {selectedTab === TopicType.ASSIGNMENT && <AssignmentOverallDashboard />}
+        {selectedTab === TopicType.QUIZ && (
+          <QuizOverallDashboard quizOverallReport={quizOverallReport} />
+        )}
+        {selectedTab === TopicType.ASSIGNMENT && (
+          <AssignmentOverallDashboard report={assignmentOverallReport} />
+        )}
       </div>
     </div>
   );

@@ -20,14 +20,7 @@ const TabQuiz = ({
   const user = useAppSelector((state) => state.profile.value);
   if (!user) return null;
   if (user.role === Role.TEACHER)
-    return (
-      <TabTeacherQuiz
-        className={className}
-        quiz={quiz}
-        quizResponses={quizResponses}
-        onQuizResponsesChange={onQuizResponsesChange}
-      />
-    );
+    return <TabTeacherQuiz className={className} quiz={quiz} />;
 
   return (
     <TabStudentQuiz

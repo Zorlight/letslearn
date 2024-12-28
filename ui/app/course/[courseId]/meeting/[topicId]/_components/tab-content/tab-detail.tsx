@@ -31,7 +31,6 @@ export default function TabDetail({ meeting }: Props) {
     router.push(`/meeting/${meeting.id}`);
   };
   const handleStartMeetingFail = () => {
-    toast.error("Failed to start meeting");
     router.push(`/meeting/${meeting.id}`);
   };
   const handleStartMeeting = () => {

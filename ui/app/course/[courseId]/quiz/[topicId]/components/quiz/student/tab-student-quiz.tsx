@@ -24,6 +24,7 @@ import {
   handleGetHighestGrade,
   handleGetLastAttemptGrade,
 } from "../utils";
+import { useAppSelector } from "@/redux/hooks";
 
 interface Props {
   quiz: QuizTopic;
@@ -38,6 +39,7 @@ const TabStudentQuiz = ({
   onQuizResponsesChange,
 }: Props) => {
   const router = useRouter();
+  const user = useAppSelector((state) => state.profile.value);
   const { data } = quiz;
   const {
     open,
@@ -97,12 +99,14 @@ const TabStudentQuiz = ({
   }, [quizResponses]);
 
   const quizResponsesToShow = useMemo(() => {
+    if (!user) return [];
     const filteredQuizResponses = quizResponses.filter(
-      (quizResponse) =>
-        (quizResponse.data as QuizResponseData).status === QuizStatus.FINISHED
+      (res) =>
+        (res.data as QuizResponseData).status === QuizStatus.FINISHED &&
+        res.student.id === user.id
     );
     return sortQuizResponsesByCompletedDate(filteredQuizResponses, false);
-  }, [quizResponses]);
+  }, [quizResponses, user]);
 
   const timeLimitString = useMemo(() => {
     if (!timeLimit) return "No time limit";
@@ -117,6 +121,7 @@ const TabStudentQuiz = ({
     ? format(new Date(close), "EEEE, dd MMMM yyyy, h:mm a")
     : null;
   const gradeColor = getGradeColor(gradeToShow, fullMarkOfQuiz);
+  console.log("quizResponsesToShow", quizResponsesToShow);
 
   return (
     <div className={cn(className)}>
@@ -164,7 +169,7 @@ const TabStudentQuiz = ({
               {quizResponsesToShow.map((quizResponse, index) => (
                 <QuizAttemptResult
                   key={index}
-                  responseIndex={quizResponses.length - index - 1}
+                  responseIndex={quizResponsesToShow.length - index - 1}
                   quizResponse={quizResponse}
                   onReview={() => handleReviewQuiz(index)}
                   onRemove={() => handleRemoveQuizResponse(index)}

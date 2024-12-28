@@ -16,6 +16,7 @@ const TabSetting = ({ topic, onTopicChange }: Props) => {
     toast.error(error);
   };
   const handleSubmitTopicSetting = (data: FileTopic) => {
+    console.log(data);
     updateTopic(data, handleUpdateTopicSuccess, handleUpdateTopicFail);
   };
 

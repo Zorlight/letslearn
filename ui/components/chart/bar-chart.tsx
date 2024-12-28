@@ -28,12 +28,14 @@ interface Props {
   data: BarChartData[];
   barColor?: string;
   type?: "number" | "percent";
+  unit?: string;
 }
 
 const HorizontalBarChart = ({
   data,
   barColor = "#1db7c1",
   type = "number",
+  unit = "Value",
 }: Props) => {
   // Calculate dynamic height
   const barHeight = 65; // Height of each bar, including gaps
@@ -67,7 +69,7 @@ const HorizontalBarChart = ({
         <YAxis type="category" dataKey="name" width={0} tick={false} />
         {/* Tooltip */}
         <Tooltip
-          content={<CustomTooltip color={barColor} />}
+          content={<CustomTooltip color={barColor} unit={unit} type={type} />}
           cursor={{ fill: "transparent" }}
         />
         {/* Bars */}

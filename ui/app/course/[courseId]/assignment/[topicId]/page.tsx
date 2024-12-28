@@ -93,6 +93,7 @@ export default function AssignmentPage({ params }: Props) {
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
             <TabContent
               user={user}
+              courseId={courseId}
               assignment={assignment}
               onAssignmentChange={handleAssignmentChange}
             />

@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { LinkTopic } from "@/models/topic";
+import Link from "next/link";
 
 interface Props {
   topic: LinkTopic;
@@ -10,9 +11,12 @@ const TabLink = ({ className, topic }: Props) => {
     <div className={cn("", className)}>
       <p>
         Click on{" "}
-        <span className="text-link font-bold hover:underline underline-offset-2 cursor-pointer">
+        <Link
+          href={topic.data.url || ""}
+          className="text-link font-bold hover:underline underline-offset-2 cursor-pointer"
+        >
           Link
-        </span>{" "}
+        </Link>{" "}
         to test the destination link
       </p>
     </div>

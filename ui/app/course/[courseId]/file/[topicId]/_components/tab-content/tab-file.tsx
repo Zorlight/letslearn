@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { FileTopic } from "@/models/topic";
+import Link from "next/link";
 
 interface Props {
   topic: FileTopic;
@@ -10,13 +11,13 @@ const TabFile = ({ className, topic }: Props) => {
   return (
     <div className={cn("", className)}>
       <p>
-        Click on{" "}
-        <a
+        <span>Click </span>
+        <Link
           className="text-file font-bold hover:underline underline-offset-2 cursor-pointer"
-          href={file ? file.downloadUrl : undefined}
+          href={file ? file.downloadUrl : ""}
         >
-          Download link
-        </a>{" "}
+          Download
+        </Link>{" "}
         to test the file uploaded
       </p>
     </div>

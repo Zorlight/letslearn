@@ -1,10 +1,23 @@
 import { fakeUserList } from "@/fake-data/user";
+import { AssignmentReport } from "@/models/report";
 import DashboardLogo from "../summary/dashboard-logo";
-import SummaryItem from "../summary/summary-item";
 import SummaryCard from "../summary/summary-card";
+import SummaryItem from "../summary/summary-item";
 
-interface Props {}
-export default function AssignmentDashboardSummary({}: Props) {
+interface Props {
+  report: AssignmentReport;
+}
+export default function AssignmentDashboardSummary({ report }: Props) {
+  const {
+    submissionCount,
+    gradedSubmissionCount,
+    fileCount,
+    avgMark,
+    maxMark,
+    completionRate,
+    students,
+  } = report;
+
   return (
     <div className="flex flex-row p-2 rounded-xl bg-gray-100">
       <div className="flex-1">
@@ -14,16 +27,25 @@ export default function AssignmentDashboardSummary({}: Props) {
             <span className="text-gray-700 font-bold text-xl">Dashboard</span>
           </div>
           <div className="flex flex-row items-center gap-4">
-            <SummaryItem title="Submissions" content="38" />
-            <SummaryItem title="Graded submission" content="0" />
-            <SummaryItem title="Total files" content="76" />
-            <SummaryItem title="Avg mark (100)" content="72.8" />
-            <SummaryItem title="Top mark (100)" content="95" />
-            <SummaryItem title="Completion rate" content="75%" />
+            <SummaryItem
+              title="Submissions"
+              content={submissionCount.toString()}
+            />
+            <SummaryItem
+              title="Graded submission"
+              content={gradedSubmissionCount.toString()}
+            />
+            <SummaryItem title="Total files" content={fileCount.toString()} />
+            <SummaryItem title="Avg mark (100)" content={avgMark.toFixed(1)} />
+            <SummaryItem title="Top mark (100)" content={maxMark.toString()} />
+            <SummaryItem
+              title="Completion rate"
+              content={`${completionRate * 100}%`}
+            />
           </div>
         </div>
       </div>
-      <SummaryCard students={fakeUserList} />
+      <SummaryCard students={students} />
     </div>
   );
 }

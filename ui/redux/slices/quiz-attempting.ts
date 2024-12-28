@@ -4,18 +4,21 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 export const quizAttemptingSlice = createSlice({
   name: "quizAttempting",
   initialState: {
-    savedQuizResponse: null as StudentResponse | null,
+    preview: null as StudentResponse | null,
   },
   reducers: {
-    saveQuizResponse: (state, action: PayloadAction<StudentResponse>) => {
-      state.savedQuizResponse = action.payload;
+    savePreviewQuizResponse: (
+      state,
+      action: PayloadAction<StudentResponse>
+    ) => {
+      state.preview = action.payload;
     },
   },
 });
 const {
   reducer: quizAttemptingReducer,
-  actions: { saveQuizResponse },
+  actions: { savePreviewQuizResponse },
 } = quizAttemptingSlice;
 
-export { saveQuizResponse };
+export { savePreviewQuizResponse };
 export default quizAttemptingReducer;

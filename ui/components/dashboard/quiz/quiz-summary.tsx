@@ -1,18 +1,12 @@
-import { fakeUserList } from "@/fake-data/user";
-import DashboardLogo from "../summary/dashboard-logo";
-import SummaryItem from "../summary/summary-item";
-import SummaryCard from "../summary/summary-card";
-import { QuizReport } from "@/models/report";
-import { QuizTopic } from "@/models/topic";
-import { getQuizTotalMark, QuizData } from "@/models/quiz";
-import { useEffect, useMemo, useState } from "react";
 import { getShortTimeStringByDuration } from "@/lib/utils";
-import {
-  getAllQuizResponsesOfTopic,
-  getQuizResponse,
-} from "@/services/quiz-response";
+import { getQuizTotalMark, QuizData } from "@/models/quiz";
+import { QuizReport } from "@/models/report";
 import { StudentResponse } from "@/models/student-response";
-import { toast } from "react-toastify";
+import { QuizTopic } from "@/models/topic";
+import { useMemo, useState } from "react";
+import DashboardLogo from "../summary/dashboard-logo";
+import SummaryCard from "../summary/summary-card";
+import SummaryItem from "../summary/summary-item";
 
 interface Props {
   report: QuizReport;
@@ -26,10 +20,9 @@ export default function QuizDashboardSummary({ report, quiz }: Props) {
     maxStudentMarkBase10,
     avgTimeSpend,
     completionRate,
-    studentCount,
+    students,
   } = report;
   const { questions } = quiz.data as QuizData;
-  const [quizResponses, setQuizResponses] = useState<StudentResponse[]>([]);
 
   const totalMark = useMemo(() => getQuizTotalMark(questions), [questions]);
   const avgMark = useMemo(
@@ -59,11 +52,14 @@ export default function QuizDashboardSummary({ report, quiz }: Props) {
             />
             <SummaryItem title="Top mark" content={maxMark.toFixed(1)} />
             <SummaryItem title="Avg time spend" content={averageTimeSpend} />
-            <SummaryItem title="Completion rate" content={completionRate} />
+            <SummaryItem
+              title="Completion rate"
+              content={`${completionRate}%`}
+            />
           </div>
         </div>
       </div>
-      <SummaryCard students={fakeUserList} />
+      <SummaryCard students={students} />
     </div>
   );
 }

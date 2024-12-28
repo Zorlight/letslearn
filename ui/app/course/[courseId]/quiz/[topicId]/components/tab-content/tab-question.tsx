@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import QuestionList from "../question/question-list";
 import { QuizOpenCloseState } from "../../../../../../quiz-attempting/[topicId]/components/anotation/static-data";
 import { getQuizTotalMark } from "@/models/quiz";
+import { Role } from "@/models/user";
 
 interface Props {
   quiz: QuizTopic;
@@ -73,7 +74,7 @@ const TabQuestion = ({
   const formatTime = (time: string) => {
     const date = new Date(time);
     return (
-      format(date, "EEEE, MMMM dd, yyyy") + " at " + format(date, "HH:mm a")
+      format(date, "EEEE, MMMM dd, yyyy") + " at " + format(date, "hh:mm a")
     );
   };
   const quizOpenCloseStateString = useMemo(() => {
@@ -88,7 +89,10 @@ const TabQuestion = ({
   }, [quizOpenCloseState, open, close]);
 
   const attempts = useMemo(() => {
-    return quizResponses.length;
+    const removeTeacherResponses = quizResponses.filter(
+      (response) => response.student.role !== Role.TEACHER
+    );
+    return removeTeacherResponses.length;
   }, [quizResponses]);
   const totalMarks = useMemo(() => getQuizTotalMark(questions), [questions]);
 

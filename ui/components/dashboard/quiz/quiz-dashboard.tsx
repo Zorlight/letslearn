@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import CustomPieChart from "@/components/chart/pie-chart";
 import RankItem from "../ranking/rank-item";
 import { fakeUserList } from "@/fake-data/user";
 import QuizDashboardSummary from "./quiz-summary";
-import { QuizReport } from "@/models/report";
+import { ChartDataObject, QuizReport } from "@/models/report";
 import { QuizTopic } from "@/models/topic";
 
 const sampleQuestionTypeData = [
@@ -24,23 +24,45 @@ interface Props {
   quiz: QuizTopic;
 }
 export default function QuizDashboard({ quiz, report }: Props) {
-  const handleGetStudentMarkData = (obj: any) => {
+  const {
+    studentWithMarkOver8,
+    studentWithMarkOver5,
+    studentWithMarkOver2,
+    studentWithMarkOver0,
+  } = report;
+  const handleGetQuestionTypeData = (report: QuizReport) => {
+    const data = [...sampleQuestionTypeData];
+    const {
+      trueFalseQuestionCount,
+      multipleChoiceQuestionCount,
+      shortAnswerQuestionCount,
+    } = report;
+    data[0].value = multipleChoiceQuestionCount;
+    data[1].value = trueFalseQuestionCount;
+    data[2].value = shortAnswerQuestionCount;
+    return data;
+  };
+  const handleGetStudentMarkData = (obj: ChartDataObject) => {
     if (!obj) return sampleStudentMarkData;
-    console.log("obj", obj);
     const data = [...sampleStudentMarkData];
-    data[0].value = obj["8"];
-    data[1].value = obj["5"];
-    data[2].value = obj["2"];
-    data[3].value = obj["0"];
+    data[0].value = obj[8];
+    data[1].value = obj[5];
+    data[2].value = obj[2];
+    data[3].value = obj[0];
     data[4].value = obj["-1"];
-    console.log("data report", data);
     return data;
   };
 
-  const studentMarkData = handleGetStudentMarkData(
-    report.markDistributionByPercentage
+  const handleClick = (studentId: string) => {};
+
+  const studentMarkData = useMemo(
+    () => handleGetStudentMarkData(report.markDistributionCount),
+    [report.markDistributionCount]
   );
-  console.log("studentMarkData", studentMarkData);
+  const questionTypeData = useMemo(
+    () => handleGetQuestionTypeData(report),
+    [report]
+  );
   return (
     <div className="flex flex-col gap-2">
       <QuizDashboardSummary report={report} quiz={quiz} />
@@ -49,23 +71,30 @@ export default function QuizDashboard({ quiz, report }: Props) {
         <div className="w-full flex flex-col gap-4 p-4">
           <h6 className="text-orange-500">Question type</h6>
           <CustomPieChart
-            data={sampleQuestionTypeData}
+            data={questionTypeData}
             title="Total questions"
+            unitForPlural="questions"
+            unitForSingular="question"
           />
         </div>
         <div className="w-full flex flex-col gap-4 p-4">
           <h6 className="text-orange-500">Student mark</h6>
-          <CustomPieChart data={studentMarkData} title="Total students" />
+          <CustomPieChart
+            data={studentMarkData}
+            title="Total students"
+            unitForPlural="students"
+            unitForSingular="student"
+          />
         </div>
       </div>
 
       <div className="w-full flex flex-col gap-4 p-4">
         <h6 className="text-orange-500">Student mark</h6>
         <div className="flex flex-col gap-2">
-          <RankItem rank="S" students={fakeUserList} />
-          <RankItem rank="A" students={fakeUserList} />
-          <RankItem rank="B" students={fakeUserList} />
-          <RankItem rank="C" students={fakeUserList} />
+          <RankItem rank="S" studentWithMarks={studentWithMarkOver8} />
+          <RankItem rank="A" studentWithMarks={studentWithMarkOver5} />
+          <RankItem rank="B" studentWithMarks={studentWithMarkOver2} />
+          <RankItem rank="C" studentWithMarks={studentWithMarkOver0} />
         </div>
       </div>
     </div>

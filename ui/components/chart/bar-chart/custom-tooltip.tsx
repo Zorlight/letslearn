@@ -1,5 +1,11 @@
 // Custom Tooltip Component
-export const CustomTooltip = ({ active, payload, color = "#1db7c1" }: any) => {
+export const CustomTooltip = ({
+  active,
+  payload,
+  color = "#1db7c1",
+  unit,
+  type,
+}: any) => {
   if (active && payload && payload.length) {
     const { name, value } = payload[0].payload;
     return (
@@ -13,7 +19,8 @@ export const CustomTooltip = ({ active, payload, color = "#1db7c1" }: any) => {
         }}
       >
         <p className="font-bold m-0">{name}</p>
-        <p className="m-0">Value: {value}</p>
+        {type === "number" && <p className="m-0">{`${unit}: ${value}`}</p>}
+        {type === "percent" && <p className="m-0">{`${unit}: ${value}%`}</p>}
       </div>
     );
   }

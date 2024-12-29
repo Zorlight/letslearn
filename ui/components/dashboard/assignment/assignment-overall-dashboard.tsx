@@ -4,32 +4,8 @@ import { AssignmentOverallReport, ChartDataObject } from "@/models/report";
 import { format } from "date-fns";
 import CardDashboard from "../card-dashboard/card-dashboard";
 import CompareCardValue from "../card-dashboard/compare-card-value";
-import { fileTypeColor } from "./static-data";
+import { fileTypeColor, sampleGradedSubmissionData } from "./static-data";
 import RankItem from "../ranking/rank-item";
-const sampleFileTypeSubmisisonData = [
-  { name: ".zip", value: 60, color: "#EC4899" },
-  { name: ".docx", value: 20, color: "#3B82F6" },
-  { name: ".pdf", value: 30, color: "#EF4444" },
-  { name: ".xlsx", value: 10, color: "#22C55E" },
-];
-const sampleGradedSubmissionData = [
-  { name: "80 - 100%", value: 25, color: "#22C55E" },
-  { name: "50 - 79%", value: 10, color: "#06B6D4" },
-  { name: "20 - 49%", value: 5, color: "#3B82F6" },
-  { name: "0 - 19%", value: 5, color: "#EAB308" },
-  { name: "Not graded", value: 5, color: "#6B7280" },
-];
-const sampleAvgMarkData = [
-  { name: "First assignment", value: 9 },
-  { name: "Introduce to Astronomy", value: 9 },
-  { name: "Final project", value: 7 },
-];
-
-const sampleAvgCompletionRateData = [
-  { name: "First assignment", value: 90 },
-  { name: "Introduce to Astronomy", value: 90 },
-  { name: "Final project", value: 70 },
-];
 
 interface Props {
   report: AssignmentOverallReport;

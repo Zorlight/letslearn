@@ -47,3 +47,14 @@ export const getAssignmentOverallReport = (
   const url = `/course/${courseId}/assignment-report?startTime=${startTime}&endTime=${endTime}`;
   GET(url, onSuccess, onFail);
 };
+
+export const getStudentReport = (
+  courseId: string,
+  startTime: string,
+  endTime: string,
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  const url = `/user/me/report?courseId=${courseId}&start=${startTime}&end=${endTime}`;
+  GET(url, onSuccess, onFail);
+};

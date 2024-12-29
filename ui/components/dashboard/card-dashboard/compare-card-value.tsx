@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import CardDashboard from "./card-dashboard";
 import ColorItem from "../summary/color-item";
 import { MoveDown, MoveUp } from "lucide-react";
@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 interface Props {
   className?: string;
   title: string;
-  value: string;
+  value: string | ReactNode;
   type?: "up" | "down" | "none";
 }
 

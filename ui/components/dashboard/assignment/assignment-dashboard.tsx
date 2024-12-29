@@ -1,25 +1,8 @@
-import React from "react";
 import CustomPieChart from "@/components/chart/pie-chart";
-import RankItem from "../ranking/rank-item";
-import { fakeUserList } from "@/fake-data/user";
-import AssignmentDashboardSummary from "./assignment-summary";
 import { AssignmentReport, ChartDataObject } from "@/models/report";
-import { AssignmentTopic } from "@/models/topic";
-import { fileTypeColor } from "./static-data";
-
-const sampleFileTypeSubmisisonData = [
-  { name: ".zip", value: 60, color: "#EC4899" },
-  { name: ".docx", value: 20, color: "#3B82F6" },
-  { name: ".pdf", value: 30, color: "#EF4444" },
-  { name: ".xlsx", value: 10, color: "#22C55E" },
-];
-const sampleGradedSubmissionData = [
-  { name: "80 - 100%", value: 25, color: "#22C55E" },
-  { name: "50 - 79%", value: 10, color: "#06B6D4" },
-  { name: "20 - 49%", value: 5, color: "#3B82F6" },
-  { name: "0 - 19%", value: 5, color: "#EAB308" },
-  { name: "Not graded", value: 5, color: "#6B7280" },
-];
+import RankItem from "../ranking/rank-item";
+import AssignmentDashboardSummary from "./assignment-summary";
+import { fileTypeColor, sampleGradedSubmissionData } from "./static-data";
 
 interface Props {
   report: AssignmentReport;
@@ -88,9 +71,9 @@ export default function AssignmentDashboard({ report }: Props) {
         <h6 className="text-orange-500">Student mark</h6>
         <div className="flex flex-col gap-2">
           <RankItem rank="S" studentWithMarks={studentWithMarkOver8} />
-          <RankItem rank="A" studentWithMarks={studentWithMarkOver8} />
-          <RankItem rank="B" studentWithMarks={studentWithMarkOver8} />
-          <RankItem rank="C" studentWithMarks={studentWithMarkOver8} />
+          <RankItem rank="A" studentWithMarks={studentWithMarkOver5} />
+          <RankItem rank="B" studentWithMarks={studentWithMarkOver2} />
+          <RankItem rank="C" studentWithMarks={studentWithMarkOver0} />
         </div>
       </div>
     </div>

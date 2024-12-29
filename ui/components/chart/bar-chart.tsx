@@ -29,6 +29,7 @@ interface Props {
   barColor?: string;
   type?: "number" | "percent";
   unit?: string;
+  maxValue?: number;
 }
 
 const HorizontalBarChart = ({
@@ -36,6 +37,7 @@ const HorizontalBarChart = ({
   barColor = "#1db7c1",
   type = "number",
   unit = "Value",
+  maxValue = 10,
 }: Props) => {
   // Calculate dynamic height
   const barHeight = 65; // Height of each bar, including gaps
@@ -60,7 +62,7 @@ const HorizontalBarChart = ({
         {/* X-Axis */}
         <XAxis
           type="number"
-          domain={type === "number" ? [0, 10] : [0, 100]}
+          domain={type === "number" ? [0, maxValue] : [0, 100]}
           axisLine={{ stroke: "#ccc" }}
           tick={{ fill: "#6b7280", fontSize: 12 }}
           tickFormatter={(tick) => (type === "number" ? tick : `${tick}%`)} // Thêm ký tự %

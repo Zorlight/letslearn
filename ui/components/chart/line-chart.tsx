@@ -56,7 +56,7 @@ const CustomLineChart = ({
         />
 
         {/* Tooltip */}
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<CustomTooltip color={lineColor} />} />
 
         {/* Line */}
         <Line

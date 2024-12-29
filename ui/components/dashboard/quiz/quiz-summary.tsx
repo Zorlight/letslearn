@@ -54,7 +54,7 @@ export default function QuizDashboardSummary({ report, quiz }: Props) {
             <SummaryItem title="Avg time spend" content={averageTimeSpend} />
             <SummaryItem
               title="Completion rate"
-              content={`${completionRate}%`}
+              content={`${completionRate * 100}%`}
             />
           </div>
         </div>

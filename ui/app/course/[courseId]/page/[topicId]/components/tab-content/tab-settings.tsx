@@ -1,9 +1,9 @@
-import { Page } from "@/models/page";
+import { PageTopic } from "@/models/topic";
 import SettingList from "../settings/setting-list";
 
 interface Props {
-  page: Page;
-  onPageChange?: (data: Page) => void;
+  page: PageTopic;
+  onPageChange?: (data: PageTopic) => void;
 }
 const TabSetting = ({ page, onPageChange }: Props) => {
   return (

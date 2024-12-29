@@ -6,30 +6,23 @@ import {
   FileTopic,
   LinkTopic,
   MeetingTopic,
+  PageTopic,
   QuizTopic,
   TopicType,
 } from "@/models/topic";
 import { nanoid } from "@reduxjs/toolkit";
 
 const today = new Date();
-const todayAt9 = new Date(
+const todayNextHour = new Date(
   today.getFullYear(),
   today.getMonth(),
   today.getDate(),
-  9,
+  today.getHours() + 1,
   0,
   0,
   0
 );
-const todayAt17 = new Date(
-  today.getFullYear(),
-  today.getMonth(),
-  today.getDate(),
-  14,
-  0,
-  0,
-  0
-);
+
 const todayAt20 = new Date(
   today.getFullYear(),
   today.getMonth(),
@@ -38,6 +31,16 @@ const todayAt20 = new Date(
   0,
   0,
   0
+);
+
+const endOfToday = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate(),
+  23,
+  59,
+  59,
+  999
 );
 
 const nextWeek = getDateAfterNDays(7, today);
@@ -57,8 +60,8 @@ export const initQuiz: QuizTopic = {
   title: "Quiz",
   type: TopicType.QUIZ,
   data: {
-    open: todayAt9.toISOString(),
-    close: todayAt17.toISOString(),
+    open: todayNextHour.toISOString(),
+    close: endOfToday.toISOString(),
     description:
       "This quiz contains a variety of questions to test your knowledge. At the end of the quiz you will be given your score with suggestions for improvement.",
     timeLimit: 1,
@@ -76,8 +79,8 @@ export const initAssignment: AssignmentTopic = {
   title: "Assignment",
   type: TopicType.ASSIGNMENT,
   data: {
-    open: todayAt9.toISOString(),
-    close: todayAt17.toISOString(),
+    open: todayNextHour.toISOString(),
+    close: endOfToday.toISOString(),
     description:
       "This quiz contains a variety of questions to test your knowledge. At the end of the quiz you will be given your score with suggestions for improvement.",
     remindToGrade: todayAt20.toISOString(),
@@ -115,5 +118,27 @@ export const initLink: LinkTopic = {
   data: {
     description: "",
     url: null,
+  },
+};
+
+const htmlString = `<p><b>Welcome to Our Platform!</b></p>
+<p>Here are some of the key features you can enjoy:</p>
+<ul>
+  <li><b>Interactive Courses:</b> Learn at your own pace with engaging video lectures and hands-on exercises.</li>
+  <li><b>Assignments & Quizzes:</b> Test your knowledge and track your progress with regular assessments.</li>
+  <li><b>Live Classes:</b> Participate in real-time discussions and get your questions answered by experts.</li>
+  <li><b>Community Support:</b> Connect with peers and mentors to enhance your learning experience.</li>
+</ul>
+<p><b>Start teaching today by create a beautiful page for your course!</b></p>
+`;
+
+export const initPage: PageTopic = {
+  id: nanoid(4), // generate temp id to use in client and it will be removed in service folder when saving to db
+  sectionId: nanoid(4),
+  title: "New Page",
+  type: TopicType.PAGE,
+  data: {
+    content: htmlString,
+    description: "",
   },
 };

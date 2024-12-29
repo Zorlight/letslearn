@@ -14,6 +14,7 @@ import { Tab } from "./components/static-data";
 import TabContent from "./components/tab-content/tab-content";
 import { getPageBreadcrumb } from "./components/utils";
 import Loading from "./loading";
+import { getTopic } from "@/services/topic";
 
 interface Props {
   params: {
@@ -25,7 +26,7 @@ export default function PagePage({ params }: Props) {
   const { courseId, topicId } = params;
   const dispatch = useAppDispatch();
   const [course, setCourse] = useState<Course>();
-  const [page, setPage] = useState<PageTopic>(fakePage);
+  const [page, setPage] = useState<PageTopic>();
   const [initTab, setInitTab] = useState<string>(Tab.PAGE);
   const handlePageChange = (data: PageTopic) => {
     setPage(data);
@@ -57,7 +58,7 @@ export default function PagePage({ params }: Props) {
   useEffect(() => {
     let storageTab = localStorage.getItem(`page-${topicId}`);
     if (storageTab) setInitTab(storageTab);
-    // getTopic(topicId, handleGetPageSuccess, handleFail);
+    getTopic(topicId, handleGetPageSuccess, handleFail);
   }, [topicId]);
 
   const tabs = Object.values(Tab);
@@ -70,7 +71,7 @@ export default function PagePage({ params }: Props) {
           <div className="w-full space-y-8">
             <div className="w-full px-5 flex flex-row gap-4">
               <Icon size={32} />
-              <h3>Astronomy conception</h3>
+              <h3>{page.title}</h3>
             </div>
             <TabList
               tabs={tabs}

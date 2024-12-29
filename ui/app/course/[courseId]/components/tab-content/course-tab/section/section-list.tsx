@@ -9,6 +9,7 @@ import {
   FileTopic,
   LinkTopic,
   MeetingTopic,
+  PageTopic,
   QuizTopic,
   Topic,
   TopicType,
@@ -21,6 +22,7 @@ import {
   initFileTopic,
   initLink,
   initMeeting,
+  initPage,
   initQuiz,
 } from "./static/init-topic";
 
@@ -55,10 +57,6 @@ const SectionList = ({
   useEffect(() => {
     if (initShowContent) setShowContent(initShowContent);
   }, []);
-
-  useEffect(() => {
-    console.log("show content ", showContent);
-  }, [showContent]);
 
   const toggleEdit = (id: string) => {
     if (sectionEditting.includes(id)) {
@@ -95,6 +93,7 @@ const SectionList = ({
     else if (type === TopicType.MEETING) handleCreateMeetingTopic(section);
     else if (type === TopicType.FILE) handleCreateFileTopic(section);
     else if (type === TopicType.LINK) handleCreateLinkTopic(section);
+    else if (type === TopicType.PAGE) handleCreatePageTopic(section);
   };
 
   const handleCreateQuizTopic = (section: Section) => {
@@ -152,6 +151,18 @@ const SectionList = ({
     const newSection: Section = {
       ...section,
       topics: [...section.topics, newLink],
+    };
+    onSectionChange(newSection);
+  };
+
+  const handleCreatePageTopic = (section: Section) => {
+    const newPage: PageTopic = {
+      ...initPage,
+      sectionId: section.id,
+    };
+    const newSection: Section = {
+      ...section,
+      topics: [...section.topics, newPage],
     };
     onSectionChange(newSection);
   };

@@ -1,14 +1,12 @@
 import EditorDisplay from "@/lib/tinymce/editor-display";
-import { getTextFromHtml } from "@/lib/utils";
-import { Page } from "@/models/page";
-import React from "react";
+import { PageTopic } from "@/models/topic";
 interface Props {
-  page: Page;
+  page: PageTopic;
 }
 export default function TabPage({ page }: Props) {
   return (
     <div>
-      <EditorDisplay htmlString={page.content}></EditorDisplay>
+      <EditorDisplay htmlString={page.data.content} />
     </div>
   );
 }

@@ -1,14 +1,14 @@
 import { useTab } from "@/hooks/useTab";
-import { Page } from "@/models/page";
 import { notFound } from "next/navigation";
 import { Tab } from "../static-data";
 import TabSetting from "./tab-settings";
 import TabPage from "./tab-page";
+import { PageTopic } from "@/models/topic";
 
 interface Props {
   className?: string;
-  page: Page;
-  onPageChange?: (data: Page) => void;
+  page: PageTopic;
+  onPageChange?: (data: PageTopic) => void;
 }
 export default function TabContent({ page, onPageChange, className }: Props) {
   const tabContext = useTab<string>();

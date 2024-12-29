@@ -9,17 +9,38 @@ import {
   sampleTopQuizMarkData,
 } from "./static-data";
 import HorizontalBarChart from "@/components/chart/bar-chart";
+import { StudentReport, TopicWithMark } from "@/models/report";
 
 interface Props {
-  report: any;
+  report: StudentReport;
 }
 export default function StudentDashboard({ report }: Props) {
+  const {
+    avgAssignmentMark,
+    avgQuizMark,
+    quizToDoCount,
+    assignmentToDoCount,
+    totalAssignmentCount,
+    totalQuizCount,
+    topTopicAssignment,
+    topTopicQuiz,
+  } = report;
+
+  const handleGetTopTopicData = (topTopic: TopicWithMark[]) => {
+    return topTopic.map((topic) => ({
+      name: topic.topic.title,
+      value: topic.mark || 0,
+    }));
+  };
   const getPlaceInCourseText = (num: number) => {
     if (num === 1) return "1st";
     if (num === 2) return "2nd";
     if (num === 3) return "3rd";
     return `${num}th`;
   };
+
+  const topTopicQuizData = handleGetTopTopicData(topTopicQuiz);
+  const topTopicAssignmentData = handleGetTopTopicData(topTopicAssignment);
   return (
     <div className="grid grid-cols-4 gap-5">
       <CompareCardValue
@@ -30,12 +51,12 @@ export default function StudentDashboard({ report }: Props) {
       <CompareCardValue
         className="col-span-1"
         title="Avg quiz mark"
-        value={<MarkWithRankLogo mark={7.9} max={10} />}
+        value={<MarkWithRankLogo mark={avgQuizMark} max={10} />}
       />
       <CompareCardValue
         className="col-span-1"
         title="Avg assignment mark"
-        value={<MarkWithRankLogo mark={80} max={100} />}
+        value={<MarkWithRankLogo mark={avgAssignmentMark} max={100} />}
       />
       <CompareCardValue
         className="col-span-1"
@@ -52,12 +73,12 @@ export default function StudentDashboard({ report }: Props) {
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-2 col-start-4"
         title="Total quiz"
-        value={5}
+        value={`${totalQuizCount} ${totalQuizCount > 1 ? "quizzes" : "quiz"}`}
       />
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-3 col-start-4"
-        title="Quiz to do"
-        value="2 quizzes"
+        title={quizToDoCount > 0 ? "Quiz to do" : "No quiz to do now"}
+        value={quizToDoCount !== 0 ? `${quizToDoCount} quizzes` : ""}
       />
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-4 col-start-4"
@@ -68,12 +89,20 @@ export default function StudentDashboard({ report }: Props) {
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-5 col-start-1"
         title="Total assignment"
-        value={5}
+        value={`${totalAssignmentCount} ${
+          totalAssignmentCount > 1 ? "assignments" : "assignment"
+        }`}
       />
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-6 col-start-1"
-        title="Assignment to do"
-        value="2 quizzes"
+        title={
+          assignmentToDoCount > 0
+            ? "Assignment to do"
+            : "No assignment to do now"
+        }
+        value={
+          assignmentToDoCount !== 0 ? `${assignmentToDoCount} assignments` : ""
+        }
       />
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-7 col-start-1"
@@ -92,15 +121,16 @@ export default function StudentDashboard({ report }: Props) {
       <CardDashboard className="col-span-2 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Top quiz mark</h6>
         <HorizontalBarChart
-          data={sampleTopQuizMarkData}
-          type="percent"
+          data={topTopicQuizData}
+          type="number"
           unit="Mark"
+          maxValue={10}
         />
       </CardDashboard>
       <CardDashboard className="col-span-2 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Top assignment mark</h6>
         <HorizontalBarChart
-          data={sampleTopAssignmentMarkData}
+          data={topTopicAssignmentData}
           type="number"
           unit="Mark"
           barColor="#7e22ce"

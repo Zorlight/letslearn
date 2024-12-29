@@ -47,13 +47,13 @@ export default function DashboardStudent({ course }: Props) {
   useEffect(() => {
     const startDateISO = range.startDate.toISOString();
     const endDateISO = range.endDate.toISOString();
-    // getStudentReport(
-    //   course.id,
-    //   startDateISO,
-    //   endDateISO,
-    //   handleGetReportSuccess,
-    //   handleGetReportFail
-    // );
+    getStudentReport(
+      course.id,
+      startDateISO,
+      endDateISO,
+      handleGetReportSuccess,
+      handleGetReportFail
+    );
   }, [course.id, range]);
 
   if (!report) return null;

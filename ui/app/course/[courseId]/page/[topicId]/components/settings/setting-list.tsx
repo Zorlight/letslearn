@@ -1,7 +1,7 @@
 "use client";
 import CollapsibleList from "@/app/course/[courseId]/components/collapsible/collapsible-list";
 import { Button } from "@/lib/shadcn/button";
-import { Page } from "@/models/page";
+import { PageTopic } from "@/models/topic";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -32,21 +32,21 @@ const schema: ZodType<PageSettingForm> = z.object({
 });
 
 interface Props {
-  page: Page;
-  onSubmitPageSetting?: (data: Page) => void;
+  page: PageTopic;
+  onSubmitPageSetting?: (data: PageTopic) => void;
 }
 const SettingList = ({ page, onSubmitPageSetting }: Props) => {
-  const handleGetGeneralSetting = (page: Page) => {
+  const handleGetGeneralSetting = (page: PageTopic) => {
     const generalSetting: GeneralSettingForm = {
-      name: page.name,
-      description: page.description,
+      name: page.title,
+      description: page.data.description,
     };
     return generalSetting;
   };
 
-  const handleGetContentSettings = (page: Page) => {
+  const handleGetContentSettings = (page: PageTopic) => {
     const contentSetting: ContentSettingForm = {
-      content: page.content,
+      content: page.data.content,
     };
     return contentSetting;
   };
@@ -77,17 +77,19 @@ const SettingList = ({ page, onSubmitPageSetting }: Props) => {
   };
 
   const handleGetPageToUpdate = (data: PageSettingForm) => {
-    const toUpdate: Page = {
+    const toUpdate: PageTopic = {
       ...page,
-      name: data.generalSettingForm.name,
-      description: data.generalSettingForm.description,
-      content: data.contentSettingForm.content,
+      title: data.generalSettingForm.name,
+      data: {
+        description: data.generalSettingForm.description,
+        content: data.contentSettingForm.content,
+      },
     };
 
     return toUpdate;
   };
 
-  const comparePage = (page1: Page, page2: Page) => {
+  const comparePage = (page1: PageTopic, page2: PageTopic) => {
     const json1 = JSON.stringify(page1);
     const json2 = JSON.stringify(page2);
     return json1 === json2;

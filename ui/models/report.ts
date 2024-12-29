@@ -90,3 +90,29 @@ export type AssignmentOverallReport = {
   fileTypeCount: Record<string, number>;
   singleAssignmentReports: AssignmentReport[];
 };
+
+export type TopicWithMark = {
+  topic: {
+    id: string;
+    sectionId: string;
+    title: string;
+    type: string;
+    data: any;
+    response: any;
+    course: any;
+  };
+  responseId: string | null;
+  mark: number | null;
+  doneTime: string | null;
+};
+
+export type StudentReport = {
+  totalQuizCount: number;
+  totalAssignmentCount: number;
+  quizToDoCount: number;
+  assignmentToDoCount: number;
+  avgQuizMark: number;
+  avgAssignmentMark: number;
+  topTopicQuiz: TopicWithMark[];
+  topTopicAssignment: TopicWithMark[];
+};

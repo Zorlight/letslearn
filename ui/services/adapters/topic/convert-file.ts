@@ -19,7 +19,7 @@ export const convertFileToRequestData = (file: FileTopic) => {
 };
 
 export const convertFileFromResponseData = (file: any): FileTopic => {
-  const parsedData = JSON.parse(file.data);
+  const parsedData = file.data ? JSON.parse(file.data) : null;
 
   return {
     ...file,

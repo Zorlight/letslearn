@@ -46,7 +46,12 @@ export default function AssignmentPage({ params }: Props) {
     //this useEffect is used for updating tab based on local storage
     let storageTab = localStorage.getItem(`assignment-${topicId}`);
     if (storageTab) setInitTab(storageTab);
-    getTopic(topicId, handleGetAssignmentSuccess, handleGetAssignmentFail);
+    getTopic(
+      courseId,
+      topicId,
+      handleGetAssignmentSuccess,
+      handleGetAssignmentFail
+    );
   }, [topicId]);
 
   useEffect(() => {

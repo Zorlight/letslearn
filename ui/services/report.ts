@@ -12,7 +12,7 @@ export const getQuizReport = (
   onSuccess: (data: QuizReport) => void,
   onFail: (err?: any) => void
 ) => {
-  const url = `/topic/${topicId}/quiz-report?courseId=${courseId}`;
+  const url = `/course/${courseId}/topic/${topicId}/quiz-report`;
   GET(url, onSuccess, onFail);
 };
 
@@ -33,7 +33,7 @@ export const getAssignmentReport = (
   onSuccess: (data: AssignmentReport) => void,
   onFail: (err?: any) => void
 ) => {
-  const url = `/topic/${topicId}/assignment-report?courseId=${courseId}`;
+  const url = `/course/${courseId}/topic/${topicId}/assignment-report`;
   GET(url, onSuccess, onFail);
 };
 

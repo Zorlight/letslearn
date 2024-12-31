@@ -1,8 +1,9 @@
-import {
-  AssignmentResponseData,
-  QuizResponseData,
-} from "@/models/student-response";
 import { AssignmentTopic, QuizTopic, Topic, TopicType } from "@/models/topic";
+
+const hasAttemptQuiz = (quiz: QuizTopic) => {
+  const { response } = quiz;
+  return response && response.length > 0;
+};
 
 // no due date -> not submitted and no due date
 const isNoDueDateAssignment = (assignment: AssignmentTopic) => {
@@ -17,13 +18,7 @@ const isNoDueDateAssignment = (assignment: AssignmentTopic) => {
 //      -> no due date -> has response
 const isDoneAssignment = (assignment: AssignmentTopic) => {
   const { response } = assignment;
-  if (!response) return false;
-
-  const { close } = assignment.data;
-  if (!close) return true;
-
-  const { submittedAt } = response.data as AssignmentResponseData;
-  return submittedAt && new Date(submittedAt) <= new Date(close);
+  return !!response;
 };
 
 // overdue -> has due date -> not submitted and due date is passed
@@ -37,15 +32,22 @@ const isOverDueAssignment = (assignment: AssignmentTopic) => {
   return new Date() > new Date(close);
 };
 
-// working -> has due date -> not submitted and behind the open and due date is not passed
+// working -> has open and due date -> not submitted and behind the open due date is not passed
+//         -> no open and has due date -> not submitted and due date is not passed
+//         -> has open and no due date -> not submitted and behind the open date
 const isWorkingInProgressAssignment = (assignment: AssignmentTopic) => {
-  const { close } = assignment.data;
-  if (!close) return false;
-
   const { response } = assignment;
   if (response) return false;
+  const { close, open } = assignment.data;
+  if (open && close) {
+    return new Date(open) < new Date() && new Date() < new Date(close);
+  } else if (!open && close) {
+    return new Date() < new Date(close);
+  } else if (open && !close) {
+    return new Date(open) < new Date();
+  }
 
-  return new Date() < new Date(close);
+  return true;
 };
 
 // no due date -> not submitted and no due date
@@ -58,8 +60,7 @@ const isNoDueDateTopic = (topic: Topic) => {
 
 // no due date -> not submitted and no due date
 const isNoDueDateQuiz = (quiz: QuizTopic) => {
-  const { response } = quiz;
-  if (response) return false;
+  if (hasAttemptQuiz(quiz)) return false;
 
   const { close } = quiz.data;
   return !close;
@@ -68,15 +69,7 @@ const isNoDueDateQuiz = (quiz: QuizTopic) => {
 // done -> has due date -> has response and submitted date is earlier than due date
 //      -> no due date -> has response
 const isDoneQuiz = (quiz: QuizTopic) => {
-  const { type } = quiz;
-  const { response } = quiz;
-  if (!response) return false;
-
-  const { close } = quiz.data;
-  if (!close) return true;
-
-  const { completedAt } = response.data as QuizResponseData;
-  return completedAt && new Date(completedAt) <= new Date(close);
+  return hasAttemptQuiz(quiz);
 };
 
 // overdue -> has due date -> not submitted and due date is passed
@@ -84,21 +77,27 @@ const isOverDueQuiz = (quiz: QuizTopic) => {
   const { close } = quiz.data;
   if (!close) return false;
 
-  const { response } = quiz;
-  if (response) return false;
+  if (hasAttemptQuiz(quiz)) return false;
 
   return new Date() > new Date(close);
 };
 
-// working -> has due date -> not submitted and due date is not passed
+// working -> has open and due date -> not submitted and behind the open due date is not passed
+//         -> no open and has due date -> not submitted and due date is not passed
+//         -> has open and no due date -> not submitted and behind the open date
 const isWorkingInProgressQuiz = (quiz: QuizTopic) => {
-  const { close } = quiz.data;
-  if (!close) return false;
+  if (hasAttemptQuiz(quiz)) return false;
 
-  const { response } = quiz;
-  if (response) return false;
+  const { close, open } = quiz.data;
+  if (open && close) {
+    return new Date(open) < new Date() && new Date() < new Date(close);
+  } else if (!open && close) {
+    return new Date() < new Date(close);
+  } else if (open && !close) {
+    return new Date(open) < new Date();
+  }
 
-  return new Date() < new Date(close);
+  return true;
 };
 
 const isDoneTopic = (topic: Topic) => {

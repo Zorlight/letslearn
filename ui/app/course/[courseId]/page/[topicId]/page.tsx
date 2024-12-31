@@ -58,7 +58,7 @@ export default function PagePage({ params }: Props) {
   useEffect(() => {
     let storageTab = localStorage.getItem(`page-${topicId}`);
     if (storageTab) setInitTab(storageTab);
-    getTopic(topicId, handleGetPageSuccess, handleFail);
+    getTopic(courseId, topicId, handleGetPageSuccess, handleFail);
   }, [topicId]);
 
   const tabs = Object.values(Tab);
@@ -82,7 +82,11 @@ export default function PagePage({ params }: Props) {
         </div>
         <div className="z-10 mt-[150px] flex w-full overflow-y-scroll default-scrollbar p-5">
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
-            <TabContent page={page} onPageChange={handlePageChange} />
+            <TabContent
+              courseId={courseId}
+              page={page}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </TabProvider>

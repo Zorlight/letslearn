@@ -82,7 +82,7 @@ export const initAssignment: AssignmentTopic = {
     open: todayNextHour.toISOString(),
     close: endOfToday.toISOString(),
     description:
-      "This quiz contains a variety of questions to test your knowledge. At the end of the quiz you will be given your score with suggestions for improvement.",
+      "This assignment is to test your understanding of the course material. Please submit your work before the deadline.",
     remindToGrade: todayAt20.toISOString(),
     maximumFile: 5,
     maximumFileSize: FileSizeOption["5MB"],

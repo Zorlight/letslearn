@@ -12,12 +12,12 @@ import ToReview from "./_components/to-review";
 
 const ToReviewPage = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.profile.value);
-  const [courses, setCourses] = useState<Course[]>([]);
+  const courses = useAppSelector((state) => state.courses.value);
 
   const handleGetTopicFromCourse = (courses: Course[]) => {
     let topics: Topic[] = [];
     courses.forEach((course) => {
+      console.log("course", course);
       topics.push(...handleGetQuizAndAssignmentFromCourse(course));
     });
     return topics;
@@ -32,35 +32,20 @@ const ToReviewPage = () => {
           topic.type === TopicType.QUIZ ||
           topic.type === TopicType.ASSIGNMENT
         ) {
-          topic.course = tempCourse;
-          topics.push(topic);
+          const tempTopic = { ...topic, course: tempCourse };
+          topics.push(tempTopic);
         }
       });
     });
     return topics;
   };
 
-  const handleGetTeacherCourseSuccess = (data: Course[]) => {
-    setCourses(data);
-  };
-  const handleGetTeacherCourseFail = (error: any) => {
-    toast.error(error || "Failed to get teacher courses");
-  };
-
-  useEffect(() => {
-    if (!user) return;
-
-    getTeacherCourses(
-      user,
-      handleGetTeacherCourseSuccess,
-      handleGetTeacherCourseFail
-    );
-  }, [user]);
   useEffect(() => {
     dispatch(setBreadcrumb(toReviewBreadcrumb));
   }, []);
 
   const topics = useMemo(() => {
+    if (!courses || courses.length === 0) return [];
     return handleGetTopicFromCourse(courses);
   }, [courses]);
 

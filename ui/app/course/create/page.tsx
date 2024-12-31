@@ -11,12 +11,14 @@ export default function CreateCoursePage() {
   };
 
   return (
-    <PageLayout className="w-full flex flex-col p-5">
-      <div
-        className="w-fit h-fit p-3 rounded-full bg-gray-100 cursor-pointer hover:bg-gray-200 duration-200"
-        onClick={handleBack}
-      >
-        <ArrowLeft size={20} />
+    <PageLayout className="w-full flex flex-col items-center p-5">
+      <div className="w-full">
+        <div
+          className="w-fit h-fit p-3 rounded-full bg-gray-100 cursor-pointer hover:bg-gray-200 duration-200"
+          onClick={handleBack}
+        >
+          <ArrowLeft size={20} />
+        </div>
       </div>
       <CreateCourseForm />
     </PageLayout>

@@ -4,10 +4,11 @@ import { updateTopic } from "@/services/topic";
 import { toast } from "react-toastify";
 
 interface Props {
+  courseId: string;
   assignment: AssignmentTopic;
   onAssignmentChange?: (data: AssignmentTopic) => void;
 }
-const TabSetting = ({ assignment, onAssignmentChange }: Props) => {
+const TabSetting = ({ courseId, assignment, onAssignmentChange }: Props) => {
   const handleUpdateTopicSuccess = (data: AssignmentTopic) => {
     if (onAssignmentChange) onAssignmentChange(data);
     toast.success("Update topic successfully");
@@ -16,8 +17,12 @@ const TabSetting = ({ assignment, onAssignmentChange }: Props) => {
     toast.error(error);
   };
   const handleSubmitAssignmentSetting = (data: AssignmentTopic) => {
-    console.log("data", data);
-    updateTopic(data, handleUpdateTopicSuccess, handleUpdateTopicFail);
+    updateTopic(
+      courseId,
+      data,
+      handleUpdateTopicSuccess,
+      handleUpdateTopicFail
+    );
   };
 
   return (

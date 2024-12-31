@@ -4,10 +4,11 @@ import { toast } from "react-toastify";
 import SettingForm from "../setting/setting-form";
 
 interface Props {
+  courseId: string;
   meeting: MeetingTopic;
   onMeetingChange?: (data: MeetingTopic) => void;
 }
-const TabSetting = ({ meeting, onMeetingChange }: Props) => {
+const TabSetting = ({ courseId, meeting, onMeetingChange }: Props) => {
   const handleUpdateTopicSuccess = (data: MeetingTopic) => {
     if (onMeetingChange) onMeetingChange(data);
     toast.success("Update successfully");
@@ -16,7 +17,12 @@ const TabSetting = ({ meeting, onMeetingChange }: Props) => {
     toast.error(error);
   };
   const handleSubmitMeetingSetting = (data: MeetingTopic) => {
-    updateTopic(data, handleUpdateTopicSuccess, handleUpdateTopicFail);
+    updateTopic(
+      courseId,
+      data,
+      handleUpdateTopicSuccess,
+      handleUpdateTopicFail
+    );
   };
 
   return (

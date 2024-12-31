@@ -34,6 +34,7 @@ const TabContent = ({
       if (user.role !== Role.TEACHER) return notFound();
       return (
         <TabSetting
+          courseId={courseId}
           assignment={assignment}
           onAssignmentChange={onAssignmentChange}
         />

@@ -82,7 +82,7 @@ export default function SubmissionView({
 
       {isClose && (
         <p className="font-bold text-assignment">
-          This assignment is closed. You can no longer submit your work.
+          This assignment is closed. You can no longer submit your assignment.
         </p>
       )}
 

@@ -5,7 +5,7 @@ export const defaultGeneralSetting: GeneralSettingForm = {
   name: "Introduction to Astronomy",
   category: "Academic",
   level: "Beginner",
-  price: 0,
+  price: 1,
 };
 export const defaultDangerZoneSetting: DangerZoneSettingForm = {
   isPublished: false,

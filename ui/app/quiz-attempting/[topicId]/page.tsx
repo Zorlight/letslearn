@@ -14,6 +14,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import QuizAttempting from "./components/quiz-attempting";
 import { defaultQuizResponse } from "./components/static-data";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { User } from "@/models/user";
+import { useSearchParams } from "next/navigation";
+import { getMyInfo } from "@/services/user";
+import { setProfile } from "@/redux/slices/profile";
 
 interface Props {
   params: {
@@ -22,12 +27,15 @@ interface Props {
 }
 export default function QuizAttemptingPage({ params }: Props) {
   const { topicId } = params;
-  const thisUser = fakeUser;
+  const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.profile.value);
   const [quiz, setQuiz] = useState<QuizTopic>();
   const [selectedQuizResponse, setSelectedQuizResponse] =
     useState<StudentResponse>(defaultQuizResponse);
+  const courseId = searchParams.get("courseId");
 
-  const getQuizResponse = (quiz: QuizTopic) => {
+  const getQuizResponse = (quiz: QuizTopic, user: User) => {
     const startTime = new Date().toISOString();
     const { questions } = quiz.data as QuizData;
 
@@ -43,7 +51,7 @@ export default function QuizAttemptingPage({ params }: Props) {
     };
     const quizResponse: StudentResponse = {
       id: nanoid(4),
-      student: thisUser,
+      student: user,
       topicId: quiz.id,
       data: quizResponseData,
     };
@@ -71,23 +79,34 @@ export default function QuizAttemptingPage({ params }: Props) {
     handleQuizResponseChange(newQuizResponse);
   };
 
-  const handleGetTopicSuccess = (data: QuizTopic) => {
+  const handleGetTopicSuccess = (user: User) => (data: QuizTopic) => {
     setQuiz(data);
-    const quizResponse = getQuizResponse(data);
+    const quizResponse = getQuizResponse(data, user);
     setSelectedQuizResponse(quizResponse);
   };
-  const handleGetTopicFail = (error: any) => {
+  const handleFail = (error: any) => {
     toast.error(error);
   };
-  useEffect(() => {
-    getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
-  }, [topicId]);
 
-  if (!quiz) return null;
+  const handleGetUserSuccess = (data: User) => {
+    dispatch(setProfile(data));
+  };
+
+  useEffect(() => {
+    if (!user || !courseId) return;
+    getTopic(courseId, topicId, handleGetTopicSuccess(user), handleFail);
+  }, [topicId, courseId, user]);
+
+  useEffect(() => {
+    if (!user) getMyInfo(handleGetUserSuccess, handleFail);
+  }, [user]);
+
+  if (!quiz || !courseId) return null;
 
   return (
     <div className="p-5">
       <QuizAttempting
+        courseId={courseId}
         quiz={quiz}
         quizResponse={selectedQuizResponse}
         onQuizResponseChange={handleQuizResponseChange}

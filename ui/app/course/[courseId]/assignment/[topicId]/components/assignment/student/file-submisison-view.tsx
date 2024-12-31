@@ -12,7 +12,7 @@ export default function FileSubmissionView({ onUploaded }: Props) {
         File submisisons
       </label>
       <div className="relative w-full flex flex-col">
-        <FileUpload onUploaded={onUploaded} />
+        <FileUpload onUploaded={onUploaded} showSuccessToast={false} />
       </div>
     </div>
   );

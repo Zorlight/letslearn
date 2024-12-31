@@ -5,6 +5,7 @@ import BreadcrumbReducer from "./slices/breadcrumb";
 import quizAttemptingReducer from "./slices/quiz-attempting";
 import CoursesReducer from "./slices/course";
 import SidebarReducer from "./slices/sidebar";
+import ChatReducer from "./slices/chat";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     quizAttempting: quizAttemptingReducer,
     courses: CoursesReducer,
     sidebar: SidebarReducer,
+    chat: ChatReducer,
   },
 });
 

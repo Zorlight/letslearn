@@ -26,6 +26,7 @@ import { Role } from "@/models/user";
 
 interface Props {
   className?: string;
+  courseId: string;
   quizResponse: StudentResponse;
   quiz: QuizTopic;
   onQuizResponseChange?: (quizResponse: StudentResponse) => void;
@@ -33,6 +34,7 @@ interface Props {
 }
 const QuizAttempting = ({
   className,
+  courseId,
   quizResponse,
   quiz,
   onQuizResponseChange,
@@ -115,7 +117,9 @@ const QuizAttempting = ({
 
   const handleCreateQuizResponseSuccess = (data: any) => {
     toast.success("Your quiz result has been saved successfully");
-    router.replace(`/quiz-attempting/${quiz.id}/review/${data.id}`);
+    router.replace(
+      `/quiz-attempting/${quiz.id}/review/${data.id}?courseId=${courseId}`
+    );
   };
   const handleCreateQuizResponseFail = (error: any) => {
     toast.error(error);
@@ -124,7 +128,9 @@ const QuizAttempting = ({
     quizResponse: StudentResponse
   ) => {
     dispatch(savePreviewQuizResponse(quizResponse));
-    router.replace(`/quiz-attempting/${quiz.id}/review/${quizResponse.id}`);
+    router.replace(
+      `/quiz-attempting/${quiz.id}/review/${quizResponse.id}?courseId=${courseId}`
+    );
   };
 
   const saveQuizResponse = (quizResponse: StudentResponse) => {

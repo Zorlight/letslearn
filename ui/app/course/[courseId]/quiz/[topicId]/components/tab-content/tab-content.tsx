@@ -97,7 +97,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
     //can not use this updatedQuiz because it got error
     if (onQuizChange) {
       //reload quiz
-      getTopic(quiz.id, onQuizChange, (error: any) => {
+      getTopic(courseId, quiz.id, onQuizChange, (error: any) => {
         toast.error(error);
       });
     }
@@ -108,7 +108,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
   };
 
   const handleUpdateQuizQuestions = () => {
-    updateTopic(quiz, handleUpdateQuizSuccess, handleUpdateQuizFail);
+    updateTopic(courseId, quiz, handleUpdateQuizSuccess, handleUpdateQuizFail);
   };
 
   const handleGetQuizResponsesSuccess = (responses: StudentResponse[]) => {
@@ -122,6 +122,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
     case Tab.QUIZ:
       return (
         <TabQuiz
+          courseId={courseId}
           quiz={quiz}
           quizResponses={quizResponses}
           onQuizResponsesChange={setQuizResponses}
@@ -130,7 +131,13 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
       );
     case Tab.SETTINGS:
       if (user?.role !== Role.TEACHER) return notFound();
-      return <TabSetting quiz={quiz} onQuizChange={onQuizChange} />;
+      return (
+        <TabSetting
+          courseId={courseId}
+          quiz={quiz}
+          onQuizChange={onQuizChange}
+        />
+      );
     case Tab.QUESTION:
       if (user?.role !== Role.TEACHER) return notFound();
       return (

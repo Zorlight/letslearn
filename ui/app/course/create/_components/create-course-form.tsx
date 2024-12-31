@@ -24,7 +24,7 @@ export type CreateCourseFormData = {
 
 const schema: ZodType<CreateCourseFormData> = z.object({
   title: z.string().min(1, "Course name muse be at least 1 character"),
-  price: z.number().min(0),
+  price: z.number(),
   category: z.string(),
   level: z.string(),
   isPublished: z.boolean(),
@@ -32,7 +32,7 @@ const schema: ZodType<CreateCourseFormData> = z.object({
 
 const initCourseValue = {
   title: "",
-  price: 0,
+  price: 1,
   category: "Academic",
   level: "Beginner",
   isPublished: false,
@@ -85,96 +85,78 @@ export default function CreateCourseForm() {
   const nameHtmlFor = nanoid();
   const categoryHtmlFor = nanoid();
   const levelHtmlFor = nanoid();
-  const priceHtmlFor = nanoid();
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="w-full flex flex-col items-center"
+      className="w-full max-w-xl mx-auto flex flex-col gap-2"
     >
-      <div className="space-y-2">
-        <h4>Create your course</h4>
-        <DataRow
-          label="Name"
-          htmlFor={nameHtmlFor}
-          desc="What will you teach in this course?"
-          errorMessage={error ? error.message : undefined}
-        >
-          <Input
-            id={nameHtmlFor}
-            placeholder="e.g. Introduce to Astronomy"
-            defaultValue={title}
-            {...register("title")}
-            onChange={handleInputChange("title")}
-          />
-        </DataRow>
-        <DataRow
-          label="Category"
-          htmlFor={categoryHtmlFor}
-          desc="What subject area best describes your course?"
-        >
-          <Input
-            id={categoryHtmlFor}
-            placeholder="e.g. Astronomy"
-            defaultValue={category}
-            {...register("category")}
-            onChange={handleInputChange("category")}
-          />
-        </DataRow>
-        <DataRow
-          label="Level"
-          htmlFor={levelHtmlFor}
-          desc="What level is your course?"
-        >
-          <Input
-            id={levelHtmlFor}
-            placeholder="e.g. Beginner"
-            defaultValue={level}
-            {...register("level")}
-            onChange={handleInputChange("level")}
-          />
-        </DataRow>
-        <DataRow
-          label="Price"
-          htmlFor={priceHtmlFor}
-          desc="Set a price for your course or make it free by setting the price to 0."
-        >
-          <Input
-            id="price"
-            aria-label="price"
-            placeholder="e.g. 1.99"
-            type="number"
-            step={0.01}
-            min={0}
-            max={999999999}
-            {...register("price", { valueAsNumber: true })}
-          />
-        </DataRow>
-        <DataRow
-          label="Visibility"
-          desc={
-            isPublished ? visibilityDescriptions[1] : visibilityDescriptions[0]
-          }
-        >
-          <Combobox
-            options={visibilityOptions}
-            initialValue={visibilityOptions[0]}
-            popoverClassName="w-[200px] text-gray-800"
-            showSearch={false}
-            onChange={handleComboboxChange}
-          >
-            <Button
-              variant="outline"
-              className="w-[200px] justify-between text-gray-800 border border-gray-300 hover:border-gray-400 hover:bg-gray-50 data-[state=open]:border-blue-500"
-            >
-              {isPublished ? visibilityOptions[1] : visibilityOptions[0]}
-              <ChevronDown className="text-gray-500" />
-            </Button>
-          </Combobox>
-        </DataRow>
+      <h4>Create your course</h4>
+      <DataRow
+        label="Name"
+        htmlFor={nameHtmlFor}
+        desc="What will you teach in this course?"
+        errorMessage={error ? error.message : undefined}
+      >
+        <Input
+          id={nameHtmlFor}
+          placeholder="e.g. Introduce to Astronomy"
+          defaultValue={title}
+          {...register("title")}
+          onChange={handleInputChange("title")}
+        />
+      </DataRow>
+      <DataRow
+        label="Category"
+        htmlFor={categoryHtmlFor}
+        desc="What subject area best describes your course?"
+      >
+        <Input
+          id={categoryHtmlFor}
+          placeholder="e.g. Astronomy"
+          defaultValue={category}
+          {...register("category")}
+          onChange={handleInputChange("category")}
+        />
+      </DataRow>
+      <DataRow
+        label="Level"
+        htmlFor={levelHtmlFor}
+        desc="What level is your course?"
+      >
+        <Input
+          id={levelHtmlFor}
+          placeholder="e.g. Beginner"
+          defaultValue={level}
+          {...register("level")}
+          onChange={handleInputChange("level")}
+        />
+      </DataRow>
 
-        <div className="flex justify-center">
-          <Button type="submit">Save</Button>
-        </div>
+      <DataRow
+        label="Visibility"
+        desc={
+          isPublished ? visibilityDescriptions[1] : visibilityDescriptions[0]
+        }
+      >
+        <Combobox
+          options={visibilityOptions}
+          initialValue={visibilityOptions[0]}
+          popoverClassName="w-[200px] text-gray-800"
+          showSearch={false}
+          onChange={handleComboboxChange}
+        >
+          <Button
+            variant="outline"
+            className="w-[200px] justify-between text-gray-800 border border-gray-300 hover:border-gray-400 hover:bg-gray-50 data-[state=open]:border-blue-500"
+          >
+            {isPublished ? visibilityOptions[1] : visibilityOptions[0]}
+            <ChevronDown className="text-gray-500" />
+          </Button>
+        </Combobox>
+      </DataRow>
+
+      <div className="flex justify-center">
+        <Button type="submit">Save</Button>
       </div>
     </form>
   );

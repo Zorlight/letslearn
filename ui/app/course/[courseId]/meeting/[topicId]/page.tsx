@@ -44,7 +44,7 @@ export default function MeetingPage({ params }: Props) {
     let storageTab = localStorage.getItem(topicId);
     if (storageTab) setInitTab(storageTab);
 
-    getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
+    getTopic(courseId, topicId, handleGetTopicSuccess, handleGetTopicFail);
   }, [topicId]);
 
   const handleTabSelected = (tab: string) => {
@@ -87,7 +87,11 @@ export default function MeetingPage({ params }: Props) {
         </div>
         <div className="z-10 mt-[150px] flex w-full default-scrollbar p-5">
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
-            <TabContent meeting={meeting} onMeetingChange={setMeeting} />
+            <TabContent
+              courseId={courseId}
+              meeting={meeting}
+              onMeetingChange={setMeeting}
+            />
           </div>
         </div>
       </TabProvider>

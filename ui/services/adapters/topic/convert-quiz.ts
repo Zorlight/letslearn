@@ -4,6 +4,7 @@ import { convertChoiceQuestionToRequestData } from "../question/choice-question"
 import { convertShortAnswerQuestionToRequestData } from "../question/short-answer-question";
 import { convertTrueFalseQuestionToRequestData } from "../question/true-false-question";
 import { convertQuestionFromResponseData } from "../question/question";
+import { convertQuizResponseFromResponseData } from "../student-response/quiz-response";
 
 const removeTempIdInQuestions = (questions: Question[]) => {
   return questions.map((question) => {
@@ -42,13 +43,16 @@ export const convertQuizFromResponseData = (quiz: any): QuizTopic => {
   const convertedQuestions = parsedData.questions.map((q: any) =>
     convertQuestionFromResponseData(q)
   );
-
+  const parsedResponse = quiz.response ? JSON.parse(quiz.response) : undefined;
   let res = {
     ...quiz,
     data: {
       ...parsedData,
       questions: convertedQuestions,
     },
+    response: parsedResponse
+      ? parsedResponse.map(convertQuizResponseFromResponseData)
+      : undefined,
   };
 
   return res as QuizTopic;

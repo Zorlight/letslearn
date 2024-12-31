@@ -18,6 +18,7 @@ import { getCourseWork } from "./course";
 import { convertAssignmentFromResponseData } from "./adapters/topic/convert-assignment";
 
 export const getTopic = (
+  courseId: string,
   id: string,
   onSuccess: (data: any) => void,
   onFail: (err?: any) => void
@@ -27,10 +28,11 @@ export const getTopic = (
     const res = convertTopicFromResponseData(data);
     onSuccess(res);
   };
-  GET(`/topic/${id}`, handleSuccess, onFail);
+  GET(`/course/${courseId}/topic/${id}`, handleSuccess, onFail);
 };
 
 export const updateTopic = (
+  courseId: string,
   data: Topic,
   onSuccess: (data: any) => void,
   onFail: (err?: any) => void
@@ -41,7 +43,7 @@ export const updateTopic = (
     const res = convertTopicFromResponseData(data);
     onSuccess(res);
   };
-  PUT(`/topic/${id}`, reqData, handleSuccess, onFail);
+  PUT(`/course/${courseId}/topic/${id}`, reqData, handleSuccess, onFail);
 };
 
 export const getAllAssignmentOfUser = (

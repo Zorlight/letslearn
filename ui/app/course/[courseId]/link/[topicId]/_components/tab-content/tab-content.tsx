@@ -8,12 +8,13 @@ import TabFile from "./tab-link";
 import TabSetting from "./tab-setting";
 
 interface Props {
+  courseId: string;
   topic: LinkTopic;
   user: User;
   onTopicChange?: (topic: LinkTopic) => void;
 }
 
-const TabContent = ({ user, topic, onTopicChange }: Props) => {
+const TabContent = ({ courseId, user, topic, onTopicChange }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
 
@@ -21,7 +22,13 @@ const TabContent = ({ user, topic, onTopicChange }: Props) => {
     case Tab.LINK:
       return <TabFile topic={topic} className="h-full" />;
     case Tab.SETTINGS:
-      return <TabSetting topic={topic} onTopicChange={onTopicChange} />;
+      return (
+        <TabSetting
+          courseId={courseId}
+          topic={topic}
+          onTopicChange={onTopicChange}
+        />
+      );
 
     default:
       return notFound();

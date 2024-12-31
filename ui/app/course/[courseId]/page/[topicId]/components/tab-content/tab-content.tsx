@@ -8,9 +8,15 @@ import { PageTopic } from "@/models/topic";
 interface Props {
   className?: string;
   page: PageTopic;
+  courseId: string;
   onPageChange?: (data: PageTopic) => void;
 }
-export default function TabContent({ page, onPageChange, className }: Props) {
+export default function TabContent({
+  courseId,
+  page,
+  onPageChange,
+  className,
+}: Props) {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
 
@@ -24,7 +30,11 @@ export default function TabContent({ page, onPageChange, className }: Props) {
     case Tab.SETTINGS:
       return (
         <div className={className}>
-          <TabSetting page={page} onPageChange={onPageChange} />
+          <TabSetting
+            courseId={courseId}
+            page={page}
+            onPageChange={onPageChange}
+          />
         </div>
       );
     default:

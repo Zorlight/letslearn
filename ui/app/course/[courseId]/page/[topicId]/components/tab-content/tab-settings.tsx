@@ -4,10 +4,11 @@ import { updateTopic } from "@/services/topic";
 import { toast } from "react-toastify";
 
 interface Props {
+  courseId: string;
   page: PageTopic;
   onPageChange?: (data: PageTopic) => void;
 }
-const TabSetting = ({ page, onPageChange }: Props) => {
+const TabSetting = ({ courseId, page, onPageChange }: Props) => {
   const handleUpdateSuccess = (data: PageTopic) => {
     toast.success("Update successfully");
     if (onPageChange) onPageChange(data);
@@ -16,7 +17,7 @@ const TabSetting = ({ page, onPageChange }: Props) => {
     toast.error(error);
   };
   const handleUpdatePageSetting = (data: PageTopic) => {
-    updateTopic(data, handleUpdateSuccess, handleFail);
+    updateTopic(courseId, data, handleUpdateSuccess, handleFail);
   };
   return (
     <div>

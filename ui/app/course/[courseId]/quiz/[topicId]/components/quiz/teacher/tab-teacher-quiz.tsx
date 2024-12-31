@@ -14,9 +14,10 @@ import { toast } from "react-toastify";
 
 interface Props {
   quiz: QuizTopic;
+  courseId: string;
   className?: string;
 }
-const TabTeacherQuiz = ({ className, quiz }: Props) => {
+const TabTeacherQuiz = ({ className, quiz, courseId }: Props) => {
   const router = useRouter();
   const { data } = quiz;
   const {
@@ -35,7 +36,7 @@ const TabTeacherQuiz = ({ className, quiz }: Props) => {
       toast.info("This quiz has no questions yet.");
       return;
     }
-    router.push(`/quiz-attempting/${quiz.id}`);
+    router.push(`/quiz-attempting/${quiz.id}?courseId=${courseId}`);
   };
 
   const timeLimitString = useMemo(() => {

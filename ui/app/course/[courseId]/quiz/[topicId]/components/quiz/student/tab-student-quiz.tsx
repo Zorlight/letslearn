@@ -28,6 +28,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { toast } from "react-toastify";
 
 interface Props {
+  courseId: string;
   quiz: QuizTopic;
   quizResponses: StudentResponse[];
   onQuizResponsesChange?: (quizResponses: StudentResponse[]) => void;
@@ -35,6 +36,7 @@ interface Props {
 }
 const TabStudentQuiz = ({
   className,
+  courseId,
   quiz,
   quizResponses,
   onQuizResponsesChange,
@@ -58,7 +60,7 @@ const TabStudentQuiz = ({
       toast.info("This quiz has no questions yet.");
       return;
     }
-    router.push(`/quiz-attempting/${quiz.id}`);
+    router.push(`/quiz-attempting/${quiz.id}?courseId=${courseId}`);
   };
 
   const handleReviewQuiz = (index: number) => {

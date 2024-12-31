@@ -49,7 +49,7 @@ const SettingList = ({ course, onSubmitCourseSetting, isLoading }: Props) => {
       name: title,
       category,
       level,
-      price,
+      price: price || 1,
     };
     return generalSetting;
   };
@@ -91,14 +91,13 @@ const SettingList = ({ course, onSubmitCourseSetting, isLoading }: Props) => {
 
   const handleGetCourseToUpdate = (data: CourseSettingForm) => {
     const { generalSettingForm, dangerZoneSettingForm } = data;
-    const { name: title, category, level, price } = generalSettingForm;
+    const { name: title, category, level } = generalSettingForm;
     const { isPublished } = dangerZoneSettingForm;
     const courseToUpdate: Course = {
       ...course,
       title,
       category,
       level,
-      price,
       isPublished,
     };
     return courseToUpdate;

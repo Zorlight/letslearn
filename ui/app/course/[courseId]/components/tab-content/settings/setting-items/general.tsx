@@ -22,7 +22,7 @@ const GeneralSetting = ({ formData, onChange }: GeneralSettingProps) => {
   const {
     errors: { generalSettingForm: errors },
   } = form.formState;
-  const { name, category, level, price } = formData;
+  const { name, category, level } = formData;
 
   const handleSettingChange = (data: GeneralSettingForm) => {
     if (onChange) onChange(data);
@@ -34,7 +34,6 @@ const GeneralSetting = ({ formData, onChange }: GeneralSettingProps) => {
   const nameHtmlFor = nanoid();
   const categoryHtmlFor = nanoid();
   const levelHtmlFor = nanoid();
-  const priceHtmlFor = nanoid();
   return (
     <div className="w-full flex flex-col p-4 gap-8">
       <RowSetting title="Name" htmlFor={nameHtmlFor}>
@@ -76,22 +75,6 @@ const GeneralSetting = ({ formData, onChange }: GeneralSettingProps) => {
         {errors?.level && (
           <p className="absolute top-full text-red-500 text-xs font-semibold">
             {errors.level.message}
-          </p>
-        )}
-      </RowSetting>
-      <RowSetting title="Price" htmlFor={priceHtmlFor}>
-        <Input
-          id={priceHtmlFor}
-          placeholder="e.g. 1.99"
-          type="number"
-          step={0.01}
-          min={0}
-          max={999999999}
-          {...register("generalSettingForm.price", { valueAsNumber: true })}
-        />
-        {errors?.price && (
-          <p className="absolute top-full text-red-500 text-xs font-semibold">
-            {errors.price.message}
           </p>
         )}
       </RowSetting>

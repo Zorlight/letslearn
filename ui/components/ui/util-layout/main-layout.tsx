@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setSidebarOpen } from "@/redux/slices/sidebar";
 import { useEffect } from "react";
+import ChatBox from "../chat/chat-box";
 interface Props {
   children: React.ReactNode;
 }
@@ -44,6 +45,7 @@ export default function MainLayout({ children }: Props) {
       >
         {children}
       </div>
+      <ChatBox />
     </div>
   );
 }

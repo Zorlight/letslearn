@@ -47,7 +47,7 @@ export default function QuizPage({ params }: Props) {
     let storageTab = localStorage.getItem(`quiz-${topicId}`);
     if (storageTab) setInitTab(storageTab);
 
-    getTopic(topicId, handleGetTopicSuccess, handleGetTopicFail);
+    getTopic(courseId, topicId, handleGetTopicSuccess, handleGetTopicFail);
   }, [topicId]);
 
   const handleQuizChange = (data: QuizTopic) => {

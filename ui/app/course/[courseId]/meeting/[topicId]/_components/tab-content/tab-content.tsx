@@ -7,11 +7,17 @@ import TabDetail from "./tab-detail";
 
 interface Props {
   className?: string;
+  courseId: string;
   meeting: MeetingTopic;
   onMeetingChange?: (meeting: MeetingTopic) => void;
 }
 
-const TabContent = ({ className, meeting, onMeetingChange }: Props) => {
+const TabContent = ({
+  courseId,
+  className,
+  meeting,
+  onMeetingChange,
+}: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
 
@@ -19,7 +25,13 @@ const TabContent = ({ className, meeting, onMeetingChange }: Props) => {
     case Tab.DETAIL:
       return <TabDetail meeting={meeting} />;
     case Tab.SETTINGS:
-      return <TabSetting meeting={meeting} onMeetingChange={onMeetingChange} />;
+      return (
+        <TabSetting
+          courseId={courseId}
+          meeting={meeting}
+          onMeetingChange={onMeetingChange}
+        />
+      );
     default:
       return notFound();
   }

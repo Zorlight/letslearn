@@ -59,9 +59,7 @@ export default function TabStudentAssignment({
     );
   };
 
-  const handleRemoveUploadedSuccess = (data: any) => {
-    toast.success("Removed successfully");
-  };
+  const handleRemoveUploadedSuccess = (data: any) => {};
   const handleRemoveUploadedFail = (err: any) => {
     toast.error(err);
   };

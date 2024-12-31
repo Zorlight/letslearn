@@ -110,14 +110,7 @@ const SettingList = ({ topic, onSubmitFileSetting }: Props) => {
           />
         </CollapsibleList>
         <div className="w-full flex flex-row justify-center">
-          <Button
-            type="submit"
-            disabled={!isSettingChange}
-            onClick={() => {
-              console.log("error", errors);
-            }}
-            variant="default"
-          >
+          <Button type="submit" disabled={!isSettingChange} variant="default">
             Save
           </Button>
         </div>

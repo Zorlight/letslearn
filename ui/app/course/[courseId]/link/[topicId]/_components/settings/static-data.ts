@@ -10,6 +10,6 @@ export const defaultCloudinaryFile = {
 
 export const defaultGeneralSetting: GeneralSettingForm = {
   title: "Assignment",
-  file: defaultCloudinaryFile,
+  url: "",
   description: "",
 };

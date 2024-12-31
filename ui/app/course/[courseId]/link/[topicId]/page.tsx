@@ -46,7 +46,12 @@ export default function LinkPage({ params }: Props) {
   useEffect(() => {
     let storageTab = localStorage.getItem(`link-${topicId}`);
     if (storageTab) setInitTab(storageTab);
-    getTopic(topicId, handleGetLinkTopicSuccess, handleGetLinkTopicFail);
+    getTopic(
+      courseId,
+      topicId,
+      handleGetLinkTopicSuccess,
+      handleGetLinkTopicFail
+    );
   }, [topicId]);
 
   useEffect(() => {

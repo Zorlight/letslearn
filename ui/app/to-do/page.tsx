@@ -29,10 +29,12 @@ const ToDoPage = () => {
     localStorage.setItem("to-do", tab);
   };
   const handleGetAllAssignmentOfUserSuccess = (data: AssignmentTopic[]) => {
+    console.log("assignment of user", data);
     setAssignmentsOfUser(data);
   };
 
   const handleGetAllQuizOfUserSuccess = (data: QuizTopic[]) => {
+    console.log("quiz of user", data);
     setQuizzesOfUser(data);
   };
 

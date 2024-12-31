@@ -32,18 +32,15 @@ export default function GeneralSetting({
   const handleInputChange = (key: keyof GeneralSettingForm, data: string) => {
     handleSettingChange({ ...formData, [key]: data });
   };
-  const handleEditorChange = (key: keyof GeneralSettingForm, data: any) => {
-    handleSettingChange({ ...formData, [key]: data });
-  };
 
   const generalSettingNameHtmlfor = nanoid();
+  const generalSettingDescriptionHtmlfor = nanoid();
 
   return (
     <div className="w-full flex flex-col p-4 gap-8">
       <RowSetting title="Assigment name" htmlFor={generalSettingNameHtmlfor}>
         <Input
           id={generalSettingNameHtmlfor}
-          className="flex-1 focus:outline-none"
           placeholder="Enter a name"
           defaultValue={title !== "" ? title : undefined}
           {...register("generalSettingForm.title")}
@@ -55,10 +52,16 @@ export default function GeneralSetting({
           </p>
         )}
       </RowSetting>
-      <RowSetting title="Description">
-        <TinyEditor
-          onChange={(data) => handleEditorChange("description", data)}
-          initValue={description}
+      <RowSetting
+        title="Description"
+        htmlFor={generalSettingDescriptionHtmlfor}
+      >
+        <Input
+          id={generalSettingDescriptionHtmlfor}
+          placeholder="Description here"
+          defaultValue={description !== "" ? description : undefined}
+          {...register("generalSettingForm.description")}
+          onChange={(e) => handleInputChange("description", e.target.value)}
         />
       </RowSetting>
     </div>

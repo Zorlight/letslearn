@@ -35,7 +35,7 @@ export enum TopicType {
 export interface QuizTopic extends BaseTopic {
   type: TopicType.QUIZ;
   data: QuizData;
-  response?: StudentResponse;
+  response?: StudentResponse[];
 }
 export interface AssignmentTopic extends BaseTopic {
   type: TopicType.ASSIGNMENT;

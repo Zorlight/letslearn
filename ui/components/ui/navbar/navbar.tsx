@@ -26,6 +26,7 @@ import {
 } from "@/lib/shadcn/dropdown-menu";
 import { logout } from "@/services/auth";
 import NavbarSkeleton from "./navbar-skeleton";
+import Chat from "../chat/chat";
 interface Props {
   className?: string;
   isSidebarOpen?: boolean;
@@ -113,13 +114,12 @@ export default function Navbar({
         <IconButton>
           <Bell size={20} />
         </IconButton>
-        <IconButton>
-          <MessageSquare size={20} />
-        </IconButton>
+        <Chat user={user} />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div>
-              <Avatar className="hover:scale-110" src={user?.image} />
+              <Avatar className="hover:scale-110" src={user?.avatar} />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-white font-sans z-50">

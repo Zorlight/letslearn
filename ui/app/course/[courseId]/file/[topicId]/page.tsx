@@ -46,7 +46,12 @@ export default function FilePage({ params }: Props) {
   useEffect(() => {
     let storageTab = localStorage.getItem(`file-${topicId}`);
     if (storageTab) setInitTab(storageTab);
-    getTopic(topicId, handleGetFileTopicSuccess, handleGetFileTopicFail);
+    getTopic(
+      courseId,
+      topicId,
+      handleGetFileTopicSuccess,
+      handleGetFileTopicFail
+    );
   }, [topicId]);
 
   useEffect(() => {

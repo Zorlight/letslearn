@@ -57,7 +57,6 @@ interface Props {
   onSubmitQuestion?: (data: Question) => void;
 }
 const ShortAnswerQuestionUI = ({ question, onSubmitQuestion }: Props) => {
-  const thisUser = fakeUser;
   const handleGetGeneralSetting = (question: Question) => {
     const { questionName, questionText, status, defaultMark } = question;
     const generalSetting: ShortAnswerQuestionGeneralForm = {

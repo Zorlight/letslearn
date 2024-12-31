@@ -34,6 +34,7 @@ const GeneralSetting = ({ formData, onChange }: GeneralSettingProps) => {
   };
 
   const titleHtmlFor = nanoid();
+  const descriptionHtmlFor = nanoid();
   return (
     <div className="w-full flex flex-col p-4 gap-8">
       <RowSetting title="Quiz title" htmlFor={titleHtmlFor}>
@@ -50,10 +51,13 @@ const GeneralSetting = ({ formData, onChange }: GeneralSettingProps) => {
           </p>
         )}
       </RowSetting>
-      <RowSetting title="Description">
-        <TinyEditor
-          onChange={(data) => handleEditorChange("description", data)}
-          initValue={description}
+      <RowSetting title="Description" htmlFor={descriptionHtmlFor}>
+        <Input
+          id={descriptionHtmlFor}
+          placeholder="Description here"
+          defaultValue={description !== "" ? description : undefined}
+          {...register("generalSettingForm.description")}
+          onChange={(e) => handleInputChange("description", e.target.value)}
         />
       </RowSetting>
     </div>

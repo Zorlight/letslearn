@@ -12,7 +12,7 @@ export default function ReviewList({
   closedTopics,
   noDueDateTopics,
 }: Props) {
-  const titles = ["Work in progress", "Overdue", "No due date"];
+  const titles = ["Work in progress", "Closed", "No due date"];
   const itemsPerGroup = [
     workingInProgressTopics.length,
     closedTopics.length,

@@ -18,6 +18,7 @@ interface Props {
   className?: ClassValue;
   config?: FileUploadConfig;
   description?: string;
+  showSuccessToast?: boolean;
 }
 
 export default function FileUpload({
@@ -25,6 +26,7 @@ export default function FileUpload({
   className,
   config = defaultConfig,
   description,
+  showSuccessToast = true,
 }: Props) {
   const { progress, start, finish, isloading, error } = useProgress();
   const [backendFilesToStore, setBackendFilesToStore] = useState<
@@ -61,7 +63,7 @@ export default function FileUpload({
   };
 
   const handleUploadSuccess = (res: any) => {
-    toast.success(res.message);
+    if (showSuccessToast) toast.success(res.message);
 
     //update url in backendFilesToStore
     const uploadedFiles = [...backendFilesToStore];

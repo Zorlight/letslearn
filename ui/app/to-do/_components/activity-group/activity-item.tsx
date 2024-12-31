@@ -14,6 +14,7 @@ import { QuizData } from "@/models/quiz";
 import {
   AssignmentResponseData,
   QuizResponseData,
+  StudentResponse,
 } from "@/models/student-response";
 import { useRouter } from "next/navigation";
 
@@ -31,8 +32,9 @@ export default function ActivityItem({ topic }: Props) {
     const quizTopic = topic as QuizTopic;
     const { response } = quizTopic;
     due = quizTopic.data.close;
-    if (response) {
-      const { completedAt } = response.data as QuizResponseData;
+    if (response && response.length > 0) {
+      const firstResponse = response[response.length - 1] as StudentResponse;
+      const { completedAt } = firstResponse.data as QuizResponseData;
       submittedAt = completedAt;
     }
   } else if (type === TopicType.ASSIGNMENT) {

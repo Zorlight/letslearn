@@ -9,6 +9,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { Role } from "@/models/user";
 import { getTopic } from "@/services/topic";
 import { QuizTopic } from "@/models/topic";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   params: {
@@ -23,6 +24,8 @@ export default function QuizReviewPage({ params }: Props) {
   const [quiz, setQuiz] = useState<QuizTopic>();
   const [selectedQuizResponse, setSelectedQuizResponse] =
     useState<StudentResponse>(defaultQuizResponse);
+  const searchParams = useSearchParams();
+  const courseId = searchParams.get("courseId");
 
   const handleGetQuizResponseSuccess = (quizResponse: StudentResponse) => {
     setSelectedQuizResponse(quizResponse);
@@ -39,8 +42,8 @@ export default function QuizReviewPage({ params }: Props) {
   };
 
   useEffect(() => {
-    if (!user) return;
-    getTopic(topicId, handleGetTopicSuccess, handleGetFail);
+    if (!user || !courseId) return;
+    getTopic(courseId, topicId, handleGetTopicSuccess, handleGetFail);
     if (user.role === Role.STUDENT) {
       // fetch quiz response
       getQuizResponse(

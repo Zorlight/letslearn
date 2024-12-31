@@ -11,6 +11,7 @@ import { ChevronDown } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { QuizSettingForm } from "../setting-list";
 import { TimeLimitType } from "@/models/quiz";
+import { toast } from "react-toastify";
 
 export type TimingSettingForm = {
   open: {
@@ -215,6 +216,7 @@ const RowSettingWithCombobox = ({
           className="w-[150px] focus:outline-none"
           placeholder="Enter time limit"
           disabled={!form[keyProp].enabled}
+          min={1}
           type="number"
           defaultValue={form[keyProp].value}
           onChange={(e) => handleInputChange(keyProp, parseInt(e.target.value))}

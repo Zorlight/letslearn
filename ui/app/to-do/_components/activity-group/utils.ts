@@ -37,7 +37,7 @@ const isOverDueAssignment = (assignment: AssignmentTopic) => {
   return new Date() > new Date(close);
 };
 
-// working -> has due date -> not submitted and due date is not passed
+// working -> has due date -> not submitted and behind the open and due date is not passed
 const isWorkingInProgressAssignment = (assignment: AssignmentTopic) => {
   const { close } = assignment.data;
   if (!close) return false;
@@ -104,21 +104,22 @@ const isWorkingInProgressQuiz = (quiz: QuizTopic) => {
 const isDoneTopic = (topic: Topic) => {
   const { type } = topic;
   if (type === TopicType.QUIZ) return isDoneQuiz(topic);
-  else if (type === TopicType.ASSIGNMENT) isDoneAssignment(topic);
+  else if (type === TopicType.ASSIGNMENT) return isDoneAssignment(topic);
   return false;
 };
 
 const isOverDueTopic = (topic: Topic) => {
   const { type } = topic;
   if (type === TopicType.QUIZ) return isOverDueQuiz(topic);
-  else if (type === TopicType.ASSIGNMENT) isOverDueAssignment(topic);
+  else if (type === TopicType.ASSIGNMENT) return isOverDueAssignment(topic);
   return false;
 };
 
 const isWorkingInProgressTopic = (topic: Topic) => {
   const { type } = topic;
   if (type === TopicType.QUIZ) return isWorkingInProgressQuiz(topic);
-  else if (type === TopicType.ASSIGNMENT) isWorkingInProgressAssignment(topic);
+  else if (type === TopicType.ASSIGNMENT)
+    return isWorkingInProgressAssignment(topic);
   return false;
 };
 

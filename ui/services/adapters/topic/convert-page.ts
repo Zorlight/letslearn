@@ -11,7 +11,6 @@ export const convertPageToRequestData = (page: PageTopic) => {
 };
 
 export const convertPageFromResponseData = (page: any): PageTopic => {
-  console.log("not convert", page);
   let res = {
     ...page,
     data: page.data ? JSON.parse(page.data) : null,

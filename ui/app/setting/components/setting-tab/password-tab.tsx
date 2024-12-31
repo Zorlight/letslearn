@@ -9,6 +9,8 @@ import PasswordGuiding, {
 } from "../form-guiding/password-guiding";
 import { useMemo } from "react";
 import { Button } from "@/lib/shadcn/button";
+import { updatePassword } from "@/services/user";
+import { toast } from "react-toastify";
 
 type PasswordForm = {
   password: string;
@@ -25,6 +27,7 @@ const schema: ZodType<PasswordForm> = z
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ["confirmPassword"],
     message: "Confirm password does not match",
   });
 
@@ -39,7 +42,7 @@ export default function PasswordTab() {
     resolver: zodResolver(schema),
     defaultValues: initForm,
   });
-  const { register, watch, setValue, formState } = form;
+  const { register, watch, setValue, formState, reset } = form;
   const { password, newPassword, confirmPassword } = watch();
   const { errors } = formState;
 
@@ -53,7 +56,22 @@ export default function PasswordTab() {
     setValue(key, e.target.value);
   };
 
-  const onSubmit = (data: PasswordForm) => {};
+  const handleUpdatePasswordSuccess = () => {
+    toast.success("Password updated");
+    reset();
+  };
+  const handleUpdatePasswordFail = (err: any) => {
+    toast.error(err);
+  };
+
+  const onSubmit = (data: PasswordForm) => {
+    updatePassword(
+      data.password,
+      data.newPassword,
+      handleUpdatePasswordSuccess,
+      handleUpdatePasswordFail
+    );
+  };
 
   const passwordHtmlFor = nanoid();
   const newPasswordHtmlFor = nanoid();

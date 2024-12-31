@@ -14,13 +14,11 @@ interface Props {
   responseIndex?: number;
   quizResponse: StudentResponse;
   onReview?: () => void;
-  onRemove?: () => void;
 }
 const QuizAttemptResult = ({
   quizResponse,
   responseIndex,
   onReview,
-  onRemove,
 }: Props) => {
   const data = quizResponse.data as QuizResponseData;
   const { startedAt, completedAt, status } = data;
@@ -46,28 +44,6 @@ const QuizAttemptResult = ({
           }`}</h5>
         )}
         <div className="flex flex-row items-center gap-4">
-          {onRemove && (
-            <CustomDialog
-              variant="warning"
-              title={`Remove Attempt ${
-                responseIndex !== undefined && responseIndex + 1
-              }`}
-              content={
-                <span>{`Are you sure you want to remove this attempt ${
-                  responseIndex !== undefined && responseIndex + 1
-                }?`}</span>
-              }
-              onYes={onRemove}
-              onCancel={handleCancel}
-            >
-              <Button
-                variant="link"
-                className="p-0 h-fit text-red-500 hover:text-red-600"
-              >
-                Remove
-              </Button>
-            </CustomDialog>
-          )}
           {onReview && (
             <Button variant="link" className="p-0 h-fit" onClick={onReview}>
               Review

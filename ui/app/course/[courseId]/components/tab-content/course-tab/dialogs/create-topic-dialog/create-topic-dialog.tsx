@@ -27,7 +27,6 @@ export default function CreateTopicDialog({
   const tabs = Object.values(Tab);
   const handleSelect = (type: TopicType) => {
     if (onSelect) onSelect(type);
-    onOpenChange(false);
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -34,7 +34,7 @@ const timingSettingSchema: ZodType<TimingSettingForm> = z.object({
   }),
   timeLimit: z.object({
     enabled: z.boolean(),
-    value: z.number(),
+    value: z.number().min(1, "Time limit must be greater than 0"),
     unit: z.nativeEnum(TimeLimitType),
   }),
 });

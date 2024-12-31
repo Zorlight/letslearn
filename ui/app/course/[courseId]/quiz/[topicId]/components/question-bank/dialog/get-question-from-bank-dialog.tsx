@@ -7,13 +7,11 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/lib/shadcn/dialog";
-import { Question } from "@/models/question";
+import { Question, QuestionStatus } from "@/models/question";
 import { useMemo, useState } from "react";
 import QuestionBankList from "./get-question-from-bank/question-bank-list";
-import { QuestionStatus } from "../../static-data";
 
 interface Props {
-  questions: Question[];
   questionsBank: Question[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -22,7 +20,6 @@ interface Props {
 }
 const GetQuestionFromBankDialog = ({
   open,
-  questions,
   questionsBank,
   onOpenChange,
   onAddQuestionsFromBank,

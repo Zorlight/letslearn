@@ -4,7 +4,7 @@ import PageLayoutWithTab from "@/components/ui/util-layout/page-layout-with-tab"
 import { Tab } from "./components/static/tabs";
 
 export default function Loading() {
-  const tabs = Object.values(Tab);
+  let tabs = [Tab.COURSE, Tab.PEOPLE];
   return (
     <PageLayoutWithTab tabs={tabs}>
       <CoursePageSkeleton />

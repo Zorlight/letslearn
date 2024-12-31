@@ -11,10 +11,10 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import {
   questionIconMap,
-  QuestionType,
   QuestionTypeOption,
   questionTypeOptions,
 } from "../../static-data";
+import { QuestionType } from "@/models/question";
 
 interface Props {
   open: boolean;

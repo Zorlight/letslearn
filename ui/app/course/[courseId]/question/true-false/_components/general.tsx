@@ -7,8 +7,8 @@ import { nanoid } from "@reduxjs/toolkit";
 import { Combobox } from "@/components/ui/combobox";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { QuestionStatus } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import { TrueFalseQuestionForm } from "./true-false-question-ui";
+import { QuestionStatus } from "@/models/question";
 
 export type TrueFalseQuestionGeneralForm = {
   questionName: string;

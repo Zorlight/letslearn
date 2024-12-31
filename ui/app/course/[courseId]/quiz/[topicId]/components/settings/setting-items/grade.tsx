@@ -25,13 +25,9 @@ const GradeSetting = ({ formData, onChange }: GradeSettingProps) => {
   const {
     errors: { gradeSettingForm: errors },
   } = form.formState;
-  const { gradeToPass, attemptAllowed, gradingMethod } = formData;
+  const { attemptAllowed, gradingMethod } = formData;
   const handleSettingChange = (data: GradeSettingForm) => {
     if (onChange) onChange(data);
-  };
-
-  const handleNumberChange = (key: keyof GradeSettingForm, value: number) => {
-    handleSettingChange({ ...formData, [key]: value });
   };
 
   const handleComboboxChange = (key: keyof GradeSettingForm, value: string) => {
@@ -42,24 +38,6 @@ const GradeSetting = ({ formData, onChange }: GradeSettingProps) => {
 
   return (
     <div className="w-full flex flex-col p-4 gap-8">
-      <RowSetting title="Grade to pass" htmlFor="grade-setting-gradeToPass">
-        <Input
-          id="grade-setting-gradeToPass"
-          className="w-[150px] focus:outline-none"
-          placeholder="Enter a grade"
-          type="number"
-          defaultValue={gradeToPass !== 0 ? gradeToPass : undefined}
-          {...register("gradeSettingForm.gradeToPass", { valueAsNumber: true })}
-          onChange={(e) =>
-            handleNumberChange("gradeToPass", Number(e.target.value))
-          }
-        />
-        {errors?.gradeToPass && (
-          <p className="absolute top-full text-red-500 text-xs font-semibold">
-            {errors.gradeToPass.message}
-          </p>
-        )}
-      </RowSetting>
       <RowSetting title="Attempts allowed">
         <Combobox
           showSearch={false}

@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import { FileText, List, RectangleHorizontal } from "lucide-react";
 import { TwoDot } from "@/components/icons/two-dot";
+import { QuestionType } from "@/models/question";
+import { List, RectangleHorizontal } from "lucide-react";
 
 export enum Tab {
   QUIZ = "Quiz",
@@ -9,13 +9,6 @@ export enum Tab {
   QUESTION_BANK = "Question Bank",
   RESULTS = "Results",
   DASHBOARD = "Dashboard",
-}
-
-export enum QuestionType {
-  TRUE_FALSE = "True/False",
-  SHORT_ANSWER = "Short Answer",
-  CHOICE = "Choices Answer",
-  ESSAY = "Essay",
 }
 
 export type QuestionTypeOption = {
@@ -27,7 +20,6 @@ export const questionIconMap = {
   [QuestionType.TRUE_FALSE]: <TwoDot />,
   [QuestionType.SHORT_ANSWER]: <RectangleHorizontal size={16} />,
   [QuestionType.CHOICE]: <List size={16} />,
-  [QuestionType.ESSAY]: <FileText size={16} />,
 };
 
 export const questionTypeOptions: QuestionTypeOption[] = [
@@ -46,11 +38,6 @@ export const questionTypeOptions: QuestionTypeOption[] = [
     description:
       "A question that provides a list of options for the user to choose from.",
   },
-  {
-    type: QuestionType.ESSAY,
-    description:
-      "A question that requires a long text answer, typically a paragraph or more.",
-  },
 ];
 
 export enum TabInTab {
@@ -58,13 +45,7 @@ export enum TabInTab {
   TRUE_FALSE_QUESTION_TAB = "New True/False Question",
   SHORT_ANSWER_QUESTION_TAB = "New Short Answer Question",
   CHOICE_QUESTION_TAB = "New Choice Question",
-  ESSAY_QUESTION_TAB = "New Essay Question",
   QUIZ_ATTEMPTING_TAB = "Quiz Attempting",
-}
-
-export enum QuestionStatus {
-  READY = "Ready",
-  DRAFT = "Draft",
 }
 
 export const answerKeys = [

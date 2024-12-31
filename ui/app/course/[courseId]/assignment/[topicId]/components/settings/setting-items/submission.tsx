@@ -68,6 +68,7 @@ export default function SubmissionSetting({ formData, onChange }: Props) {
         handleEnableChange={handleEnableChange("maximumFile")}
       >
         <Input
+          min={1}
           type="number"
           defaultValue={maximumFile.value}
           disabled={!maximumFile.enabled}

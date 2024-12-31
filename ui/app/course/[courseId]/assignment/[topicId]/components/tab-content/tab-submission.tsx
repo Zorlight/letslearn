@@ -164,6 +164,7 @@ export function TabSubmission({ className, assignment }: Props) {
           </div>
           <div className="w-full h-[350px] default-scrollbar">
             <SubmissionList
+              assignment={assignment}
               selectedStudentResponse={selectedStudentResponse}
               studentResponses={filteredResponses}
               onResponseSelect={handleResponseSelect}

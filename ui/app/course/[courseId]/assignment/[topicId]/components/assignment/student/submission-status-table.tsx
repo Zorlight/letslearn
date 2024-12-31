@@ -22,13 +22,13 @@ const SubmissionStatusTable = ({
   assignmentResponse,
   maxGrade = 100,
 }: Props) => {
-  const { data } = assignment;
-  const { close } = data;
+  const { close } = assignment.data;
   let submissionStatus = SubmissionStatus.NOT_SUBMITTED;
   let gradingStatus = GradingStatus.NOT_GRADED;
   let timeRemaining = "No due date";
   let lastModified = "Not modified";
   let fileSubmitted: any = "No file submitted";
+  let noteToShow = "";
   let submissionStatusTextColor = "";
   let submissionStatusBackgroundColor = "";
   let markNumber = 0;
@@ -96,7 +96,7 @@ const SubmissionStatusTable = ({
   };
 
   if (assignmentResponse) {
-    const { mark, submittedAt, files } =
+    const { mark, submittedAt, files, note } =
       assignmentResponse.data as AssignmentResponseData;
 
     // submission status
@@ -116,6 +116,9 @@ const SubmissionStatusTable = ({
 
     // file submitted
     fileSubmitted = getUIFileSubmitted(files);
+
+    // note
+    noteToShow = note;
   } else {
     // submission status
     submissionStatus = handleGetSubmissionStatus(close, null);
@@ -149,6 +152,7 @@ const SubmissionStatusTable = ({
       </MiniTableRow>
       <MiniTableRow title="Last modified">{lastModified}</MiniTableRow>
       <MiniTableRow title="File(s) submitted">{fileSubmitted}</MiniTableRow>
+      {noteToShow && <MiniTableRow title="Note">{noteToShow}</MiniTableRow>}
     </div>
   );
 };

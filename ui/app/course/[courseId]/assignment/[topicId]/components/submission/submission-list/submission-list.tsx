@@ -1,13 +1,13 @@
 "use client";
 import { useDebounceFunction } from "@/hooks/useDebounce";
-import {
-  AssignmentResponseData,
-  StudentResponse,
-} from "@/models/student-response";
+import { StudentResponse } from "@/models/student-response";
 import { User } from "@/models/user";
 import SubmissionItem from "./submission-item";
+import { AssignmentTopic } from "@/models/topic";
+import { toast } from "react-toastify";
 
 interface Props {
+  assignment: AssignmentTopic;
   selectedStudentResponse: StudentResponse | null;
   studentResponses: StudentResponse[];
   canGrade?: boolean;
@@ -17,6 +17,7 @@ interface Props {
 }
 
 export default function SubmissionList({
+  assignment,
   selectedStudentResponse,
   studentResponses,
   canGrade = true,
@@ -24,6 +25,10 @@ export default function SubmissionList({
   onSelectedStudentResponseChange,
   onEnter,
 }: Props) {
+  const isCloseAssignment = (assignment: AssignmentTopic) => {
+    const { close } = assignment.data;
+    return close ? new Date(close) < new Date() : false;
+  };
   const handleStudentSelect = (student: User) => () => {
     const selectedResponse = studentResponses.find(
       (response) => response.student.id === student.id
@@ -60,6 +65,7 @@ export default function SubmissionList({
           .map((res) => (
             <SubmissionItem
               key={res.id}
+              isClose={isCloseAssignment(assignment)}
               assignmentResponse={res}
               selected={selectedStudentResponse?.id === res.id}
               onClick={handleStudentSelect(res.student)}

@@ -8,8 +8,8 @@ import { nanoid } from "@reduxjs/toolkit";
 import { ChevronsUpDown } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
-import { QuestionStatus } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import { ShortAnswerQuestionForm } from "./short-answer-question-ui";
+import { QuestionStatus } from "@/models/question";
 
 export type ShortAnswerQuestionGeneralForm = {
   questionName: string;

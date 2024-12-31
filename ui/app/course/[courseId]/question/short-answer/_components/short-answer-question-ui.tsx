@@ -1,12 +1,12 @@
-import {
-  QuestionStatus,
-  QuestionType,
-} from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
-import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/collapsible-list";
 import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
 import { getTextFromHtml } from "@/lib/utils";
-import { Question, ShortAnswerQuestion } from "@/models/question";
+import {
+  Question,
+  QuestionStatus,
+  QuestionType,
+  ShortAnswerQuestion,
+} from "@/models/question";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
 import { FormProvider, useForm } from "react-hook-form";
@@ -18,6 +18,7 @@ import ShortAnswerQuestionGeneralSetting, {
   ShortAnswerQuestionGeneralForm,
 } from "./general";
 import { dafaultGeneralSetting, defaultAnswerSetting } from "./static-data";
+import CollapsibleList from "../../../components/collapsible/collapsible-list";
 
 const generalSettingSchema: ZodType<ShortAnswerQuestionGeneralForm> = z.object({
   questionName: z.string().min(1, "Required"),

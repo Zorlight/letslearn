@@ -1,7 +1,11 @@
-import CollapsibleList from "@/app/courses/[courseId]/_components/collapsible/collapsible-list";
 import { fakeUser } from "@/fake-data/user";
 import { Button } from "@/lib/shadcn/button";
-import { Question, TrueFalseQuestion } from "@/models/question";
+import {
+  Question,
+  QuestionStatus,
+  QuestionType,
+  TrueFalseQuestion,
+} from "@/models/question";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
 import { FormProvider, useForm } from "react-hook-form";
@@ -10,14 +14,11 @@ import TrueFalseQuestionGeneralSetting, {
   TrueFalseQuestionGeneralForm,
 } from "./general";
 import { defaultAnswerSetting, defaultGeneralSetting } from "./static-data";
-import {
-  QuestionStatus,
-  QuestionType,
-} from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import TrueFalseQuestionAnswerSetting, {
   TrueFalseQuestionAnswerForm,
 } from "./answers";
 import { useDebounceFunction } from "@/hooks/useDebounce";
+import CollapsibleList from "../../../components/collapsible/collapsible-list";
 
 const generalSettingSchema: ZodType<TrueFalseQuestionGeneralForm> = z.object({
   questionName: z.string().min(1, "Required"),

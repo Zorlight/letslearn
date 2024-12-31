@@ -1,13 +1,12 @@
 import CustomDialog from "@/components/ui/custom-dialog";
 import { Button } from "@/lib/shadcn/button";
-import { Question } from "@/models/question";
+import { Question, QuestionStatus, QuestionType } from "@/models/question";
 import { CirclePlus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import CreateQuestionDialog from "../question-bank/dialog/create-question-dialog";
 import QuestionTable from "../question-bank/table/question-table";
-import { QuestionStatus, QuestionType } from "../static-data";
 
 interface Props {
   questions: Question[];

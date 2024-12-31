@@ -1,13 +1,12 @@
 import DraggableContainer from "@/lib/@hello-pangea/draggable-container";
-import { Question } from "@/models/question";
-import React, { useEffect, useState } from "react";
+import { Button } from "@/lib/shadcn/button";
+import { Question, QuestionType } from "@/models/question";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import CreateQuestionDialog from "../question-bank/dialog/create-question-dialog";
-import { QuestionType } from "../static-data";
+import GetQuestionFromBankDialog from "../question-bank/dialog/get-question-from-bank-dialog";
 import QuestionAddButton from "./question-add-button";
 import QuestionRow from "./question-row";
-import GetQuestionFromBankDialog from "../question-bank/dialog/get-question-from-bank-dialog";
-import { notFound, useRouter } from "next/navigation";
-import { Button } from "@/lib/shadcn/button";
 
 interface Props {
   questions: Question[];
@@ -144,7 +143,6 @@ const QuestionList = ({
             onAddQuestion={handleAddNewQuestion}
           />
           <GetQuestionFromBankDialog
-            questions={questions}
             questionsBank={questionsBank}
             open={openAddQuestionFromBankDialog}
             onOpenChange={setOpenAddQuestionFromBankDialog}

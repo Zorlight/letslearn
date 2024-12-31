@@ -5,7 +5,7 @@ import { ClassValue } from "clsx";
 import { Camera, ImageMinus } from "lucide-react";
 import { CldImage } from "next-cloudinary";
 import Image from "next/image";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -27,6 +27,7 @@ export const ChooseAvatarButton = ({
     if (onImageChanged) onImageChanged(file);
     e.target.value = "";
   };
+
   const handleRemoveImage = (e: any) => {
     e.preventDefault();
     if (onImageChanged) onImageChanged(null);

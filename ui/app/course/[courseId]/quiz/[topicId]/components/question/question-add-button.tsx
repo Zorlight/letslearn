@@ -34,13 +34,13 @@ const QuestionAddButton = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-white font-sans z-50">
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer ease-linear duration-100"
           onClick={handleAddNewQuestion}
         >
           <CirclePlus size={16} />
           <p>A new question</p>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem
           className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer ease-linear duration-100"
           onClick={handleAddQuestionFromBank}

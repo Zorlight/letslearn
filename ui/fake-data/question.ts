@@ -1,8 +1,4 @@
-import {
-  QuestionStatus,
-  QuestionType,
-} from "@/app/courses/[courseId]/quiz/[topicId]/_components/static-data";
-import { Question } from "@/models/question";
+import { Question, QuestionStatus, QuestionType } from "@/models/question";
 
 export const fakeQuestions: Question[] = [
   {

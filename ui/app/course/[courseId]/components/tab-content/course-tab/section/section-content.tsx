@@ -7,6 +7,7 @@ import CreateTopicDialog from "../dialogs/create-topic-dialog/create-topic-dialo
 import SectionDescription from "./section-description";
 import CourseTopic from "../topic/course-topic";
 import { Section } from "@/models/course";
+import TopicTooltip from "../topic/topic-tooltip";
 
 interface Props {
   section: Section;
@@ -70,9 +71,14 @@ export default function SectionContent({
         )}
 
         {!isEditting && (
-          <div>
+          <div className="flex flex-col">
             {topics.map((topic, index) => (
-              <CourseTopic key={index} topic={topic} isEditing={isEditting} />
+              <TopicTooltip
+                key={index}
+                content={topic.data ? topic.data.description : ""}
+              >
+                <CourseTopic topic={topic} isEditing={isEditting} />
+              </TopicTooltip>
             ))}
           </div>
         )}

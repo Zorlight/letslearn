@@ -9,7 +9,7 @@ import { ChevronsUpDown } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
 import { ChoiceQuestionForm } from "./choice-question-ui";
-import { QuestionStatus } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
+import { QuestionStatus } from "@/models/question";
 
 export type ChoiceQuestionGeneralForm = {
   questionName: string;

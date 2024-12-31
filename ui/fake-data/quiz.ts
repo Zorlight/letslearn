@@ -1,9 +1,6 @@
-import {
-  GradingMethod,
-  TimeLimitType,
-} from "@/app/courses/[courseId]/quiz/[topicId]/_components/static-data";
 import { QuizTopic, TopicType } from "@/models/topic";
 import { fakeQuestions } from "./question";
+import { GradingMethod, TimeLimitType } from "@/models/quiz";
 
 export const fakeQuiz: QuizTopic = {
   id: "1",

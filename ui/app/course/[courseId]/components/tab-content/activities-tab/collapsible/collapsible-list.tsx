@@ -18,7 +18,7 @@ interface Props {
 const CollapsibleList = ({
   children,
   titles,
-  initShowContent,
+  initShowContent = titles,
   itemsPerGroup,
   listClassName,
   contentClassName,

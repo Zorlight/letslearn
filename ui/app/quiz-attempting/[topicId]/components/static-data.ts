@@ -1,6 +1,5 @@
-import { QuestionType } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import { fakeUser } from "@/fake-data/user";
-import { QuizData } from "@/models/quiz";
+import { QuestionType } from "@/models/question";
 import {
   QuizResponseData,
   QuizStatus,
@@ -13,7 +12,6 @@ export const questionDescription = {
   SingleChoice: "Select the correct answer: ",
   [QuestionType.TRUE_FALSE]: "Select the correct answer: ",
   [QuestionType.SHORT_ANSWER]: "Enter your answer: ",
-  [QuestionType.ESSAY]: "Enter your answer: ",
 };
 export const defaultQuizResponseData: QuizResponseData = {
   status: QuizStatus.NOT_STARTED,

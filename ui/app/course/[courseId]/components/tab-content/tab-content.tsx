@@ -7,12 +7,16 @@ import ActivitiesTab from "./activities-tab";
 import SettingsTab from "./settings-tab";
 import PeopleTab from "./people-tab";
 import DashboardTab from "./dashboard-tab";
+import { useAppSelector } from "@/redux/hooks";
+import { Role } from "@/models/user";
+import { notFound } from "next/navigation";
 
 interface Props {
   course: Course;
   onCourseChange?: (course: Course) => void;
 }
 export default function TabContent({ course, onCourseChange }: Props) {
+  const user = useAppSelector((state) => state.profile.value);
   const tabContext = useTab<Tab>();
   const { selectedTab } = tabContext;
 
@@ -24,9 +28,10 @@ export default function TabContent({ course, onCourseChange }: Props) {
         </div>
       );
     case Tab.ACTIVITIES:
+      if (user?.role !== Role.TEACHER) return notFound();
       return (
         <div className="p-5">
-          <ActivitiesTab />
+          <ActivitiesTab course={course} />
         </div>
       );
     case Tab.PEOPLE:
@@ -36,8 +41,10 @@ export default function TabContent({ course, onCourseChange }: Props) {
         </div>
       );
     case Tab.DASHBOARD:
+      if (user?.role !== Role.TEACHER) return notFound();
       return <DashboardTab course={course} />;
     case Tab.SETTINGS:
+      if (user?.role !== Role.TEACHER) return notFound();
       return (
         <div className="p-5">
           <SettingsTab course={course} onCourseChange={onCourseChange} />

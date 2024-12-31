@@ -1,4 +1,4 @@
-import { QuestionStatus } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
+import { QuestionStatus } from "@/models/question";
 import { TrueFalseQuestionGeneralForm } from "./general";
 
 export const defaultGeneralSetting: TrueFalseQuestionGeneralForm = {

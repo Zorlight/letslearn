@@ -23,7 +23,6 @@ export enum QuestionType {
   TRUE_FALSE = "True/False",
   SHORT_ANSWER = "Short Answer",
   CHOICE = "Choices Answer",
-  ESSAY = "Essay",
 }
 
 export type TrueFalseQuestion = {

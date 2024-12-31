@@ -95,7 +95,7 @@ export const iconMap: TopicMap = {
   page: ScrollText,
 };
 
-export const activityTopics = [
+export const activityTopics: TopicType[] = [
   TopicType.ASSIGNMENT,
   TopicType.MEETING,
   TopicType.QUIZ,

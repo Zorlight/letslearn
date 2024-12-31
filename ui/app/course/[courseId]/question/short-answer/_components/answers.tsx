@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { ShortAnswerQuestionForm } from "./short-answer-question-ui";
 import { gradePercentOptions } from "../../_components/static-data";
 import { QuestionChoice } from "@/models/question";
+import { defaultChoice } from "./static-data";
 
 export type ShortAnswerQuestionAnswerForm = {
   answers: QuestionChoice[];
@@ -38,16 +39,7 @@ const ShortAnswerQuestionAnswerSetting = ({ formData, onChange }: Props) => {
   };
 
   const handleAddAnswer = () => {
-    const newAnswers = [
-      ...answers,
-      {
-        id: nanoid(),
-        questionId: nanoid(4),
-        text: "",
-        gradePercent: 100,
-        feedback: "",
-      },
-    ];
+    const newAnswers = [...answers, defaultChoice];
     handleSettingChange({ ...formData, answers: newAnswers });
   };
 

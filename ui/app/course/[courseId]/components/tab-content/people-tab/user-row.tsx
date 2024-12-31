@@ -8,7 +8,7 @@ interface Props {
 export default function UserRow({ user }: Props) {
   return (
     <div className="flex flex-row items-center gap-2 px-4">
-      <Avatar src={user.image} className="w-12" />
+      <Avatar src={user.avatar} className="w-12" />
       <span className="text-cyan-500 font-bold text-sm">{user.username}</span>
     </div>
   );

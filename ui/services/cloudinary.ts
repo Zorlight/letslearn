@@ -23,12 +23,12 @@ export const uploadFile = async (
 };
 
 export const deleteFile = async (
-  publicId: string,
+  url: string,
   onSuccess: (message: string) => void,
   onFail: (err?: string) => void
 ) => {
   try {
-    const res = await DeleteFile(publicId);
+    const res = await DeleteFile(url);
     if (res.error) onFail(res.error);
     if (res.message) onSuccess(res.message);
   } catch (err: any) {

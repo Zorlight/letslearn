@@ -15,6 +15,9 @@ import TabContent from "./components/tab-content/tab-content";
 import { getQuizBreadcrumb } from "./components/utils";
 import Loading from "./loading";
 import { Role } from "@/models/user";
+import MessageInput from "@/components/message/message-input";
+import MessageComment from "@/components/message/message-comment";
+import { Users } from "lucide-react";
 
 interface Props {
   params: {
@@ -89,13 +92,23 @@ export default function QuizPage({ params }: Props) {
             />
           </div>
         </div>
-        <div className="z-10 mt-[150px] flex w-full default-scrollbar p-5">
-          <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
+        <div className="z-10 mt-[150px] flex flex-col gap-5 w-full default-scrollbar p-5">
+          <div className="w-full min-h-fit h-full bg-white rounded-md p-5 shadow-md">
             <TabContent
               courseId={courseId}
               quiz={quiz}
               onQuizChange={handleQuizChange}
             />
+          </div>
+          <div className="w-full min-h-fit h-full bg-white rounded-md p-5 shadow-md space-y-4">
+            <div className="flex flex-row gap-2 text-gray-500 items-center">
+              <Users size={20} />
+              <span className="font-bold text-sm">Class comments</span>
+            </div>
+            <div className="space-y-4">
+              <MessageComment user={user} />
+              <MessageInput user={user} />
+            </div>
           </div>
         </div>
       </TabProvider>

@@ -1,4 +1,4 @@
-import { TimerStatus } from "@/app/courses/[courseId]/quiz/[topicId]/_components/tab-content/_components/quiz-attempting-tab/quiz-timer";
+import { TimerStatus } from "@/app/quiz-attempting/[topicId]/components/timer/timer";
 import { useEffect, useRef, useState } from "react";
 
 interface Props {

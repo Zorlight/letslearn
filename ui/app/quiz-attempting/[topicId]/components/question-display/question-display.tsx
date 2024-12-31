@@ -1,14 +1,11 @@
 "use client";
-import {
-  QuestionResult,
-  QuestionType,
-} from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
+import { QuestionResult } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import { FlagIcon } from "@/components/icons/flag";
 import useBubbleAnimation from "@/hooks/useBubbleAnimation/useBubbleAnimation";
 import { Button } from "@/lib/shadcn/button";
 import EditorDisplay from "@/lib/tinymce/editor-display";
 import { cn } from "@/lib/utils";
-import { ChoiceQuestion, Question } from "@/models/question";
+import { ChoiceQuestion, Question, QuestionType } from "@/models/question";
 import { QuizAnswer } from "@/models/student-response";
 import { Settings2 } from "lucide-react";
 import { useRouter } from "next/navigation";

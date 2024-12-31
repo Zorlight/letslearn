@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/lib/shadcn/dropdown-menu";
-import { Question } from "@/models/question";
+import { Question, QuestionStatus } from "@/models/question";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ChevronDown,
@@ -22,7 +22,7 @@ import {
   Pen,
   Trash2,
 } from "lucide-react";
-import { questionIconMap, QuestionStatus } from "../../static-data";
+import { questionIconMap } from "../../static-data";
 import QuestionNameColumn from "./question-name-column";
 
 const questionColumnTitles = {

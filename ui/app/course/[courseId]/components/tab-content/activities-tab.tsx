@@ -1,17 +1,50 @@
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
-import { activityTopics } from "@/models/topic";
+import {
+  activityTopics,
+  AssignmentTopic,
+  QuizTopic,
+  Topic,
+  TopicType,
+} from "@/models/topic";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ActivityList from "./activities-tab/activity-group/activity-list";
+import { Course } from "@/models/course";
+import { getAllAssignmentOfCourse, getAllQuizOfCourse } from "@/services/topic";
+import { toast } from "react-toastify";
 
-interface Props {}
-export default function ActivitiesTab({}: Props) {
+interface Props {
+  course: Course;
+}
+export default function ActivitiesTab({ course }: Props) {
   const options = ["All activities", ...activityTopics];
+  const [topics, setTopics] = useState<Topic[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<string>(options[0]);
   const handleChoiceChange = (choice: string) => {
     setSelectedChoice(choice);
   };
+
+  const handleGetAllQuizSuccess = (data: QuizTopic[]) => {
+    console.log("quiz", data);
+    setTopics((prev) => [...prev, ...data]);
+  };
+  const handleGetAllAssignmentSuccess = (data: AssignmentTopic[]) => {
+    console.log("assignment", data);
+    setTopics((prev) => [...prev, ...data]);
+  };
+  const handleFail = (error: any) => {
+    toast.error(error);
+  };
+  useEffect(() => {
+    getAllQuizOfCourse(course.id, handleGetAllQuizSuccess, handleFail);
+    getAllAssignmentOfCourse(
+      course.id,
+      handleGetAllAssignmentSuccess,
+      handleFail
+    );
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto flex flex-col items-center gap-5">
       <Combobox
@@ -28,7 +61,11 @@ export default function ActivitiesTab({}: Props) {
           <ChevronDown className="ml-2 shrink-0" size={20} />
         </Button>
       </Combobox>
-      <ActivityList />
+      <ActivityList
+        topics={topics}
+        course={course}
+        selectedType={selectedChoice}
+      />
     </div>
   );
 }

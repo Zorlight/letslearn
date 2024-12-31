@@ -1,11 +1,13 @@
 import CollapsibleList from "@/app/course/[courseId]/components/collapsible/collapsible-list";
-import {
-  QuestionStatus,
-  QuestionType,
-} from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
+
 import { Button } from "@/lib/shadcn/button";
 import { getTextFromHtml } from "@/lib/utils";
-import { ChoiceQuestion, Question } from "@/models/question";
+import {
+  ChoiceQuestion,
+  Question,
+  QuestionStatus,
+  QuestionType,
+} from "@/models/question";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
 import { FormProvider, useForm } from "react-hook-form";

@@ -104,7 +104,7 @@ export const getAllAssignmentOfCourse = (
   onFail: (err?: any) => void
 ) => {
   const handleSuccess = (data: any) => {
-    const assignment = data.map(convertAssignmentResponseFromResponseData);
+    const assignment = data.map(convertAssignmentFromResponseData);
     onSuccess(assignment);
   };
   getCourseWork(courseId, "assignment", handleSuccess, onFail);

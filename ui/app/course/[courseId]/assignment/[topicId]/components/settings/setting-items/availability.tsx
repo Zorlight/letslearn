@@ -85,13 +85,6 @@ export default function AvailabilitySetting({ formData, onChange }: Props) {
         handleEnableChange={handleEnableChange}
         handleDatePickerChange={handleDatePickerChange}
       />
-      <RowSettingWithDatePicker
-        title="Remind me to grade"
-        form={formData}
-        keyProp="remindToGrade"
-        handleEnableChange={handleEnableChange}
-        handleDatePickerChange={handleDatePickerChange}
-      />
     </div>
   );
 }

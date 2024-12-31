@@ -25,6 +25,7 @@ import {
   handleGetLastAttemptGrade,
 } from "../utils";
 import { useAppSelector } from "@/redux/hooks";
+import { toast } from "react-toastify";
 
 interface Props {
   quiz: QuizTopic;
@@ -53,17 +54,16 @@ const TabStudentQuiz = ({
   } = data;
 
   const handleAttemptQuiz = () => {
+    if (questions.length === 0) {
+      toast.info("This quiz has no questions yet.");
+      return;
+    }
     router.push(`/quiz-attempting/${quiz.id}`);
   };
 
   const handleReviewQuiz = (index: number) => {
     const quizToReview = quizResponses[index];
     router.push(`/quiz-attempting/${quiz.id}/review/${quizToReview.id}`);
-  };
-
-  const handleRemoveQuizResponse = (index: number) => {
-    const newQuizResponses = quizResponses.filter((_, i) => i !== index);
-    if (onQuizResponsesChange) onQuizResponsesChange(newQuizResponses);
   };
 
   const fullMarkOfQuiz = useMemo(() => {
@@ -121,7 +121,12 @@ const TabStudentQuiz = ({
     ? format(new Date(close), "EEEE, dd MMMM yyyy, h:mm a")
     : null;
   const gradeColor = getGradeColor(gradeToShow, fullMarkOfQuiz);
-  console.log("quizResponsesToShow", quizResponsesToShow);
+  const canDoQuiz = open ? new Date() >= new Date(open) : true;
+  const isQuizClosed = close ? new Date() >= new Date(close) : false;
+  const overAllowedAttempts =
+    attemptAllowed === attemptsAllowedOptions[0]
+      ? false
+      : quizResponses.length >= parseInt(attemptAllowed);
 
   return (
     <div className={cn(className)}>
@@ -141,12 +146,28 @@ const TabStudentQuiz = ({
       </div>
       <EditorDisplay className="text-gray-500" htmlString={description} />
       <div className="space-y-4">
-        <Button variant="cyan" className="w-fit" onClick={handleAttemptQuiz}>
-          Attempt quiz
-        </Button>
+        {canDoQuiz && !isQuizClosed && !overAllowedAttempts && (
+          <Button variant="cyan" className="w-fit" onClick={handleAttemptQuiz}>
+            Attempt quiz
+          </Button>
+        )}
+
+        {!canDoQuiz && (
+          <p className="font-bold text-orange-500">
+            This quiz will be available at {openTime}
+          </p>
+        )}
+        {isQuizClosed && (
+          <p className="font-bold text-red-500">This quiz has been closed</p>
+        )}
+        {overAllowedAttempts && (
+          <p className="font-bold text-red-500">
+            You have reached the maximum number of attempts
+          </p>
+        )}
 
         {timeLimit && (
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-gray-500">
             {`Time limit: ${timeLimitString}`}
           </p>
         )}
@@ -172,7 +193,6 @@ const TabStudentQuiz = ({
                   responseIndex={quizResponsesToShow.length - index - 1}
                   quizResponse={quizResponse}
                   onReview={() => handleReviewQuiz(index)}
-                  onRemove={() => handleRemoveQuizResponse(index)}
                 />
               ))}
             </div>

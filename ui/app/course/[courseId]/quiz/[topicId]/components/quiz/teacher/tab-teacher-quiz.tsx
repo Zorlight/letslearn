@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { SearchCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { toast } from "react-toastify";
 
 interface Props {
   quiz: QuizTopic;
@@ -26,9 +27,14 @@ const TabTeacherQuiz = ({ className, quiz }: Props) => {
     gradingMethod,
     timeLimit,
     timeLimitUnit,
+    questions,
   } = data;
 
   const handlePreviewQuiz = () => {
+    if (questions.length === 0) {
+      toast.info("This quiz has no questions yet.");
+      return;
+    }
     router.push(`/quiz-attempting/${quiz.id}`);
   };
 
@@ -60,6 +66,11 @@ const TabTeacherQuiz = ({ className, quiz }: Props) => {
             <span className="text-gray-500">{closeTime}</span>
           </p>
         )}
+        {!openTime && !closeTime && (
+          <p className="font-bold">
+            This quiz is always open for student to attempt.
+          </p>
+        )}
       </div>
       <EditorDisplay className="text-gray-500" htmlString={description} />
       <div className="space-y-4">
@@ -68,7 +79,7 @@ const TabTeacherQuiz = ({ className, quiz }: Props) => {
           Preview quiz
         </Button>
 
-        {timeLimit && (
+        {!!timeLimit && (
           <p className="text-sm text-slate-600">
             {`Time limit: ${timeLimitString}`}
           </p>

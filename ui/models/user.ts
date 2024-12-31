@@ -10,7 +10,7 @@ export type User = {
   username: string;
   email: string;
   password: string;
-  image: string;
+  avatar: string;
   role: Role;
   courses: Course[];
 };

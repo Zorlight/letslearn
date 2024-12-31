@@ -1,15 +1,20 @@
 "use client";
 import { Button } from "@/lib/shadcn/button";
-import { cn } from "@/lib/utils";
 import { Input } from "@/lib/shadcn/input";
-import { Topic, TopicMap, TopicType } from "@/models/topic";
+import { cn } from "@/lib/utils";
+import { FileTopicData } from "@/models/file-topic";
+import { LinkData } from "@/models/link";
+import {
+  colorMap,
+  iconMap,
+  isValidType,
+  Topic,
+  TopicMap,
+} from "@/models/topic";
+import { Role } from "@/models/user";
+import { useAppSelector } from "@/redux/hooks";
 import { Trash2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import TopicFileExtension from "./topic-file-extension";
-import { colorMap, iconMap, isValidType } from "@/models/topic";
-import { useAppSelector } from "@/redux/hooks";
-import { Role } from "@/models/user";
-import { FileTopicData } from "@/models/file-topic";
 
 interface Props {
   topic: Topic;
@@ -40,7 +45,12 @@ const CourseTopic = ({
   };
 
   const handleLinkAction = () => {
-    router.push(`${path}/link/${topic.id}`);
+    if (!user) return;
+    if (!topic.data) return;
+    const { url } = topic.data as LinkData;
+    if (!url || url === "") return;
+    if (user.role === Role.STUDENT) window.open(url, "_blank");
+    if (user.role === Role.TEACHER) router.push(`${path}/link/${topic.id}`);
   };
 
   const handleMeetingAction = () => {
@@ -98,7 +108,7 @@ const CourseTopic = ({
   return (
     <div
       className={cn(
-        "w-full flex items-center justify-between px-4 py-6 border-t-[0.5px] transition-all duration-200",
+        "w-full flex items-center justify-between px-4 py-6 border-t-[0.5px] transition-all duration-200 hover:bg-gray-50",
         isEditing && "border-transparent",
         !isEditing && "border-gray-300",
         className
@@ -113,12 +123,6 @@ const CourseTopic = ({
             onClick={handleTopicClick}
           >
             {title}
-            {/* {type === TopicType.FILE && topic.data.file && (
-              <TopicFileExtension
-                fileName={topic.data.file.name}
-                className="no-underline"
-              />
-            )} */}
           </Button>
         )}
 
@@ -132,6 +136,7 @@ const CourseTopic = ({
           />
         )}
       </div>
+
       {isEditing && (
         <div className="flex flex-row gap-4">
           <Trash2

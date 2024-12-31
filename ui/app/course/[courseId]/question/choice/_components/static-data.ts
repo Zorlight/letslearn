@@ -1,14 +1,22 @@
-import { QuestionStatus } from "@/app/course/[courseId]/quiz/[topicId]/components/static-data";
 import { ChoiceQuestionGeneralForm } from "./general";
 import { ChoiceQuestionAnswerForm } from "./answers";
 import { nanoid } from "@reduxjs/toolkit";
+import { QuestionChoice, QuestionStatus } from "@/models/question";
 
 export const defaultGeneralSetting: ChoiceQuestionGeneralForm = {
   questionName: "",
   questionText: "",
   questionStatus: QuestionStatus.READY,
   defaultMark: 1,
-  multipleChoice: false,
+  multipleChoice: true,
+};
+
+export const defaultChoice: QuestionChoice = {
+  id: nanoid(4),
+  questionId: nanoid(4),
+  text: "",
+  gradePercent: 0,
+  feedback: "",
 };
 
 export const defaultAnswerSetting: ChoiceQuestionAnswerForm = {

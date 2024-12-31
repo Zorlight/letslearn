@@ -28,7 +28,7 @@ import { getGradeColor } from "../../utils";
 const resultColumnTitles = {
   id: "ID",
   image: "Image",
-  name: "Student name",
+  name: "Name",
   email: "Email",
   status: "Status",
   duration: "Duration",
@@ -58,7 +58,7 @@ const imageColumn = (title: string): ColumnDef<StudentResponse> => {
     cell: ({ row }) => {
       const student: User = row.getValue("student");
       let imageUrl = "/default-user.png";
-      if (student && student.image) imageUrl = student.image;
+      if (student && student.avatar) imageUrl = student.avatar;
 
       return (
         <div className="px-2">

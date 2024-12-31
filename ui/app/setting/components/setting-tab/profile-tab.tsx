@@ -2,7 +2,7 @@
 import { Button } from "@/lib/shadcn/button";
 import { Input } from "@/lib/shadcn/input";
 import { getFileExtension, isImageExtension } from "@/lib/utils";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "@reduxjs/toolkit";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +10,12 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z, ZodType } from "zod";
 import ImageGuiding, { ImageRequirement } from "../form-guiding/image-guiding";
 import { ChooseAvatarButton } from "../profile-tab/choose-avatar-button";
+import { updateProfile } from "@/services/user";
+import { User } from "@/models/user";
+import { toast } from "react-toastify";
+import { deleteFile, uploadFile } from "@/services/cloudinary";
+import { setProfile } from "@/redux/slices/profile";
+import { Spinner } from "@nextui-org/spinner";
 
 type ProfileForm = {
   email: string;
@@ -29,6 +35,8 @@ const initForm = {
 };
 
 export default function ProfileTab() {
+  const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const user = useAppSelector((state) => state.profile.value);
@@ -48,10 +56,14 @@ export default function ProfileTab() {
   const { username, email } = watch();
   const { errors } = formState;
 
-  useEffect(() => {
-    if (!user) return;
+  const setInitValue = (user: User) => {
     setValue("username", user.username);
     setValue("email", user.email);
+    setImageUrl(user.avatar);
+  };
+  useEffect(() => {
+    if (!user) return;
+    setInitValue(user);
   }, [user]);
 
   const handleInputChange = (key: keyof ProfileForm) => (e: any) => {
@@ -63,14 +75,52 @@ export default function ProfileTab() {
     setImageUrl(url);
   };
 
-  const onSubmit = (data: ProfileForm) => {
-    if (!isDataChanged) return;
+  const handleUpdateSuccess = (user: User) => {
+    toast.success("Profile updated successfully");
+    dispatch(setProfile(user));
+    setIsLoading(false);
+  };
+  const handleFail = (error: any) => {
+    toast.error(error);
   };
 
+  const handleUploadFileSuccess = (data: any) => {
+    updateProfile(username, data.secure_url, handleUpdateSuccess, handleFail);
+  };
+
+  const handleUploadAvatar = (file: File) => {
+    if (user?.avatar) deleteFile(user?.avatar, () => {}, handleFail);
+    uploadFile(file, handleUploadFileSuccess, handleFail);
+  };
+
+  const onSubmit = (data: ProfileForm) => {
+    if (!isDataChanged) return;
+    setIsLoading(true);
+    if (imageFile) handleUploadAvatar(imageFile);
+    else {
+      updateProfile(
+        data.username,
+        imageUrl || "",
+        handleUpdateSuccess,
+        handleFail
+      );
+    }
+  };
+
+  useEffect(() => {
+    console.log("imageUrl", imageUrl);
+    console.log("user.avatar", user?.avatar);
+    console.log("is dif", imageUrl !== user?.avatar);
+    console.log("is data changed", isDataChanged);
+  }, [imageUrl]);
   const isDataChanged = useMemo(() => {
     if (!user) return false;
-    return username !== user.username || imageFile !== null;
-  }, [username, imageFile, user]);
+    return (
+      username !== user.username ||
+      imageFile !== null ||
+      imageUrl !== user.avatar
+    );
+  }, [username, imageFile, imageUrl, user]);
   const usernameHtmlfor = nanoid();
   return (
     <FormProvider {...form}>
@@ -107,9 +157,9 @@ export default function ProfileTab() {
         </div>
         <Button
           disabled={!isDataChanged}
-          className="bg-blue-50 text-blue-700 border-[0.5px] border-blue-700 font-bold rounded-lg hover:bg-blue-100 hover:text-blue-800"
+          className="w-[120px] bg-blue-50 text-blue-700 border-[0.5px] border-blue-700 font-bold rounded-lg hover:bg-blue-100 hover:text-blue-800"
         >
-          Save profile
+          {isLoading ? <Spinner color="primary" size="sm" /> : "Save profile"}
         </Button>
       </form>
     </FormProvider>

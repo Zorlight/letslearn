@@ -81,6 +81,7 @@ const SettingList = ({ page, onSubmitPageSetting }: Props) => {
       ...page,
       title: data.generalSettingForm.name,
       data: {
+        ...page.data,
         description: data.generalSettingForm.description,
         content: data.contentSettingForm.content,
       },

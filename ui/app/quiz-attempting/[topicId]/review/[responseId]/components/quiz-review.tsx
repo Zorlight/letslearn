@@ -12,12 +12,14 @@ import Anotation from "../../../components/anotation/anotation";
 import QuestionDisplay from "../../../components/question-display/question-display";
 import QuestionBlock from "../../../components/question-navigation-box/question-block";
 import StickyCard from "../../../components/sticky-card/sticky-card";
+import { iconMap, QuizTopic } from "@/models/topic";
 
 interface Props {
   className?: string;
+  quiz: QuizTopic;
   quizResponse: StudentResponse;
 }
-const QuizReview = ({ className, quizResponse }: Props) => {
+const QuizReview = ({ className, quizResponse, quiz }: Props) => {
   const router = useRouter();
   const quizResponseData = quizResponse.data as QuizResponseData;
   const { answers: studentAnswers } = quizResponseData;
@@ -47,6 +49,7 @@ const QuizReview = ({ className, quizResponse }: Props) => {
     scrollTo(`question-${index + 1}`);
   };
 
+  const Icon = iconMap.quiz;
   return (
     <div
       className={cn(
@@ -56,7 +59,11 @@ const QuizReview = ({ className, quizResponse }: Props) => {
     >
       <Anotation />
 
-      <div className={cn("relative w-full flex flex-col gap-10")}>
+      <div className={cn("relative w-full flex flex-col gap-8")}>
+        <div className="flex flex-row items-center gap-2 text-xl font-bold text-quiz">
+          <Icon size={28} />
+          {quiz.title}
+        </div>
         {quizResponse && <QuizAttemptResult quizResponse={quizResponse} />}
         {studentAnswers.map((answer, index) => (
           <QuestionDisplay

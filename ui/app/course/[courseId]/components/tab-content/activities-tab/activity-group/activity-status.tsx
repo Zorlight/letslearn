@@ -41,7 +41,7 @@ export default function ActivityStatus({ due, submittedAt }: Props) {
     submissionStatus === SubmissionStatus.NOT_SUBMITTED &&
     assignmentStatus === AssignmentStatus.CLOSE
   ) {
-    statusText = "Overdue";
+    statusText = "Closed";
     color = Color.RED;
   } else {
     const dayLeft = getDurationText(due, current, 1);

@@ -1,62 +1,51 @@
-import { fakeTopics } from "@/fake-data/topic";
 import { Topic, TopicType } from "@/models/topic";
 import { useEffect, useState } from "react";
 import CollapsibleList from "../collapsible/collapsible-list";
 import ActivityItem from "./activity-item";
+import { isOverDueTopic, isWorkingInProgressTopic } from "./utils";
+import { Course } from "@/models/course";
 
-export default function ActivityList() {
-  const [topics, setTopics] = useState<Topic[]>(fakeTopics);
+interface Props {
+  topics: Topic[];
+  course: Course;
+  selectedType: string;
+}
+export default function ActivityList({ topics, course, selectedType }: Props) {
   const [workingInProgressTopics, setWorkingInProgressTopics] = useState<
     Topic[]
   >([]);
   const [overdueTopics, setOverdueTopics] = useState<Topic[]>([]);
   const [itemsPerGroup, setItemsPerGroup] = useState<number[]>([0, 0]);
 
-  const isWorkingInProgressTopic = (topic: Topic) => {
-    const { type } = topic;
-    const current = new Date();
-    if (type === TopicType.QUIZ) {
-      const { close } = topic.data;
-      return close && new Date(close) > current;
-    } else if (type === TopicType.ASSIGNMENT) {
-      const { close } = topic.data;
-      return close && new Date(close) > current;
-    }
-    return false;
-  };
-  const isOverDueTopic = (topic: Topic) => {
-    const { type } = topic;
-    const current = new Date();
-    if (type === TopicType.QUIZ) {
-      const { close } = topic.data;
-      return close && new Date(close) < current;
-    } else if (type === TopicType.ASSIGNMENT) {
-      const { close } = topic.data;
-      return close && new Date(close) < current;
-    }
-    return false;
+  const filterTopicType = (type: string) => (topic: Topic) => {
+    if (type === "All activities") return topic;
+    return topic.type === type;
   };
 
   useEffect(() => {
-    const workingInProgressTopics = topics.filter(isWorkingInProgressTopic);
-    const overdueTopics = topics.filter(isOverDueTopic);
+    const workingInProgressTopics = topics
+      .filter(filterTopicType(selectedType))
+      .filter(isWorkingInProgressTopic);
+    const overdueTopics = topics
+      .filter(filterTopicType(selectedType))
+      .filter(isOverDueTopic);
     setWorkingInProgressTopics(workingInProgressTopics);
     setOverdueTopics(overdueTopics);
     setItemsPerGroup([workingInProgressTopics.length, overdueTopics.length]);
-  }, [topics]);
+  }, [topics, selectedType]);
 
-  const titles = ["Work in progress", "Overdue"];
+  const titles = ["Work in progress", "Closed"];
   return (
     <div className="w-full">
       <CollapsibleList titles={titles} itemsPerGroup={itemsPerGroup}>
         <div>
           {workingInProgressTopics.map((topic) => (
-            <ActivityItem key={topic.id} topic={topic} />
+            <ActivityItem key={topic.id} topic={topic} course={course} />
           ))}
         </div>
         <div>
           {overdueTopics.map((topic) => (
-            <ActivityItem key={topic.id} topic={topic} />
+            <ActivityItem key={topic.id} topic={topic} course={course} />
           ))}
         </div>
       </CollapsibleList>

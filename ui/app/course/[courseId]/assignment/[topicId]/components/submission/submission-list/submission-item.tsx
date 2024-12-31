@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 
 interface Props {
   assignmentResponse: StudentResponse;
+  isClose: boolean;
   selected: boolean;
   canGrade?: boolean;
   onClick?: () => void;
@@ -19,6 +20,7 @@ interface Props {
   onEnter?: () => void;
 }
 export default function SubmissionItem({
+  isClose,
   assignmentResponse,
   selected,
   canGrade = false,
@@ -38,6 +40,7 @@ export default function SubmissionItem({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
+    if (isNaN(value)) return;
     if (value > totalMark || value < 0) return;
     setInput(e.target.value);
     if (onInputChange) onInputChange(value);
@@ -45,6 +48,12 @@ export default function SubmissionItem({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      if (!isClose) {
+        toast.info(
+          "Please wait until the assignment is closed to grade the submission."
+        );
+        return;
+      }
       if (onEnter) onEnter();
     }
   };

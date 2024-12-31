@@ -1,12 +1,11 @@
-import { AssignmentTopic, FileTopic } from "@/models/topic";
-import { convertAssignmentResponseFromResponseData } from "../student-response/assignment-response";
+import { FileTopic } from "@/models/topic";
 import { convertCloudinaryFileToRequestData } from "../cloudinary-file/cloudinary-file";
 
 export const convertFileToRequestData = (file: FileTopic) => {
+  console.log("File", file);
   const { id, data } = file;
-  const cloudinaryFileToReq = data.file
-    ? convertCloudinaryFileToRequestData(data.file)
-    : null;
+  const cloudinaryFileToReq =
+    data && data.file ? convertCloudinaryFileToRequestData(data.file) : null;
   const dataToReq = {
     ...data,
     file: cloudinaryFileToReq,

@@ -181,6 +181,7 @@ const QuizAttempting = ({
       />
 
       <div className={cn("relative w-full flex flex-col gap-10")}>
+        <span className="text-xl font-bold text-orange-500">{quiz.title}</span>
         {questions.map((question, index) => (
           <QuestionDisplay
             key={index}

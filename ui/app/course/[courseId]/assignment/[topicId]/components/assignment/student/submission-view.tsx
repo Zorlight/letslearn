@@ -20,6 +20,7 @@ export default function SubmissionView({
   onUploaded,
   onRemove,
 }: Props) {
+  const { close, open } = assignment.data;
   const [isAddingSubmisison, setIsAddingSubmission] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [dialogInfo, setDialogInfo] = useState<{
@@ -49,39 +50,61 @@ export default function SubmissionView({
   const handleCancelConfirm = () => {
     setOpenConfirmDialog(false);
   };
+  const isOpen = open ? new Date(open) < new Date() : true;
+  const isClose = close ? new Date(close) < new Date() : false;
+
+  const canEditSubmit = isOpen && !isClose;
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-row gap-2 items-center ">
-        {!assignmentResponse && (
-          <Button
-            variant="cyan"
-            className="w-fit rounded-lg font-bold"
-            onClick={toggleAddingSubmission}
-          >
-            Add submission
-          </Button>
-        )}
-        {assignmentResponse && (
-          <Button
-            variant="cyan"
-            className="w-fit rounded-lg font-bold"
-            onClick={handleRemoveSubmission}
-          >
-            Remove submission
-          </Button>
-        )}
-      </div>
-
-      <div className="font-bold text-orange-500">Submission status</div>
-      {!isAddingSubmisison && (
-        <SubmissionStatusTable
-          assignment={assignment}
-          assignmentResponse={assignmentResponse}
-        />
+      {canEditSubmit && (
+        <div className="flex flex-row gap-2 items-center ">
+          {!assignmentResponse && (
+            <Button
+              variant="cyan"
+              className="w-fit rounded-lg font-bold"
+              onClick={toggleAddingSubmission}
+            >
+              Add submission
+            </Button>
+          )}
+          {assignmentResponse && (
+            <Button
+              variant="cyan"
+              className="w-fit rounded-lg font-bold"
+              onClick={handleRemoveSubmission}
+            >
+              Remove submission
+            </Button>
+          )}
+        </div>
       )}
-      {isAddingSubmisison && (
-        <FileSubmissionView onUploaded={handleUploadedFile} />
+
+      {isClose && (
+        <p className="font-bold text-assignment">
+          This assignment is closed. You can no longer submit your work.
+        </p>
+      )}
+
+      {!isOpen && (
+        <p className="font-bold text-assignment">
+          This assignment is not open yet.
+        </p>
+      )}
+
+      {isOpen && (
+        <>
+          <div className="font-bold text-orange-500">Submission status</div>
+          {!isAddingSubmisison && (
+            <SubmissionStatusTable
+              assignment={assignment}
+              assignmentResponse={assignmentResponse}
+            />
+          )}
+          {isAddingSubmisison && (
+            <FileSubmissionView onUploaded={handleUploadedFile} />
+          )}
+        </>
       )}
       <CustomDialog
         control={{ open: openConfirmDialog, setOpen: setOpenConfirmDialog }}

@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { ChoiceQuestionForm } from "./choice-question-ui";
 import { gradePercentOptions } from "../../_components/static-data";
 import { nanoid } from "@reduxjs/toolkit";
+import { defaultChoice } from "./static-data";
 
 export type ChoiceQuestionAnswerForm = {
   choices: QuestionChoice[];
@@ -39,13 +40,7 @@ const ChoiceQuestionAnswerSetting = ({ formData, onChange }: Props) => {
 
   const handleAddChoice = () => {
     const newChoices = [...choices];
-    newChoices.push({
-      id: nanoid(4),
-      questionId: nanoid(4),
-      text: "",
-      gradePercent: 0,
-      feedback: "",
-    });
+    newChoices.push(defaultChoice);
     handleSettingChange({ ...formData, choices: newChoices });
   };
 

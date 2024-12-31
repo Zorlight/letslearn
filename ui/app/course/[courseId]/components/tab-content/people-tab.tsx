@@ -22,16 +22,13 @@ export default function PeopleTab({ course }: Props) {
         </div>
         <div className="flex flex-col gap-6">
           <TitleLayout className="flex flex-row items-center justify-between">
-            <h4 className="font-medium">Members</h4>
+            <h4 className="font-medium">Students</h4>
             <div className="relative flex flex-row items-center gap-2">
               <span className="mr-14">
                 {`${students.length} ${
-                  students.length > 1 ? "members" : "member"
+                  students.length > 1 ? "students" : "student"
                 }`}
               </span>
-              <IconButton className="absolute right-0">
-                <IconPersonAdd />
-              </IconButton>
             </div>
           </TitleLayout>
           {students.map((student) => (

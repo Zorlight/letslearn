@@ -52,6 +52,7 @@ export default function CalendarPage() {
   };
 
   const handleGetAllWorkOfUserSuccess = (data: Topic[]) => {
+    console.log("work: ", data);
     setWorkOfUser(data);
   };
 
@@ -78,8 +79,13 @@ export default function CalendarPage() {
 
   useEffect(() => {
     dispatch(setBreadcrumb(calendarBreadcrumb));
-    getAllWorkOfUser(handleGetAllWorkOfUserSuccess, handleGetAllWorkOfUserFail);
-  }, []);
+    getAllWorkOfUser(
+      handleGetAllWorkOfUserSuccess,
+      handleGetAllWorkOfUserFail,
+      calendarRange.start.toISOString(),
+      calendarRange.end.toISOString()
+    );
+  }, [calendarRange]);
 
   const filteredWorkOfUser = useMemo(() => {
     if (selectedIndex === 0) return workOfUser;

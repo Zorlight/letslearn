@@ -63,7 +63,7 @@ export default function Navbar({
     );
     handleClearLocalStorage();
     toast.success("Logout successfully");
-    router.push("/login");
+    router.replace("/login");
   };
   const handleGetMyInfoSuccess = (data: User) => {
     dispatch(setProfile(data));

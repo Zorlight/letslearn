@@ -1,16 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 export const chatSlice = createSlice({
   name: "chat",
   initialState: {
     isChatBoxOpen: false,
+    chatUserId: "",
   },
   reducers: {
-    openChatBox: (state) => {
+    openChatBox: (state, action: PayloadAction<string>) => {
       state.isChatBoxOpen = true;
+      state.chatUserId = action.payload;
     },
     closeChatBox: (state) => {
       state.isChatBoxOpen = false;
+      state.chatUserId = "";
     },
   },
 });

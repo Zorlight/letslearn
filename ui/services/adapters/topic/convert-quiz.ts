@@ -19,9 +19,9 @@ const removeTempIdInQuestions = (questions: Question[]) => {
 };
 
 export const convertQuizToRequestData = (quiz: QuizTopic) => {
-  const { id, data } = quiz;
+  const { id, data, response, ...others } = quiz;
   let reqData = {
-    ...quiz,
+    ...others,
     id: id.length === 4 ? null : id,
   };
   if (!data) return reqData;

@@ -14,8 +14,15 @@ interface Props {
   tooltipSide?: "top" | "left" | "right" | "bottom";
 }
 export default function Message({ message, className, tooltipSide }: Props) {
-  const { content, time } = message;
-  const formatTime = format(new Date(time), "HH:mm");
+  const { content, timestamp } = message;
+  console.log("message", message);
+  console.log("timestamp", timestamp);
+  let formatTime = "";
+  try {
+    formatTime = format(new Date(timestamp), "HH:mm");
+  } catch (error) {
+    console.error(error);
+  }
   return (
     <TooltipProvider delayDuration={100}>
       <Tooltip>

@@ -6,30 +6,27 @@ import { Input } from "@/lib/shadcn/input";
 import { useMemo, useState } from "react";
 
 interface Props {
-  messages: ChatMessage[];
   user: User;
-  onItemClick?: (message: ChatMessage) => void;
+  chatUserList: User[];
+  onItemClick?: (chatUser: User) => void;
 }
-export default function ChatList({ messages, user, onItemClick }: Props) {
+export default function ChatList({ user, chatUserList, onItemClick }: Props) {
   const [filterInput, setFilterInput] = useState("");
-  const handleFilterMessage = (
-    filterInput: string,
-    messages: ChatMessage[]
-  ) => {
-    if (filterInput === "") return messages;
-    return messages.filter((message) =>
-      message.sender.username.toLowerCase().includes(filterInput.toLowerCase())
+  const handleFilterChatUser = (filterInput: string, chatUserList: User[]) => {
+    if (filterInput === "") return chatUserList;
+    return chatUserList.filter((chatUser) =>
+      chatUser.username.toLowerCase().includes(filterInput.toLowerCase())
     );
   };
   const handleFilterInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterInput(e.target.value);
   };
-  const handleClick = (message: ChatMessage) => () => {
-    if (onItemClick) onItemClick(message);
+  const handleClick = (chatUser: User) => () => {
+    if (onItemClick) onItemClick(chatUser);
   };
-  const filteredMessages = useMemo(
-    () => handleFilterMessage(filterInput, messages),
-    [messages, filterInput]
+  const filterChatUsers = useMemo(
+    () => handleFilterChatUser(filterInput, chatUserList),
+    [chatUserList, filterInput]
   );
   return (
     <div>
@@ -43,12 +40,12 @@ export default function ChatList({ messages, user, onItemClick }: Props) {
       </div>
 
       <div className="flex flex-col">
-        {filteredMessages.map((message, index) => (
+        {chatUserList.map((chatUser, index) => (
           <ChatItem
             key={index}
-            message={message}
+            chatUser={chatUser}
             currentUser={user}
-            onClick={handleClick(message)}
+            onClick={handleClick(chatUser)}
           />
         ))}
       </div>

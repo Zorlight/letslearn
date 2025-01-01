@@ -8,6 +8,13 @@ export const getMyInfo = (
   GET("/user/me", onSuccess, onFail);
 };
 
+export const getAllUsers = (
+  onSuccess: (data: any) => void,
+  onFail: (err?: any) => void
+) => {
+  GET("/user/all", onSuccess, onFail);
+};
+
 export const getUserWork = (
   type: "quiz" | "assignment" | "meeting",
   onSuccess: (data: any) => void,

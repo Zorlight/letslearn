@@ -4,5 +4,5 @@ export type ChatMessage = {
   id: string;
   content: string;
   sender: User;
-  time: string;
+  timestamp: string;
 };

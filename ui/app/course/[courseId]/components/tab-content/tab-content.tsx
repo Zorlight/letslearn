@@ -41,7 +41,6 @@ export default function TabContent({ course, onCourseChange }: Props) {
         </div>
       );
     case Tab.DASHBOARD:
-      if (user?.role !== Role.TEACHER) return notFound();
       return <DashboardTab course={course} />;
     case Tab.SETTINGS:
       if (user?.role !== Role.TEACHER) return notFound();

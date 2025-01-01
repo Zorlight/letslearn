@@ -38,7 +38,7 @@ export default function CoursePage({ params }: Props) {
     getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
   }, [courseId]);
   const teacherTabs = Object.values(Tab);
-  let tabs = [Tab.COURSE, Tab.PEOPLE];
+  let tabs = [Tab.COURSE, Tab.PEOPLE, Tab.DASHBOARD];
   if (user?.role === Role.TEACHER) tabs = teacherTabs;
 
   if (!course) return <Loading />;

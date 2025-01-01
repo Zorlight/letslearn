@@ -4,6 +4,7 @@ import {
   AssignmentReport,
   QuizOverallReport,
   QuizReport,
+  StudentReport,
 } from "@/models/report";
 
 export const getQuizReport = (
@@ -52,7 +53,7 @@ export const getStudentReport = (
   courseId: string,
   startTime: string,
   endTime: string,
-  onSuccess: (data: any) => void,
+  onSuccess: (data: StudentReport) => void,
   onFail: (err?: any) => void
 ) => {
   const url = `/user/me/report?courseId=${courseId}&start=${startTime}&end=${endTime}`;

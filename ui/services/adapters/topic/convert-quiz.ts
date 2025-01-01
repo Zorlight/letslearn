@@ -39,10 +39,10 @@ export const convertQuizToRequestData = (quiz: QuizTopic) => {
 };
 
 export const convertQuizFromResponseData = (quiz: any): QuizTopic => {
-  const parsedData = JSON.parse(quiz.data);
-  const convertedQuestions = parsedData.questions.map((q: any) =>
-    convertQuestionFromResponseData(q)
-  );
+  const parsedData = quiz.data ? JSON.parse(quiz.data) : null;
+  const convertedQuestions = parsedData
+    ? parsedData.questions.map((q: any) => convertQuestionFromResponseData(q))
+    : [];
   const parsedResponse = quiz.response ? JSON.parse(quiz.response) : undefined;
   let res = {
     ...quiz,

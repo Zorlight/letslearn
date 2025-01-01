@@ -1,20 +1,20 @@
-import React from "react";
-import CompareCardValue from "../card-dashboard/compare-card-value";
-import RankLogo from "../ranking/rank-logo";
-import CardDashboard from "../card-dashboard/card-dashboard";
+import HorizontalBarChart from "@/components/chart/bar-chart";
 import CustomLineChart from "@/components/chart/line-chart";
 import {
-  sampleAvgQuizMarkLineChartData,
-  sampleTopAssignmentMarkData,
-  sampleTopQuizMarkData,
-} from "./static-data";
-import HorizontalBarChart from "@/components/chart/bar-chart";
+  getLast6Months,
+  monthNames,
+} from "@/components/chart/line-chart/static-data";
 import { StudentReport, TopicWithMark } from "@/models/report";
+import CardDashboard from "../card-dashboard/card-dashboard";
+import CompareCardValue from "../card-dashboard/compare-card-value";
+import RankLogo from "../ranking/rank-logo";
+import { sampleAvgQuizMarkLineChartData } from "./static-data";
 
 interface Props {
   report: StudentReport;
+  range: { startDate: Date; endDate: Date };
 }
-export default function StudentDashboard({ report }: Props) {
+export default function StudentDashboard({ report, range }: Props) {
   const {
     avgAssignmentMark,
     avgQuizMark,
@@ -38,6 +38,26 @@ export default function StudentDashboard({ report }: Props) {
     if (num === 3) return "3rd";
     return `${num}th`;
   };
+
+  // const handleGetAvgQuizMarkLineChartData = (
+  //   topicWithMarks: TopicWithMark[]
+  // ) => {
+  //   const last6Months = getLast6Months(range.endDate);
+  //   const data = last6Months.map((month) => {
+  //     const monthName = monthNames[month];
+  //     const totalMark = topicWithMarks.reduce((acc, topic) => {
+  //       const doneTime = new Date(topic.doneTime);
+  //       if (doneTime.getMonth() === month) {
+  //         return acc + (topic.mark || 0);
+  //       }
+  //       return acc;
+  //     }, 0);
+  //     return {
+  //       name: monthName,
+  //       value: totalMark,
+  //     };
+  //   });
+  // };
 
   const topTopicQuizData = handleGetTopTopicData(topTopicQuiz);
   const topTopicAssignmentData = handleGetTopTopicData(topTopicAssignment);

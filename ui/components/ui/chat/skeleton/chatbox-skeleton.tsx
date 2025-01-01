@@ -22,7 +22,7 @@ export default function ChatboxSkeleton({ open, onClose }: Props) {
         <div className="w-full h-fit flex flex-row items-stretch justify-between shadow p-2">
           <div className="flex flex-row items-center gap-2">
             <Circle className="w-8 h-8" />
-            <Rectangle className="w-24 h-4" />
+            <Rectangle className="min-w-32 min-h-4" />
           </div>
           <XIcon
             size={20}
@@ -31,8 +31,16 @@ export default function ChatboxSkeleton({ open, onClose }: Props) {
           />
         </div>
         <div className="flex flex-col gap-1 h-full p-2 pb-4 default-scrollbar">
-          {[1, 2, 3, 4, 5].map((item) => (
-            <Rectangle key={item} className="w-full h-12" />
+          {[1, 2, 1, 1, 2, 2, 2, 1, 2].map((item) => (
+            <div
+              key={item}
+              className={cn(
+                "w-full flex flex-row justify-start",
+                item % 2 === 0 && "justify-end"
+              )}
+            >
+              <Rectangle key={item} className="min-w-32 min-h-7 rounded-full" />
+            </div>
           ))}
         </div>
         <div className="w-full h-fit flex flex-row items-center gap-1 p-2">

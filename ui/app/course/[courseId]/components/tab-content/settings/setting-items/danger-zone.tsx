@@ -24,6 +24,10 @@ const DangerZoneSetting = ({ formData, onChange }: DangerZoneSettingProps) => {
     if (onChange) onChange(data);
   };
 
+  const handleChangeVisibility = () => {
+    handleSettingChange({ isPublished: !isPublished });
+  };
+
   const changeCourseVisibilityDescription = `This repository is currently ${
     isPublished ? "public" : "private"
   }.`;
@@ -37,7 +41,11 @@ const DangerZoneSetting = ({ formData, onChange }: DangerZoneSettingProps) => {
         title="Change course visibility"
         description={changeCourseVisibilityDescription}
       >
-        <Button className="bg-gray-100 border-1 text-red-600 font-bold hover:bg-gray-200">
+        <Button
+          type="button"
+          className="bg-gray-100 border-1 text-red-600 font-bold hover:bg-gray-200"
+          onClick={handleChangeVisibility}
+        >
           {changeCourseVisibilityButtonContent}
         </Button>
       </RowSetting>

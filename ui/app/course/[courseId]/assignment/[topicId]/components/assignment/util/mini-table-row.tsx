@@ -7,7 +7,6 @@ interface Props {
   color?: string;
 }
 export default function MiniTableRow({ title, children, color }: Props) {
-  console.log("color", color);
   return (
     <div
       className={cn(

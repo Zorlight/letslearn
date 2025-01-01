@@ -5,13 +5,8 @@ import {
   getStartDateOfCurrentMonth,
 } from "@/lib/utils";
 import { Course } from "@/models/course";
-import { AssignmentOverallReport, QuizOverallReport } from "@/models/report";
-import { TopicType } from "@/models/topic";
-import {
-  getAssignmentOverallReport,
-  getQuizOverallReport,
-  getStudentReport,
-} from "@/services/report";
+import { StudentReport } from "@/models/report";
+import { getStudentReport } from "@/services/report";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -36,7 +31,7 @@ export default function DashboardStudent({ course }: Props) {
     setRange(newRange);
   };
 
-  const handleGetReportSuccess = (data: any) => {
+  const handleGetReportSuccess = (data: StudentReport) => {
     console.log("report: ", data);
     setReport(data);
   };
@@ -79,7 +74,7 @@ export default function DashboardStudent({ course }: Props) {
         />
       </div>
       <div className="w-full">
-        <StudentDashboard report={report} />
+        <StudentDashboard report={report} range={range} />
       </div>
     </div>
   );

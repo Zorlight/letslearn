@@ -7,6 +7,7 @@ import { Conversation, SocketMessage } from "@/models/conversation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeChatBox, openChatBox } from "@/redux/slices/chat";
 import { getConversation } from "@/services/conversation";
+import { CompatClient } from "@stomp/stompjs";
 import { SendHorizonal, XIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -14,17 +15,16 @@ import Avatar from "../simple/avatar";
 import LeftMessage from "./message/left-message";
 import RightMessage from "./message/right-message";
 import ChatboxSkeleton from "./skeleton/chatbox-skeleton";
-import { CompatClient } from "@stomp/stompjs";
-import { ChatMessage } from "@/models/message";
-import { nanoid } from "@reduxjs/toolkit";
 
 export default function ChatBox() {
+  const messageBoxRef = React.useRef<HTMLDivElement>(null);
   const [stompClient, setStompClient] = useState<CompatClient>();
   const messageInputRef = React.useRef<HTMLInputElement>(null);
   const open = useAppSelector((state) => state.chat.isChatBoxOpen);
   const chatUserId = useAppSelector((state) => state.chat.chatUserId);
   const [conversation, setConversation] = useState<Conversation>();
   const dispatch = useAppDispatch();
+
   const handleClose = () => {
     localStorage.removeItem("chat-user-id");
     dispatch(closeChatBox());
@@ -32,23 +32,13 @@ export default function ChatBox() {
 
   const sendMessage = (message: SocketMessage) => {
     if (!stompClient || !stompClient.connected) return;
-    stompClient.send("/app/sendMessage", {}, JSON.stringify(message));
+    stompClient.send(
+      `/app/sendMessage/${message.conversationId}`,
+      {},
+      JSON.stringify(message)
+    );
   };
-  const handleUpdateConversation = (message: SocketMessage) => {
-    if (!conversation) return;
-    const now = new Date();
-    const sentMessage: ChatMessage = {
-      id: nanoid(4),
-      content: message.content,
-      sender: conversation.user1,
-      timestamp: now.toISOString(),
-    };
-    const updateConversation = {
-      ...conversation,
-      messages: [...conversation.messages, sentMessage],
-    };
-    setConversation(updateConversation);
-  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!messageInputRef.current) return;
     messageInputRef.current.value = e.target.value;
@@ -63,20 +53,24 @@ export default function ChatBox() {
       conversationId: conversation.id,
     };
     sendMessage(message);
-    handleUpdateConversation(message);
 
     messageInputRef.current.value = "";
   };
 
   const handleReceiveMessage = (message: any) => {
-    console.log("Received:", message.body);
+    if (!conversation) return;
+    const parseData = JSON.parse(message.body);
+
+    setConversation((prev) => {
+      if (!prev) return;
+      return { ...prev, messages: [...prev.messages, parseData] };
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleSendMessage();
   };
   const handleGetConversationSuccess = (data: Conversation) => {
-    console.log("Conversation", conversation);
     setConversation(data);
   };
   const handleFail = (error: any) => {
@@ -93,21 +87,30 @@ export default function ChatBox() {
 
   useEffect(() => {
     if (!conversation) return;
+    if (!stompClient) {
+      setStompClient(getStompClient());
+      return;
+    }
 
-    if (!stompClient || !stompClient.connected) return;
+    stompClient.connect({}, (frame: any) => {
+      console.log("Connected:", frame);
 
-    stompClient.subscribe(
-      `/topic/conversation/${conversation.id}`,
-      (message: any) => handleReceiveMessage(message)
-    );
-  }, [conversation]);
-  useEffect(() => {
-    if (!stompClient) setStompClient(getStompClient());
-  }, [stompClient]);
+      stompClient.subscribe(
+        `/topic/conversation/${conversation.id}`,
+        (message: any) => handleReceiveMessage(message)
+      );
+    });
+  }, [conversation, stompClient]);
+
   useEffect(() => {
     const storageChatUserId = localStorage.getItem("chat-user-id");
     if (storageChatUserId) dispatch(openChatBox(storageChatUserId));
   }, []);
+
+  useEffect(() => {
+    if (!messageBoxRef.current) return;
+    messageBoxRef.current.scrollTo(0, messageBoxRef.current.scrollHeight);
+  }, [conversation]);
 
   if (!conversation)
     return <ChatboxSkeleton open={open} onClose={handleClose} />;
@@ -133,7 +136,10 @@ export default function ChatBox() {
             onClick={handleClose}
           />
         </div>
-        <div className="flex flex-col gap-1 h-full p-2 pb-4 default-scrollbar">
+        <div
+          ref={messageBoxRef}
+          className="flex flex-col gap-1 h-full p-2 pb-4 default-scrollbar"
+        >
           {conversation.messages.map((message, index) => {
             if (message.sender.id === conversation.user1.id)
               return <RightMessage key={index} message={message} />;

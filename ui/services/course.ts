@@ -19,6 +19,7 @@ export const createCourse = (
   };
 
   const handleSuccess = (data: any) => {
+    console.log("not convert course", data);
     const res = convertCourseFromResponseData(data);
     onSuccess(res);
   };

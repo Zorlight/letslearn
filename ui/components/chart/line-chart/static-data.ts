@@ -1,12 +1,12 @@
-const getLast6Months = () => {
-  const currentMonth = new Date().getMonth();
+export const getLast6Months = (fromDate?: Date) => {
+  const currentMonth = fromDate ? fromDate.getMonth() : new Date().getMonth();
   return Array.from({ length: 6 }, (_, index) => {
     const month = currentMonth - index;
     return month < 0 ? month + 12 : month;
   }).sort((a, b) => a - b);
 };
 
-const monthNames = [
+export const monthNames = [
   "Jan",
   "Feb",
   "Mar",

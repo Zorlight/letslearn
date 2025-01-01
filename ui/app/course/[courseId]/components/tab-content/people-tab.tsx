@@ -24,11 +24,9 @@ export default function PeopleTab({ course }: Props) {
           <TitleLayout className="flex flex-row items-center justify-between">
             <h4 className="font-medium">Students</h4>
             <div className="relative flex flex-row items-center gap-2">
-              <span className="mr-14">
-                {`${students.length} ${
-                  students.length > 1 ? "students" : "student"
-                }`}
-              </span>
+              {`${students.length} ${
+                students.length > 1 ? "students" : "student"
+              }`}
             </div>
           </TitleLayout>
           {students.map((student) => (

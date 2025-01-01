@@ -15,8 +15,6 @@ interface Props {
 }
 export default function Message({ message, className, tooltipSide }: Props) {
   const { content, timestamp } = message;
-  console.log("message", message);
-  console.log("timestamp", timestamp);
   let formatTime = "";
   try {
     formatTime = format(new Date(timestamp), "HH:mm");

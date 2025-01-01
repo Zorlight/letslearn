@@ -9,9 +9,7 @@ const getStompClient = () => {
     process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8080/ws"
   );
   stompClient = Stomp.over(socket);
-  stompClient.connect({}, (frame: any) => {
-    console.log("Connected:", frame);
-  });
+
   return stompClient as CompatClient;
 };
 

@@ -15,9 +15,13 @@ import TabContent from "./components/tab-content/tab-content";
 import { getQuizBreadcrumb } from "./components/utils";
 import Loading from "./loading";
 import { Role } from "@/models/user";
-import MessageInput from "@/components/message/message-input";
-import MessageComment from "@/components/message/message-comment";
 import { Users } from "lucide-react";
+import { addComment, getComments } from "@/services/comment";
+import { Comment } from "@/models/comment";
+import { nanoid } from "@reduxjs/toolkit";
+import CommentInput from "@/components/ui/comment/comment-input";
+import CommentMessage from "@/components/ui/comment/comment-message";
+import CommentList from "@/components/ui/comment/comment-list";
 
 interface Props {
   params: {
@@ -32,23 +36,22 @@ export default function QuizPage({ params }: Props) {
   const [initTab, setInitTab] = useState<string>(Tab.QUIZ);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.profile.value);
+  const [comments, setComments] = useState<Comment[]>([]);
 
-  useEffect(() => {
-    if (!quiz || !course) return;
-    dispatch(setBreadcrumb(getQuizBreadcrumb(course, quiz)));
-  }, [course, quiz]);
-
-  useEffect(() => {
-    getCourse(courseId, handleGetCourseSuccess, handleGetCourseFail);
-  }, [courseId]);
-
-  useEffect(() => {
-    //this useEffect is used for updating tab based on local storage
-    let storageTab = localStorage.getItem(`quiz-${topicId}`);
-    if (storageTab) setInitTab(storageTab);
-
-    getTopic(courseId, topicId, handleGetTopicSuccess, handleGetTopicFail);
-  }, [topicId]);
+  const handleAddCommentSuccess = (data: Comment) => {
+    setComments((prev) => [...prev, data]);
+  };
+  const handleSendComment = (message: string) => {
+    if (!quiz || !user) return;
+    const comment: Comment = {
+      id: nanoid(4),
+      text: message,
+      topic: quiz,
+      user: user,
+      createdAt: new Date().toISOString(),
+    };
+    addComment(courseId, topicId, comment, handleAddCommentSuccess, handleFail);
+  };
 
   const handleQuizChange = (data: QuizTopic) => {
     setQuiz(data);
@@ -60,16 +63,34 @@ export default function QuizPage({ params }: Props) {
   const handleGetTopicSuccess = (data: QuizTopic) => {
     setQuiz(data);
   };
-  const handleGetTopicFail = (error: any) => {
-    toast.error(error);
-  };
 
   const handleGetCourseSuccess = (data: Course) => {
     setCourse(data);
   };
-  const handleGetCourseFail = (error: any) => {
+  const handleFail = (error: any) => {
     toast.error(error);
   };
+
+  useEffect(() => {
+    if (!quiz || !course) return;
+    dispatch(setBreadcrumb(getQuizBreadcrumb(course, quiz)));
+  }, [course, quiz]);
+
+  useEffect(() => {
+    getCourse(courseId, handleGetCourseSuccess, handleFail);
+  }, [courseId]);
+
+  useEffect(() => {
+    //this useEffect is used for updating tab based on local storage
+    let storageTab = localStorage.getItem(`quiz-${topicId}`);
+    if (storageTab) setInitTab(storageTab);
+
+    getTopic(courseId, topicId, handleGetTopicSuccess, handleFail);
+  }, [topicId]);
+
+  useEffect(() => {
+    getComments(courseId, topicId, setComments, handleFail);
+  }, [topicId, courseId]);
 
   const Icon = iconMap.quiz;
   const teacherTabs = Object.values(Tab);
@@ -105,10 +126,12 @@ export default function QuizPage({ params }: Props) {
               <Users size={20} />
               <span className="font-bold text-sm">Class comments</span>
             </div>
-            <div className="space-y-4">
-              <MessageComment user={user} />
-              <MessageInput user={user} />
-            </div>
+            <CommentList
+              comments={comments}
+              currentUser={user}
+              onSend={handleSendComment}
+              className="gap-4"
+            />
           </div>
         </div>
       </TabProvider>

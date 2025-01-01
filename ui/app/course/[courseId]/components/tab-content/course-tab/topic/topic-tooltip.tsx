@@ -21,7 +21,7 @@ export default function TopicTooltip({ children, content }: Props) {
     >
       <Tooltip>
         <TooltipTrigger className="cursor-default">{children}</TooltipTrigger>
-        <TooltipContent className="w-full flex flex-col gap-1 bg-black text-white border-0 pointer-events-none">
+        <TooltipContent className="max-w-[300px] w-full flex flex-col gap-1 bg-black text-white border-0 pointer-events-none">
           {content}
           <TooltipArrow />
         </TooltipContent>

@@ -1,4 +1,4 @@
-import { GET, PATCH, PUT } from "@/lib/http-handle/http-handle";
+import { DELETE, GET, PATCH, PUT } from "@/lib/http-handle/http-handle";
 import { User } from "@/models/user";
 
 export const getMyInfo = (
@@ -58,4 +58,12 @@ export const updatePassword = (
     newPassword,
   };
   PATCH("/user/me/password", reqData, onSuccess, onFail);
+};
+
+export const leaveCourse = (
+  courseId: string,
+  onSuccess: () => void,
+  onFail: (err?: any) => void
+) => {
+  DELETE(`/user/leave?courseId=${courseId}`, onSuccess, onFail);
 };

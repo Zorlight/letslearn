@@ -34,6 +34,7 @@ export default function QuizDashboardSummary({ report, quiz }: Props) {
     () => (maxStudentMarkBase10 / 10) * totalMark,
     [maxStudentMarkBase10, totalMark]
   );
+
   const averageTimeSpend = getShortTimeStringByDuration(avgTimeSpend, 2);
   return (
     <div className="flex flex-row p-2 rounded-xl bg-gray-100">
@@ -45,7 +46,10 @@ export default function QuizDashboardSummary({ report, quiz }: Props) {
           </div>
           <div className="flex flex-row items-center gap-4">
             <SummaryItem title="Questions" content={questionCount.toString()} />
-            <SummaryItem title="Attempted" content={attemptCount.toString()} />
+            <SummaryItem
+              title="Total attempted"
+              content={attemptCount.toString()}
+            />
             <SummaryItem
               title={`Avg mark (${totalMark})`}
               content={avgMark.toFixed(1)}

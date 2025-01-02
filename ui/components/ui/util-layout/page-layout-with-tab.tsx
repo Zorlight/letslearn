@@ -9,7 +9,9 @@ interface Props {
   tabs: string[];
   className?: string;
   tabContentClassName?: string;
+  endIcon?: React.ReactNode;
   onTabSelected?: (tab: string) => void;
+  onEndIconClick?: () => void;
 }
 export default function PageLayoutWithTab({
   children,
@@ -17,6 +19,8 @@ export default function PageLayoutWithTab({
   tabs,
   className,
   tabContentClassName,
+  endIcon,
+  onEndIconClick,
   onTabSelected,
 }: Props) {
   return (
@@ -28,6 +32,8 @@ export default function PageLayoutWithTab({
           tabs={tabs}
           className="sticky top-0 h-[40px] bg-white shadow-md"
           onTabSelected={onTabSelected}
+          endIcon={endIcon}
+          onEndIconClick={onEndIconClick}
         />
         <div
           className={cn(

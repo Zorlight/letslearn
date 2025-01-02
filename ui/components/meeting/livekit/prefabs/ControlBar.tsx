@@ -1,19 +1,22 @@
-import { Track } from 'livekit-client';
-import * as React from 'react';
-import ReactModal from 'react-modal';
-import { MediaDeviceMenu } from './MediaDeviceMenu';
-import { DisconnectButton } from '../components/controls/DisconnectButton';
-import { TrackToggle } from '../components/controls/TrackToggle';
-import { ChatIcon, GearIcon, LeaveIcon } from '../assets/icons';
-import { ChatToggle } from '../components/controls/ChatToggle';
-import { useLocalParticipantPermissions, usePersistentUserChoices } from '../hooks';
-import { useMediaQuery } from '../hooks/internal';
-import { useMaybeLayoutContext } from '../context';
-import { supportsScreenSharing } from '@livekit/components-core';
-import { mergeProps } from '../utils';
-import { StartMediaButton } from '../components/controls/StartMediaButton';
-import { SettingsMenuToggle } from '../components/controls/SettingsMenuToggle';
-import DrawBoard from '@/components/meeting/DrawBoard';
+import { Track } from "livekit-client";
+import * as React from "react";
+import ReactModal from "react-modal";
+import { MediaDeviceMenu } from "./MediaDeviceMenu";
+import { DisconnectButton } from "../components/controls/DisconnectButton";
+import { TrackToggle } from "../components/controls/TrackToggle";
+import { ChatIcon, GearIcon, LeaveIcon } from "../assets/icons";
+import { ChatToggle } from "../components/controls/ChatToggle";
+import {
+  useLocalParticipantPermissions,
+  usePersistentUserChoices,
+} from "../hooks";
+import { useMediaQuery } from "../hooks/internal";
+import { useMaybeLayoutContext } from "../context";
+import { supportsScreenSharing } from "@livekit/components-core";
+import { mergeProps } from "../utils";
+import { StartMediaButton } from "../components/controls/StartMediaButton";
+import { SettingsMenuToggle } from "../components/controls/SettingsMenuToggle";
+import DrawBoard from "@/components/meeting/DrawBoard";
 
 ReactModal.setAppElement("body");
 
@@ -30,7 +33,7 @@ export type ControlBarControls = {
 /** @public */
 export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
   onDeviceError?: (error: { source: Track.Source; error: Error }) => void;
-  variation?: 'minimal' | 'verbose' | 'textOnly';
+  variation?: "minimal" | "verbose" | "textOnly";
   controls?: ControlBarControls;
   /**
    * If `true`, the user's device choices will be persisted.
@@ -63,7 +66,7 @@ export function ControlBar({
   controls,
   saveUserChoices = true,
   onDeviceError,
-    meetingID,
+  meetingID,
   ...props
 }: ControlBarProps) {
   const [isDrawBoardOpen, setIsDrawBoardOpen] = React.useState(false);
@@ -74,9 +77,11 @@ export function ControlBar({
       setIsChatOpen(layoutContext?.widget.state?.showChat);
     }
   }, [layoutContext?.widget.state?.showChat]);
-  const isTooLittleSpace = useMediaQuery(`(max-width: ${isChatOpen ? 1000 : 760}px)`);
+  const isTooLittleSpace = useMediaQuery(
+    `(max-width: ${isChatOpen ? 1000 : 760}px)`
+  );
 
-  const defaultVariation = isTooLittleSpace ? 'minimal' : 'verbose';
+  const defaultVariation = isTooLittleSpace ? "minimal" : "verbose";
   variation ??= defaultVariation;
 
   const visibleControls = { leave: true, ...controls };
@@ -96,12 +101,12 @@ export function ControlBar({
   }
 
   const showIcon = React.useMemo(
-    () => variation === 'minimal' || variation === 'verbose',
-    [variation],
+    () => variation === "minimal" || variation === "verbose",
+    [variation]
   );
   const showText = React.useMemo(
-    () => variation === 'textOnly' || variation === 'verbose',
-    [variation],
+    () => variation === "textOnly" || variation === "verbose",
+    [variation]
   );
 
   const browserSupportsScreenSharing = supportsScreenSharing();
@@ -112,10 +117,10 @@ export function ControlBar({
     (enabled: boolean) => {
       setIsScreenShareEnabled(enabled);
     },
-    [setIsScreenShareEnabled],
+    [setIsScreenShareEnabled]
   );
 
-  const htmlProps = mergeProps({ className: 'lk-control-bar' }, props);
+  const htmlProps = mergeProps({ className: "lk-control-bar" }, props);
 
   const {
     saveAudioInputEnabled,
@@ -127,13 +132,13 @@ export function ControlBar({
   const microphoneOnChange = React.useCallback(
     (enabled: boolean, isUserInitiated: boolean) =>
       isUserInitiated ? saveAudioInputEnabled(enabled) : null,
-    [saveAudioInputEnabled],
+    [saveAudioInputEnabled]
   );
 
   const cameraOnChange = React.useCallback(
     (enabled: boolean, isUserInitiated: boolean) =>
       isUserInitiated ? saveVideoInputEnabled(enabled) : null,
-    [saveVideoInputEnabled],
+    [saveVideoInputEnabled]
   );
 
   return (
@@ -144,14 +149,18 @@ export function ControlBar({
             source={Track.Source.Microphone}
             showIcon={showIcon}
             onChange={microphoneOnChange}
-            onDeviceError={(error) => onDeviceError?.({ source: Track.Source.Microphone, error })}
+            onDeviceError={(error) =>
+              onDeviceError?.({ source: Track.Source.Microphone, error })
+            }
           >
-            {showText && 'Microphone'}
+            {showText && "Microphone"}
           </TrackToggle>
           <div className="lk-button-group-menu">
             <MediaDeviceMenu
               kind="audioinput"
-              onActiveDeviceChange={(_kind, deviceId) => saveAudioInputDeviceId(deviceId ?? '')}
+              onActiveDeviceChange={(_kind, deviceId) =>
+                saveAudioInputDeviceId(deviceId ?? "")
+              }
             />
           </div>
         </div>
@@ -162,14 +171,18 @@ export function ControlBar({
             source={Track.Source.Camera}
             showIcon={showIcon}
             onChange={cameraOnChange}
-            onDeviceError={(error) => onDeviceError?.({ source: Track.Source.Camera, error })}
+            onDeviceError={(error) =>
+              onDeviceError?.({ source: Track.Source.Camera, error })
+            }
           >
-            {showText && 'Camera'}
+            {showText && "Camera"}
           </TrackToggle>
           <div className="lk-button-group-menu">
             <MediaDeviceMenu
               kind="videoinput"
-              onActiveDeviceChange={(_kind, deviceId) => saveVideoInputDeviceId(deviceId ?? '')}
+              onActiveDeviceChange={(_kind, deviceId) =>
+                saveVideoInputDeviceId(deviceId ?? "")
+              }
             />
           </div>
         </div>
@@ -177,52 +190,61 @@ export function ControlBar({
       {visibleControls.screenShare && browserSupportsScreenSharing && (
         <TrackToggle
           source={Track.Source.ScreenShare}
-          captureOptions={{ audio: true, selfBrowserSurface: 'include' }}
+          captureOptions={{ audio: true, selfBrowserSurface: "include" }}
           showIcon={showIcon}
           onChange={onScreenShareChange}
-          onDeviceError={(error) => onDeviceError?.({ source: Track.Source.ScreenShare, error })}
+          onDeviceError={(error) =>
+            onDeviceError?.({ source: Track.Source.ScreenShare, error })
+          }
         >
-          {showText && (isScreenShareEnabled ? 'Stop screen share' : 'Share screen')}
+          {showText &&
+            (isScreenShareEnabled ? "Stop screen share" : "Share screen")}
         </TrackToggle>
       )}
-       <ReactModal
+      <ReactModal
         isOpen={isDrawBoardOpen}
         style={{
           content: {
-            width: '80%',
-            height: '80%',
-            margin: 'auto',
-            borderRadius: '8px',
-            padding: '0px',
-            backgroundColor: '#fff',
-            border: '1px solid #ccc',
+            width: "80%",
+            height: "80%",
+            margin: "auto",
+            borderRadius: "8px",
+            padding: "0px",
+            backgroundColor: "#fff",
+            border: "1px solid #ccc",
           },
           overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
           },
         }}
       >
-        <DrawBoard meetingID={meetingID} close={() => setIsDrawBoardOpen(false)}/>
+        <DrawBoard
+          meetingID={meetingID}
+          close={() => setIsDrawBoardOpen(false)}
+        />
       </ReactModal>
-      <div className='flex items-center justify-center w-auto h-[45px] px-2 cursor-pointer bg-slate-300 rounded-lg bg-opacity-5 text-white' onClick={() => setIsDrawBoardOpen(true)}>
+      <div
+        className="flex items-center justify-center w-auto h-[45px] px-2 cursor-pointer bg-slate-300 rounded-lg bg-opacity-5 text-white"
+        onClick={() => setIsDrawBoardOpen(true)}
+      >
         Open Whiteboard
       </div>
       {visibleControls.chat && (
         <ChatToggle>
           {showIcon && <ChatIcon />}
-          {showText && 'Chat'}
+          {showText && "Chat"}
         </ChatToggle>
       )}
       {visibleControls.settings && (
         <SettingsMenuToggle>
           {showIcon && <GearIcon />}
-          {showText && 'Settings'}
+          {showText && "Settings"}
         </SettingsMenuToggle>
       )}
       {visibleControls.leave && (
         <DisconnectButton>
           {showIcon && <LeaveIcon />}
-          {showText && 'Leave'}
+          {showText && "Leave"}
         </DisconnectButton>
       )}
       <StartMediaButton />

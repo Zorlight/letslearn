@@ -31,15 +31,15 @@ export default function ChatboxSkeleton({ open, onClose }: Props) {
           />
         </div>
         <div className="flex flex-col gap-1 h-full p-2 pb-4 default-scrollbar">
-          {[1, 2, 1, 1, 2, 2, 2, 1, 2].map((item) => (
+          {[1, 2, 1, 1, 2, 2, 2, 1, 2].map((item, index) => (
             <div
-              key={item}
+              key={index}
               className={cn(
                 "w-full flex flex-row justify-start",
                 item % 2 === 0 && "justify-end"
               )}
             >
-              <Rectangle key={item} className="min-w-32 min-h-7 rounded-full" />
+              <Rectangle className="min-w-32 min-h-7 rounded-full" />
             </div>
           ))}
         </div>

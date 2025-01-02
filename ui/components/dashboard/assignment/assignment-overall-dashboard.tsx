@@ -121,7 +121,12 @@ export default function AssignmentOverallDashboard({ report }: Props) {
       </CardDashboard>
       <CardDashboard className="col-span-2 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Avg mark</h6>
-        <HorizontalBarChart data={avgMarkData} type="number" unit="Mark" />
+        <HorizontalBarChart
+          data={avgMarkData}
+          type="number"
+          unit="Mark"
+          maxValue={100}
+        />
       </CardDashboard>
       <CardDashboard className="col-span-2 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Completion rate</h6>

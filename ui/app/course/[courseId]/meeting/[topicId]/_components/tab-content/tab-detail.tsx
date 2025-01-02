@@ -15,8 +15,9 @@ import { Spinner } from "@nextui-org/spinner";
 
 interface Props {
   meeting: MeetingTopic;
+  courseId: string;
 }
-export default function TabDetail({ meeting }: Props) {
+export default function TabDetail({ meeting, courseId }: Props) {
   const user = useAppSelector((state) => state.profile.value);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,7 @@ export default function TabDetail({ meeting }: Props) {
 
   const handleStartMeetingSuccess = () => {
     setLoading(false);
+    localStorage.setItem("courseId", courseId);
     router.push(`/meeting/${meeting.id}`);
   };
   const handleStartMeetingFail = () => {
@@ -38,6 +40,7 @@ export default function TabDetail({ meeting }: Props) {
     startMeeting(meeting.id, handleStartMeetingSuccess, handleStartMeetingFail);
   };
   const handleJoinMeeting = () => {
+    localStorage.setItem("courseId", courseId);
     router.push(`/meeting/${meeting.id}`);
   };
   const openText = handleGetOpenText(open);

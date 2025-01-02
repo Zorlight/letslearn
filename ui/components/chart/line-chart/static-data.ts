@@ -3,7 +3,7 @@ export const getLast6Months = (fromDate?: Date) => {
   return Array.from({ length: 6 }, (_, index) => {
     const month = currentMonth - index;
     return month < 0 ? month + 12 : month;
-  }).sort((a, b) => a - b);
+  }).reverse();
 };
 
 export const monthNames = [

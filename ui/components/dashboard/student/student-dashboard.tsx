@@ -32,41 +32,55 @@ export default function StudentDashboard({ report, range }: Props) {
       value: topic.mark || 0,
     }));
   };
-  const getPlaceInCourseText = (num: number) => {
-    if (num === 1) return "1st";
-    if (num === 2) return "2nd";
-    if (num === 3) return "3rd";
-    return `${num}th`;
+
+  const isInMonth = (date: Date, month: number) => {
+    return date.getMonth() === month;
   };
 
-  // const handleGetAvgQuizMarkLineChartData = (
-  //   topicWithMarks: TopicWithMark[]
-  // ) => {
-  //   const last6Months = getLast6Months(range.endDate);
-  //   const data = last6Months.map((month) => {
-  //     const monthName = monthNames[month];
-  //     const totalMark = topicWithMarks.reduce((acc, topic) => {
-  //       const doneTime = new Date(topic.doneTime);
-  //       if (doneTime.getMonth() === month) {
-  //         return acc + (topic.mark || 0);
-  //       }
-  //       return acc;
-  //     }, 0);
-  //     return {
-  //       name: monthName,
-  //       value: totalMark,
-  //     };
-  //   });
-  // };
+  const handleGetAvgMarkLineChartData = (topicWithMarks: TopicWithMark[]) => {
+    const last6Months = getLast6Months(range.endDate);
+    const data = last6Months.map((month) => {
+      const monthName = monthNames[month];
+      let totalResponse = 0;
+      const totalQuizMarkByMonth = topicWithMarks.reduce((acc, topic) => {
+        if (
+          topic.doneTime &&
+          topic.mark &&
+          isInMonth(new Date(topic.doneTime), month)
+        ) {
+          totalResponse++;
+          return acc + topic.mark;
+        }
+        return acc;
+      }, 0);
+
+      return {
+        name: monthName,
+        value: totalResponse ? totalQuizMarkByMonth / totalResponse : 0,
+      };
+    });
+    return data;
+  };
 
   const topTopicQuizData = handleGetTopTopicData(topTopicQuiz);
   const topTopicAssignmentData = handleGetTopTopicData(topTopicAssignment);
+  const quizCompletionRate = totalQuizCount
+    ? (totalQuizCount - quizToDoCount) / totalQuizCount
+    : 0;
+  const assignmentCompletionRate = totalAssignmentCount
+    ? (totalAssignmentCount - assignmentToDoCount) / totalAssignmentCount
+    : 0;
+  const avgQuizMarkLineChartData = handleGetAvgMarkLineChartData(topTopicQuiz);
+
+  const avgAssignmentMarkLineChartData =
+    handleGetAvgMarkLineChartData(topTopicAssignment);
+
   return (
     <div className="grid grid-cols-4 gap-5">
       <CompareCardValue
         className="col-span-1"
-        title="Completed activity"
-        value={7}
+        title="Quiz completion rate"
+        value={`${Math.round(quizCompletionRate * 100)}%`}
       />
       <CompareCardValue
         className="col-span-1"
@@ -80,19 +94,16 @@ export default function StudentDashboard({ report, range }: Props) {
       />
       <CompareCardValue
         className="col-span-1"
-        title="Place in course"
-        value={getPlaceInCourseText(8)}
+        title="Assignment completion rate"
+        value={`${Math.round(assignmentCompletionRate * 100)}%`}
       />
       <CardDashboard className="col-span-3 row-span-3 row-start-2 col-start-1 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Avg quiz mark in last 6 months</h6>
-        <CustomLineChart
-          data={sampleAvgQuizMarkLineChartData}
-          lineColor="#db2777"
-        />
+        <CustomLineChart data={avgQuizMarkLineChartData} lineColor="#db2777" />
       </CardDashboard>
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-2 col-start-4"
-        title="Total quiz"
+        title="Total quizzes"
         value={`${totalQuizCount} ${totalQuizCount > 1 ? "quizzes" : "quiz"}`}
       />
       <CompareCardValue
@@ -102,13 +113,13 @@ export default function StudentDashboard({ report, range }: Props) {
       />
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-4 col-start-4"
-        title="Next quiz will end on"
-        value="2021-12-31"
+        title={quizToDoCount > 0 ? "Next quiz will end on" : "Total attempted"}
+        value={quizToDoCount > 0 ? "2021-12-31" : totalQuizCount.toString()}
       />
 
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-5 col-start-1"
-        title="Total assignment"
+        title="Total assignments"
         value={`${totalAssignmentCount} ${
           totalAssignmentCount > 1 ? "assignments" : "assignment"
         }`}
@@ -126,15 +137,15 @@ export default function StudentDashboard({ report, range }: Props) {
       />
       <CompareCardValue
         className="col-span-1 row-span-1 row-start-7 col-start-1"
-        title="Next assignment will end on"
-        value="2021-12-31"
+        title="Total files"
+        value={1}
       />
       <CardDashboard className="col-span-3 row-span-3 row-start-5 col-start-2 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">
           Avg assignment mark in last 6 months
         </h6>
         <CustomLineChart
-          data={sampleAvgQuizMarkLineChartData}
+          data={avgAssignmentMarkLineChartData}
           lineColor="#7e22ce"
         />
       </CardDashboard>

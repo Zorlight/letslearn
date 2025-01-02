@@ -1,10 +1,9 @@
-import React, { useMemo } from "react";
 import CustomPieChart from "@/components/chart/pie-chart";
-import RankItem from "../ranking/rank-item";
-import { fakeUserList } from "@/fake-data/user";
-import QuizDashboardSummary from "./quiz-summary";
 import { ChartDataObject, QuizReport } from "@/models/report";
 import { QuizTopic } from "@/models/topic";
+import { useMemo } from "react";
+import RankItem from "../ranking/rank-item";
+import QuizDashboardSummary from "./quiz-summary";
 
 const sampleQuestionTypeData = [
   { name: "Multiple choice", value: 25, color: "#EC4899" },
@@ -52,8 +51,6 @@ export default function QuizDashboard({ quiz, report }: Props) {
     data[4].value = obj["-1"];
     return data;
   };
-
-  const handleClick = (studentId: string) => {};
 
   const studentMarkData = useMemo(
     () => handleGetStudentMarkData(report.markDistributionCount),

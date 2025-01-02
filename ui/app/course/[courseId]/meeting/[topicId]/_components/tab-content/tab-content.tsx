@@ -23,7 +23,7 @@ const TabContent = ({
 
   switch (selectedTab) {
     case Tab.DETAIL:
-      return <TabDetail meeting={meeting} />;
+      return <TabDetail meeting={meeting} courseId={courseId} />;
     case Tab.SETTINGS:
       return (
         <TabSetting

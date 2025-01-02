@@ -5,13 +5,16 @@ import { QuizTopic } from "@/models/topic";
 
 interface Props {
   quiz: QuizTopic;
+  courseId: string;
   studentResponses: StudentResponse[];
 }
-const TabResults = ({ studentResponses, quiz }: Props) => {
+const TabResults = ({ studentResponses, quiz, courseId }: Props) => {
   const router = useRouter();
 
   const handleViewResponse = (responseId: string) => {
-    router.push(`/quiz-attempting/${quiz.id}/review/${responseId}`);
+    router.push(
+      `/quiz-attempting/${quiz.id}/review/${responseId}?courseId=${courseId}`
+    );
   };
   return (
     <div className="w-full flex flex-col gap-8">

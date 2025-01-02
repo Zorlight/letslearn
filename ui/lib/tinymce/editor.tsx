@@ -14,44 +14,44 @@ const TinyEditor = ({ initValue, onChange }: Props) => {
   };
 
   return (
-    // <Editor
-    // apiKey={process.env.TINYMCE_API_KEY}
-    //   init={{
-    //     plugins: [
-    //       // Core editing features
-    //       "anchor",
-    //       "autosave",
-    //       "autolink",
-    //       "charmap",
-    //       "codesample",
-    //       "emoticons",
-    //       "image",
-    //       "link",
-    //       "lists",
-    //       "media",
-    //       "searchreplace",
-    //       "table",
-    //       "visualblocks",
-    //       "wordcount",
-    //       "preview",
-    //       // Your account includes a free trial of TinyMCE premium features
-    //       // Try the most popular premium features until Sep 20, 2024:
-    //     ],
-    //     toolbar:
-    //       "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
-    //     resize: true,
-    //   }}
-    //   initialValue={_initValue}
-    //   onChange={handleChange}
-    // />
-    <textarea
-      value={_initValue}
-      onChange={(e) => {
-        setInitValue(e.target.value);
-        if (onChange) onChange(e.target.value);
+    <Editor
+      apiKey={process.env.TINYMCE_API_KEY}
+      init={{
+        plugins: [
+          // Core editing features
+          "anchor",
+          "autosave",
+          "autolink",
+          "charmap",
+          "codesample",
+          "emoticons",
+          "image",
+          "link",
+          "lists",
+          "media",
+          "searchreplace",
+          "table",
+          "visualblocks",
+          "wordcount",
+          "preview",
+          // Your account includes a free trial of TinyMCE premium features
+          // Try the most popular premium features until Sep 20, 2024:
+        ],
+        toolbar:
+          "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+        resize: true,
       }}
-      className="w-full p-2 border-[0.5px] min-h-[200px] border-gray-400 focus-within:border-blue-700 outline-none rounded-md"
+      initialValue={_initValue}
+      onChange={handleChange}
     />
+    // <textarea
+    //   value={_initValue}
+    //   onChange={(e) => {
+    //     setInitValue(e.target.value);
+    //     if (onChange) onChange(e.target.value);
+    //   }}
+    //   className="w-full p-2 border-[0.5px] min-h-[200px] border-gray-400 focus-within:border-blue-700 outline-none rounded-md"
+    // />
   );
 };
 

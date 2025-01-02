@@ -3,7 +3,7 @@ import type {
   LocalAudioTrack,
   LocalTrack,
   LocalVideoTrack,
-} from 'livekit-client';
+} from "livekit-client";
 import {
   createLocalAudioTrack,
   createLocalTracks,
@@ -12,23 +12,23 @@ import {
   Track,
   VideoPresets,
   Mutex,
-} from 'livekit-client';
-import * as React from 'react';
-import { MediaDeviceMenu } from './MediaDeviceMenu';
-import { TrackToggle } from '../components/controls/TrackToggle';
-import type { LocalUserChoices } from '@livekit/components-core';
-import { log } from '@livekit/components-core';
-import { ParticipantPlaceholder } from '../assets/images';
-import { useMediaDevices, usePersistentUserChoices } from '../hooks';
-import { useWarnAboutMissingStyles } from '../hooks/useWarnAboutMissingStyles';
-import { defaultUserChoices } from '@livekit/components-core';
+} from "livekit-client";
+import * as React from "react";
+import { MediaDeviceMenu } from "./MediaDeviceMenu";
+import { TrackToggle } from "../components/controls/TrackToggle";
+import type { LocalUserChoices } from "@livekit/components-core";
+import { log } from "@livekit/components-core";
+import { ParticipantPlaceholder } from "../assets/images";
+import { useMediaDevices, usePersistentUserChoices } from "../hooks";
+import { useWarnAboutMissingStyles } from "../hooks/useWarnAboutMissingStyles";
+import { defaultUserChoices } from "@livekit/components-core";
 
 /**
  * Props for the PreJoin component.
  * @public
  */
 export interface PreJoinProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onSubmit' | 'onError'> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSubmit" | "onError"> {
   /** This function is called with the `LocalUserChoices` if validation is passed. */
   onSubmit?: (values: LocalUserChoices) => void;
   /**
@@ -55,7 +55,7 @@ export interface PreJoinProps
 /** @alpha */
 export function usePreviewTracks(
   options: CreateLocalTracksOptions,
-  onError?: (err: Error) => void,
+  onError?: (err: Error) => void
 ) {
   const [tracks, setTracks] = React.useState<LocalTrack[]>();
 
@@ -101,15 +101,15 @@ export function usePreviewTracks(
 export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
   enabled: boolean,
   deviceId: string,
-  kind: 'videoinput' | 'audioinput',
+  kind: "videoinput" | "audioinput"
 ) {
   const [deviceError, setDeviceError] = React.useState<Error | null>(null);
   const [isCreatingTrack, setIsCreatingTrack] = React.useState<boolean>(false);
 
   const devices = useMediaDevices({ kind });
-  const [selectedDevice, setSelectedDevice] = React.useState<MediaDeviceInfo | undefined>(
-    undefined,
-  );
+  const [selectedDevice, setSelectedDevice] = React.useState<
+    MediaDeviceInfo | undefined
+  >(undefined);
 
   const [localTrack, setLocalTrack] = React.useState<T>();
   const [localDeviceId, setLocalDeviceId] = React.useState<string>(deviceId);
@@ -118,10 +118,13 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
     setLocalDeviceId(deviceId);
   }, [deviceId]);
 
-  const createTrack = async (deviceId: string, kind: 'videoinput' | 'audioinput') => {
+  const createTrack = async (
+    deviceId: string,
+    kind: "videoinput" | "audioinput"
+  ) => {
     try {
       const track =
-        kind === 'videoinput'
+        kind === "videoinput"
           ? await createLocalVideoTrack({
               deviceId: deviceId,
               resolution: VideoPresets.h720.resolution,
@@ -141,7 +144,10 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
     }
   };
 
-  const switchDevice = async (track: LocalVideoTrack | LocalAudioTrack, id: string) => {
+  const switchDevice = async (
+    track: LocalVideoTrack | LocalAudioTrack,
+    id: string
+  ) => {
     await track.setDeviceId(id);
     prevDeviceId.current = id;
   };
@@ -150,7 +156,7 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
 
   React.useEffect(() => {
     if (enabled && !localTrack && !deviceError && !isCreatingTrack) {
-      log.debug('creating track', kind);
+      log.debug("creating track", kind);
       setIsCreatingTrack(true);
       createTrack(localDeviceId, kind).finally(() => {
         setIsCreatingTrack(false);
@@ -166,8 +172,15 @@ export function usePreviewDevice<T extends LocalVideoTrack | LocalAudioTrack>(
     if (!enabled) {
       log.debug(`muting ${kind} track`);
       localTrack.mute().then(() => log.debug(localTrack.mediaStreamTrack));
-    } else if (selectedDevice?.deviceId && prevDeviceId.current !== selectedDevice?.deviceId) {
-      log.debug(`switching ${kind} device from`, prevDeviceId.current, selectedDevice.deviceId);
+    } else if (
+      selectedDevice?.deviceId &&
+      prevDeviceId.current !== selectedDevice?.deviceId
+    ) {
+      log.debug(
+        `switching ${kind} device from`,
+        prevDeviceId.current,
+        selectedDevice.deviceId
+      );
       switchDevice(localTrack, selectedDevice.deviceId);
     } else {
       log.debug(`unmuting local ${kind} track`);
@@ -217,10 +230,10 @@ export function PreJoin({
   onSubmit,
   onError,
   debug,
-  joinLabel = 'Join Room',
-  micLabel = 'Microphone',
-  camLabel = 'Camera',
-  userLabel = 'Username',
+  joinLabel = "Join Room",
+  micLabel = "Microphone",
+  camLabel = "Camera",
+  userLabel = "Username",
   persistUserChoices = true,
   ...htmlProps
 }: PreJoinProps) {
@@ -228,10 +241,18 @@ export function PreJoin({
 
   // TODO: Remove and pipe `defaults` object directly into `usePersistentUserChoices` once we fully switch from type `LocalUserChoices` to `UserChoices`.
   const partialDefaults: Partial<LocalUserChoices> = {
-    ...(defaults.audioDeviceId !== undefined && { audioDeviceId: defaults.audioDeviceId }),
-    ...(defaults.videoDeviceId !== undefined && { videoDeviceId: defaults.videoDeviceId }),
-    ...(defaults.audioEnabled !== undefined && { audioEnabled: defaults.audioEnabled }),
-    ...(defaults.videoEnabled !== undefined && { videoEnabled: defaults.videoEnabled }),
+    ...(defaults.audioDeviceId !== undefined && {
+      audioDeviceId: defaults.audioDeviceId,
+    }),
+    ...(defaults.videoDeviceId !== undefined && {
+      videoDeviceId: defaults.videoDeviceId,
+    }),
+    ...(defaults.audioEnabled !== undefined && {
+      audioEnabled: defaults.audioEnabled,
+    }),
+    ...(defaults.videoEnabled !== undefined && {
+      videoEnabled: defaults.videoEnabled,
+    }),
     ...(defaults.username !== undefined && { username: defaults.username }),
   };
 
@@ -249,13 +270,17 @@ export function PreJoin({
   });
 
   // Initialize device settings
-  const [audioEnabled, setAudioEnabled] = React.useState<boolean>(initialUserChoices.audioEnabled);
-  const [videoEnabled, setVideoEnabled] = React.useState<boolean>(initialUserChoices.videoEnabled);
+  const [audioEnabled, setAudioEnabled] = React.useState<boolean>(
+    initialUserChoices.audioEnabled
+  );
+  const [videoEnabled, setVideoEnabled] = React.useState<boolean>(
+    initialUserChoices.videoEnabled
+  );
   const [audioDeviceId, setAudioDeviceId] = React.useState<string>(
-    initialUserChoices.audioDeviceId,
+    initialUserChoices.audioDeviceId
   );
   const [videoDeviceId, setVideoDeviceId] = React.useState<string>(
-    initialUserChoices.videoDeviceId,
+    initialUserChoices.videoDeviceId
   );
   const [username, setUsername] = React.useState(initialUserChoices.username);
 
@@ -278,17 +303,24 @@ export function PreJoin({
 
   const tracks = usePreviewTracks(
     {
-      audio: audioEnabled ? { deviceId: initialUserChoices.audioDeviceId } : false,
-      video: videoEnabled ? { deviceId: initialUserChoices.videoDeviceId } : false,
+      audio: audioEnabled
+        ? { deviceId: initialUserChoices.audioDeviceId }
+        : false,
+      video: videoEnabled
+        ? { deviceId: initialUserChoices.videoDeviceId }
+        : false,
     },
-    onError,
+    onError
   );
 
   const videoEl = React.useRef(null);
 
   const videoTrack = React.useMemo(
-    () => tracks?.filter((track) => track.kind === Track.Kind.Video)[0] as LocalVideoTrack,
-    [tracks],
+    () =>
+      tracks?.filter(
+        (track) => track.kind === Track.Kind.Video
+      )[0] as LocalVideoTrack,
+    [tracks]
   );
 
   const facingMode = React.useMemo(() => {
@@ -296,13 +328,16 @@ export function PreJoin({
       const { facingMode } = facingModeFromLocalTrack(videoTrack);
       return facingMode;
     } else {
-      return 'undefined';
+      return "undefined";
     }
   }, [videoTrack]);
 
   const audioTrack = React.useMemo(
-    () => tracks?.filter((track) => track.kind === Track.Kind.Audio)[0] as LocalAudioTrack,
-    [tracks],
+    () =>
+      tracks?.filter(
+        (track) => track.kind === Track.Kind.Audio
+      )[0] as LocalAudioTrack,
+    [tracks]
   );
 
   React.useEffect(() => {
@@ -320,13 +355,13 @@ export function PreJoin({
 
   const handleValidation = React.useCallback(
     (values: LocalUserChoices) => {
-      if (typeof onValidate === 'function') {
+      if (typeof onValidate === "function") {
         return onValidate(values);
       } else {
-        return values.username !== '';
+        return values.username !== "";
       }
     },
-    [onValidate],
+    [onValidate]
   );
 
   React.useEffect(() => {
@@ -339,26 +374,38 @@ export function PreJoin({
     };
     setUserChoices(newUserChoices);
     setIsValid(handleValidation(newUserChoices));
-  }, [username, videoEnabled, handleValidation, audioEnabled, audioDeviceId, videoDeviceId]);
+  }, [
+    username,
+    videoEnabled,
+    handleValidation,
+    audioEnabled,
+    audioDeviceId,
+    videoDeviceId,
+  ]);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (handleValidation(userChoices)) {
-      if (typeof onSubmit === 'function') {
+      if (typeof onSubmit === "function") {
         onSubmit(userChoices);
       }
     } else {
-      log.warn('Validation failed with: ', userChoices);
+      log.warn("Validation failed with: ", userChoices);
     }
   }
 
   useWarnAboutMissingStyles();
 
   return (
-    <div className="lk-prejoin" {...htmlProps}>
+    <div className="lk-prejoin rounded-lg" {...htmlProps}>
       <div className="lk-video-container">
         {videoTrack && (
-          <video ref={videoEl} width="1280" height="720" data-lk-facing-mode={facingMode} />
+          <video
+            ref={videoEl}
+            width="1280"
+            height="720"
+            data-lk-facing-mode={facingMode}
+          />
         )}
         {(!videoTrack || !videoEnabled) && (
           <div className="lk-camera-off-note">
@@ -429,7 +476,10 @@ export function PreJoin({
       {debug && (
         <>
           <strong>User Choices:</strong>
-          <ul className="lk-list" style={{ overflow: 'hidden', maxWidth: '15rem' }}>
+          <ul
+            className="lk-list"
+            style={{ overflow: "hidden", maxWidth: "15rem" }}
+          >
             <li>Username: {`${userChoices.username}`}</li>
             <li>Video Enabled: {`${userChoices.videoEnabled}`}</li>
             <li>Audio Enabled: {`${userChoices.audioEnabled}`}</li>

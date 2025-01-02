@@ -1,6 +1,7 @@
 "use client";
 import { ConnectionDetails } from "@/app/meeting/[meetingID]/types";
 import {
+  AudioConference,
   formatChatMessageLinks,
   LiveKitRoom,
   LocalUserChoices,
@@ -16,7 +17,7 @@ import {
   RoomConnectOptions,
 } from "livekit-client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 export function MeetingPageComponent(props: { meetingID: string }) {
   const [preJoinChoices, setPreJoinChoices] = React.useState<
@@ -52,7 +53,7 @@ export function MeetingPageComponent(props: { meetingID: string }) {
   return (
     <main data-lk-theme="default">
       {connectionDetails === undefined || preJoinChoices === undefined ? (
-        <div className="flex items-center justify-center w-screen h-screen bg-slate-600 rounded-lg">
+        <div className="flex items-center justify-center w-screen h-screen bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-500 rounded-lg">
           <PreJoin
             defaults={preJoinDefaults}
             onSubmit={handlePreJoinSubmit}
@@ -107,7 +108,19 @@ function VideoConferenceComponent(props: {
   }, []);
 
   const router = useRouter();
-  const handleOnLeave = React.useCallback(() => router.push("/home"), [router]);
+  const [courseId, setCourseId] = React.useState<string>();
+
+  const handleOnLeave = React.useCallback(() => {
+    if (courseId) {
+      localStorage.removeItem("courseId");
+      router.push(`/course/${courseId}/meeting/${props.meetingID}`);
+    } else router.push("/home");
+  }, [router, courseId, props.meetingID]);
+
+  useEffect(() => {
+    const storageCourseId = localStorage.getItem("courseId");
+    if (storageCourseId) setCourseId(storageCourseId);
+  }, []);
 
   return (
     <div className="h-screen w-screen">

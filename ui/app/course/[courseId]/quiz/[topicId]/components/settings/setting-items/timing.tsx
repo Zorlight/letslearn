@@ -58,6 +58,7 @@ const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
   ) => {
     if (!zoneDatetime) return;
     const date = zonedDateTimeToDate(zoneDatetime);
+    console.log("goddam the date", date)
     handleSettingChange({
       ...formData,
       [key]: { ...formData[key], value: date.toISOString() },

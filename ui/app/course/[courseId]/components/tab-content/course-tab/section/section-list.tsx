@@ -211,35 +211,37 @@ const SectionList = ({
         type="multiple"
         className={cn("w-full flex flex-col gap-4", className)}
       >
-        {sections.map((section) => {
-          const { id } = section;
-          const isEditting = sectionEditting.includes(id);
+        {sections
+          .sort((a, b) => a.position - b.position)
+          .map((section) => {
+            const { id } = section;
+            const isEditting = sectionEditting.includes(id);
 
-          return (
-            <SectionLayout
-              key={id}
-              section={section}
-              isEditing={isEditting}
-              showContent={showContent}
-              onSectionChange={onSectionChange}
-              onTrigger={handleTriggerClick}
-              onEdit={() => handleEdit(id)}
-              onSave={handleSaveSection(section)}
-              onRefresh={handleRefreshSection(id)}
-              canEdit={canEdit}
-              className={contentClassName}
-            >
-              <SectionContent
+            return (
+              <SectionLayout
+                key={id}
                 section={section}
-                isEditting={isEditting}
+                isEditing={isEditting}
+                showContent={showContent}
                 onSectionChange={onSectionChange}
-                onCreateTopic={handleCreateTopic(section)}
-                onReorderedTopic={handleReorderedTopic(section)}
-                onDeleteTopic={handleDeleteTopic(section)}
-              />
-            </SectionLayout>
-          );
-        })}
+                onTrigger={handleTriggerClick}
+                onEdit={() => handleEdit(id)}
+                onSave={handleSaveSection(section)}
+                onRefresh={handleRefreshSection(id)}
+                canEdit={canEdit}
+                className={contentClassName}
+              >
+                <SectionContent
+                  section={section}
+                  isEditting={isEditting}
+                  onSectionChange={onSectionChange}
+                  onCreateTopic={handleCreateTopic(section)}
+                  onReorderedTopic={handleReorderedTopic(section)}
+                  onDeleteTopic={handleDeleteTopic(section)}
+                />
+              </SectionLayout>
+            );
+          })}
       </Accordion>
     </div>
   );

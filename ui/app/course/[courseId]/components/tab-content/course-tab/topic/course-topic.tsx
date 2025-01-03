@@ -46,11 +46,11 @@ const CourseTopic = ({
 
   const handleLinkAction = () => {
     if (!user) return;
+    if (user.role === Role.TEACHER) router.push(`${path}/link/${topic.id}`);
     if (!topic.data) return;
     const { url } = topic.data as LinkData;
     if (!url || url === "") return;
     if (user.role === Role.STUDENT) window.open(url, "_blank");
-    if (user.role === Role.TEACHER) router.push(`${path}/link/${topic.id}`);
   };
 
   const handleMeetingAction = () => {

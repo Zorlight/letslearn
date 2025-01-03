@@ -10,8 +10,8 @@ interface Props {
 const TabFile = ({ className, topic }: Props) => {
   const { file } = topic.data;
   const handleDownloadFile = () => {
-    if (!file) return;
-    if (!file.downloadUrl) toast.error("Please go to settings to set the file");
+    if (!file || !file.downloadUrl)
+      toast.info("Please go to settings to set the file");
   };
   return (
     <div className={cn("", className)}>

@@ -25,11 +25,22 @@ export type MeetingForm = {
   open: string;
 };
 
-const schema: ZodType<MeetingForm> = z.object({
-  title: z.string().min(1, "Title must be at least 1 character"),
-  description: z.string(),
-  open: z.string(),
-});
+const schema: ZodType<MeetingForm> = z
+  .object({
+    title: z.string().min(1, "Title must be at least 1 character"),
+    description: z.string(),
+    open: z.string(),
+  })
+  .refine(
+    (data) => {
+      const { open } = data;
+      return new Date(open).getTime() > Date.now();
+    },
+    {
+      path: ["open"],
+      message: "Open time must be now or in the future",
+    }
+  );
 
 export default function SettingForm({ meeting, className, onSubmit }: Props) {
   const { open } = meeting.data;
@@ -49,6 +60,7 @@ export default function SettingForm({ meeting, className, onSubmit }: Props) {
     defaultValues: initMeetingSetting,
   });
   const { setValue, watch, register } = form;
+  const { errors } = form.formState;
   const { title, description } = watch();
   const handleInputChange = (key: keyof MeetingForm) => (e: any) => {
     setValue(key, e.target.value);
@@ -116,6 +128,11 @@ export default function SettingForm({ meeting, className, onSubmit }: Props) {
             inputWrapper: "border",
           }}
         />
+        {errors?.open && (
+          <p className="absolute top-full text-red-500 text-xs font-semibold">
+            {errors.open.message}
+          </p>
+        )}
       </SettingRow>
       <SettingRow label={<TextSelect className="text-gray-500" />}>
         <TinyEditor

@@ -13,6 +13,7 @@ import {
 import { nanoid } from "@reduxjs/toolkit";
 
 const today = new Date();
+
 const todayNextHour = new Date(
   today.getFullYear(),
   today.getMonth(),

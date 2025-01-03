@@ -1,9 +1,8 @@
 "use client";
-import { ChatMessage } from "@/models/message";
-import { User } from "@/models/user";
-import ChatItem from "./chat-item";
 import { Input } from "@/lib/shadcn/input";
+import { User } from "@/models/user";
 import { useMemo, useState } from "react";
+import ChatItem from "./chat-item";
 
 interface Props {
   user: User;
@@ -40,7 +39,7 @@ export default function ChatList({ user, chatUserList, onItemClick }: Props) {
       </div>
 
       <div className="flex flex-col">
-        {chatUserList.map((chatUser, index) => (
+        {filterChatUsers.map((chatUser, index) => (
           <ChatItem
             key={index}
             chatUser={chatUser}

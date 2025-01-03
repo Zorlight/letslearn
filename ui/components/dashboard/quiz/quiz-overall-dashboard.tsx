@@ -90,7 +90,7 @@ export default function QuizOverallDashboard({ quizOverallReport }: Props) {
       <CompareCardValue
         className="col-span-1"
         title="Avg completion rate"
-        value={`${avgCompletionPercentage * 100}%`}
+        value={`${(avgCompletionPercentage * 100).toFixed(2)}%`}
       />
       <CompareCardValue
         className="col-span-1"

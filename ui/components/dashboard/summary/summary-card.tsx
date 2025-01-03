@@ -11,9 +11,7 @@ export default function SummaryCard({ students }: Props) {
     <Card className="min-w-[250px] min-h-full flex flex-col gap-2 p-4 text-gray-500 text-sm border-0">
       <div className="flex flex-col gap-2">
         <Title
-          title={
-            students.length > 1 ? "Students attempted" : "Student attempted"
-          }
+          title={students.length > 1 ? "Students" : "Student"}
           number={students.length}
         />
         <StudentList students={students} maxToShow={5} />

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/lib/shadcn/button";
 import EditorDisplay from "@/lib/tinymce/editor-display";
 import { cn, getTimeStringByDuration } from "@/lib/utils";
@@ -13,9 +14,9 @@ import {
   StudentResponse,
 } from "@/models/student-response";
 import { QuizTopic } from "@/models/topic";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { getGradeColor } from "../../utils";
 import QuizAttemptResult from "../quiz-attempt-result";
 import {
@@ -26,6 +27,7 @@ import {
 } from "../utils";
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "react-toastify";
+import CustomDialog from "@/components/ui/custom-dialog";
 
 interface Props {
   courseId: string;
@@ -54,6 +56,23 @@ const TabStudentQuiz = ({
     timeLimit,
     timeLimitUnit,
   } = data;
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [dialogInfo, setDialogInfo] = useState<{
+    title: string;
+    content: string;
+    variant: "default" | "warning" | "error" | "success";
+  }>({
+    title: "This quiz has time limit",
+    content: `Are you sure you want to start this quiz? You can't pause the quiz and the time will keep counting down.`,
+    variant: "default",
+  });
+  const handleConfirmAttempt = () => {
+    handleAttemptQuiz();
+    setOpenConfirmDialog(false);
+  };
+  const handleCancelConfirm = () => {
+    setOpenConfirmDialog(false);
+  };
 
   const handleAttemptQuiz = () => {
     if (questions.length === 0) {
@@ -150,7 +169,11 @@ const TabStudentQuiz = ({
       <EditorDisplay className="text-gray-500" htmlString={description} />
       <div className="space-y-4">
         {canDoQuiz && !isQuizClosed && !overAllowedAttempts && (
-          <Button variant="cyan" className="w-fit" onClick={handleAttemptQuiz}>
+          <Button
+            variant="cyan"
+            className="w-fit"
+            onClick={() => setOpenConfirmDialog(true)}
+          >
             Attempt quiz
           </Button>
         )}
@@ -202,6 +225,14 @@ const TabStudentQuiz = ({
           </div>
         )}
       </div>
+      <CustomDialog
+        control={{ open: openConfirmDialog, setOpen: setOpenConfirmDialog }}
+        variant={dialogInfo.variant}
+        title={dialogInfo.title}
+        content={<span>{dialogInfo.content}</span>}
+        onYes={handleConfirmAttempt}
+        onCancel={handleCancelConfirm}
+      />
     </div>
   );
 };

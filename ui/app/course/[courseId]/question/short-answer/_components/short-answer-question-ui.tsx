@@ -19,6 +19,7 @@ import ShortAnswerQuestionGeneralSetting, {
 } from "./general";
 import { dafaultGeneralSetting, defaultAnswerSetting } from "./static-data";
 import CollapsibleList from "../../../components/collapsible/collapsible-list";
+import { toast } from "react-toastify";
 
 const generalSettingSchema: ZodType<ShortAnswerQuestionGeneralForm> = z.object({
   questionName: z.string().min(1, "Required"),
@@ -140,10 +141,21 @@ const ShortAnswerQuestionUI = ({ question, onSubmitQuestion }: Props) => {
     return questionToEdit;
   };
 
+  const checkAnswerPercent = (question: Question) => {
+    const { data } = question;
+    const { choices } = data as ShortAnswerQuestion;
+    return choices.every((choice) => choice.gradePercent < 100);
+  };
+
   const onSubmit = (data: ShortAnswerQuestionForm) => {
     let questionToSubmit;
     if (question) questionToSubmit = handleEditQuestion(question, data);
     else questionToSubmit = handleCreateQuestion(data);
+
+    if (checkAnswerPercent(questionToSubmit)) {
+      toast.error("At least one answer must have 100% grade percent");
+      return;
+    }
 
     if (onSubmitQuestion) onSubmitQuestion(questionToSubmit);
   };

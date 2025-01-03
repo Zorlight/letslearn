@@ -24,7 +24,7 @@ export const getQuizOverallReport = (
   onSuccess: (data: QuizOverallReport) => void,
   onFail: (err?: any) => void
 ) => {
-  const url = `/course/${courseId}/quiz-report?startTime=${startTime}&endTime=${endTime}`;
+  const url = `/course/${courseId}/quiz-report?start=${startTime}&end=${endTime}`;
   GET(url, onSuccess, onFail);
 };
 
@@ -45,7 +45,7 @@ export const getAssignmentOverallReport = (
   onSuccess: (data: AssignmentOverallReport) => void,
   onFail: (err?: any) => void
 ) => {
-  const url = `/course/${courseId}/assignment-report?startTime=${startTime}&endTime=${endTime}`;
+  const url = `/course/${courseId}/assignment-report?start=${startTime}&end=${endTime}`;
   GET(url, onSuccess, onFail);
 };
 

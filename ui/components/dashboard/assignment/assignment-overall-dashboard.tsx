@@ -90,7 +90,7 @@ export default function AssignmentOverallDashboard({ report }: Props) {
       <CompareCardValue
         className="col-span-1"
         title="Avg completion rate"
-        value={`${avgCompletionRate * 100}%`}
+        value={`${(avgCompletionRate * 100).toFixed(2)}%`}
       />
       <CompareCardValue
         className="col-span-1"

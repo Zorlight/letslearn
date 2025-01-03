@@ -12,6 +12,7 @@ import { getQuizTotalMark } from "@/models/quiz";
 import { Role } from "@/models/user";
 
 interface Props {
+  courseId: string;
   quiz: QuizTopic;
   questionsBank: Question[];
   quizResponses: StudentResponse[];
@@ -22,6 +23,7 @@ interface Props {
   onSave?: () => void;
 }
 const TabQuestion = ({
+  courseId,
   quiz,
   questionsBank,
   quizResponses,
@@ -127,6 +129,7 @@ const TabQuestion = ({
         <p>{`Total marks: ${totalMarks}`}</p>
       </div>
       <QuestionList
+        courseId={courseId}
         questions={questions}
         questionsBank={questionsBank}
         canEdit={attempts === 0}

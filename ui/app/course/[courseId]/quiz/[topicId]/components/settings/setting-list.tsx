@@ -34,7 +34,9 @@ const timingSettingSchema: ZodType<TimingSettingForm> = z.object({
   }),
   timeLimit: z.object({
     enabled: z.boolean(),
-    value: z.number().min(1, "Time limit must be greater than 0"),
+    value: z
+      .number({ message: "Time limit is empty" })
+      .min(1, "Time limit must be greater than 0"),
     unit: z.nativeEnum(TimeLimitType),
   }),
 });
@@ -88,7 +90,7 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
       },
       timeLimit: {
         enabled: timeLimit !== null,
-        value: timeLimit || 0,
+        value: timeLimit || 1,
         unit: timeLimitUnit as TimeLimitType,
       },
     };
@@ -169,6 +171,8 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
     const quiz2JSON = JSON.stringify(quiz2);
     return quiz1JSON === quiz2JSON;
   };
+
+  const isValid = () => {};
 
   const onSubmit = (data: QuizSettingForm) => {
     const quizToSubmit = handleGetQuizToUpdate(data);

@@ -7,11 +7,13 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/lib/shadcn/dialog";
-import { Question, QuestionStatus } from "@/models/question";
+import { Question, QuestionStatus, QuestionType } from "@/models/question";
 import { useMemo, useState } from "react";
 import QuestionBankList from "./get-question-from-bank/question-bank-list";
+import { useRouter } from "next/navigation";
 
 interface Props {
+  courseId: string;
   questionsBank: Question[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -19,12 +21,14 @@ interface Props {
   onAddQuestionsFromBank?: (question: Question[]) => void;
 }
 const GetQuestionFromBankDialog = ({
+  courseId,
   open,
   questionsBank,
   onOpenChange,
   onAddQuestionsFromBank,
   children,
 }: Props) => {
+  const router = useRouter();
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const questionToShowInBankList = useMemo(() => {
     return questionsBank.filter((q) => q.status === QuestionStatus.READY);
@@ -53,6 +57,16 @@ const GetQuestionFromBankDialog = ({
       setSelectedQuestions(questionToShowInBankList);
     else setSelectedQuestions([]);
   };
+  const handleReviewQuestion = (question: Question) => {
+    const prefix = courseId ? `/course/${courseId}` : "";
+    const { type } = question;
+    if (type === QuestionType.CHOICE)
+      router.push(`${prefix}/question/choice/edit/${question.id}`);
+    else if (type === QuestionType.SHORT_ANSWER)
+      router.push(`${prefix}/question/short-answer/edit/${question.id}`);
+    else if (type === QuestionType.TRUE_FALSE)
+      router.push(`${prefix}/question/true-false/edit/${question.id}`);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -68,6 +82,7 @@ const GetQuestionFromBankDialog = ({
             selectedQuestions={selectedQuestions}
             questions={questionToShowInBankList}
             onQuestionCheck={handleSelectedQuestionChange}
+            onReviewQuestion={handleReviewQuestion}
           />
         </div>
         <DialogFooter>

@@ -250,9 +250,17 @@ const getFileTypeColor = (ex: string) => {
   return fileTypeColorMap.default;
 };
 const getDateAfterNDays = (days?: number, current?: Date) => {
-  const previousDay = new Date(current || new Date());
-  previousDay.setDate(previousDay.getDate() + (days || 0));
-  return previousDay;
+  const findingDate = new Date(current || new Date());
+  //set date to 0 hours to prevent DST errors
+  findingDate.setHours(0, 0, 0, 0);
+  findingDate.setDate(findingDate.getDate() + (days || 0));
+  return findingDate;
+};
+
+const getEndTimeOfDate = (date: Date) => {
+  const endTime = new Date(date);
+  endTime.setHours(23, 59, 59, 999);
+  return endTime;
 };
 
 const generateDateRange = (start: Date, end: Date) => {
@@ -308,4 +316,5 @@ export {
   getShortTimeStringByDuration,
   getStartDateOfCurrentMonth,
   getEndDateOfCurrentMonth,
+  getEndTimeOfDate,
 };

@@ -4,7 +4,7 @@ import PageLayout from "@/components/ui/util-layout/page-layout";
 import { Course } from "@/models/course";
 import { iconMap, MeetingTopic } from "@/models/topic";
 import { TabProvider } from "@/provider/tab-provider";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { getCourse } from "@/services/course";
 import { getTopic } from "@/services/topic";
@@ -14,6 +14,7 @@ import { Tab } from "./_components/static-data";
 import TabContent from "./_components/tab-content/tab-content";
 import { getMeetingBreadcrumb } from "./_components/utils";
 import Loading from "./loading";
+import { Role } from "@/models/user";
 
 interface Props {
   params: {
@@ -27,6 +28,7 @@ export default function MeetingPage({ params }: Props) {
   const [meeting, setMeeting] = useState<MeetingTopic>();
   const [initTab, setInitTab] = useState<string>(Tab.DETAIL);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.profile.value);
 
   useEffect(() => {
     if (!meeting || !course) return;
@@ -66,7 +68,8 @@ export default function MeetingPage({ params }: Props) {
   };
 
   const Icon = iconMap.meeting;
-  const tabs = Object.values(Tab);
+  const studentTabs = [Tab.DETAIL];
+  const teacherTabs = Object.values(Tab);
 
   if (!meeting) return <Loading />;
   return (
@@ -79,7 +82,7 @@ export default function MeetingPage({ params }: Props) {
               <h3>{meeting.title}</h3>
             </div>
             <TabList
-              tabs={tabs}
+              tabs={user?.role === Role.TEACHER ? teacherTabs : studentTabs}
               variant="white-text"
               onTabSelected={handleTabSelected}
             />

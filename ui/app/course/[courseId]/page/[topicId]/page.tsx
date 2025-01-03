@@ -5,7 +5,7 @@ import { fakePage } from "@/fake-data/page";
 import { Course } from "@/models/course";
 import { iconMap, PageTopic } from "@/models/topic";
 import { TabProvider } from "@/provider/tab-provider";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { getCourse } from "@/services/course";
 import { useEffect, useState } from "react";
@@ -15,6 +15,7 @@ import TabContent from "./components/tab-content/tab-content";
 import { getPageBreadcrumb } from "./components/utils";
 import Loading from "./loading";
 import { getTopic } from "@/services/topic";
+import { Role } from "@/models/user";
 
 interface Props {
   params: {
@@ -28,6 +29,7 @@ export default function PagePage({ params }: Props) {
   const [course, setCourse] = useState<Course>();
   const [page, setPage] = useState<PageTopic>();
   const [initTab, setInitTab] = useState<string>(Tab.PAGE);
+  const user = useAppSelector((state) => state.profile.value);
   const handlePageChange = (data: PageTopic) => {
     setPage(data);
   };
@@ -61,7 +63,8 @@ export default function PagePage({ params }: Props) {
     getTopic(courseId, topicId, handleGetPageSuccess, handleFail);
   }, [topicId]);
 
-  const tabs = Object.values(Tab);
+  const studentTabs = [Tab.PAGE];
+  const teacherTabs = Object.values(Tab);
   const Icon = iconMap.page;
   if (!page) return <Loading />;
   return (
@@ -74,7 +77,7 @@ export default function PagePage({ params }: Props) {
               <h3>{page.title}</h3>
             </div>
             <TabList
-              tabs={tabs}
+              tabs={user?.role === Role.TEACHER ? teacherTabs : studentTabs}
               variant="white-text"
               onTabSelected={handleTabSelected}
             />

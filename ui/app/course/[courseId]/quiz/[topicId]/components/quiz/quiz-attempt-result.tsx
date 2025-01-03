@@ -33,8 +33,6 @@ const QuizAttemptResult = ({
   const isGoodMark = mark >= totalMark * 0.4 && mark < totalMark * 0.8;
   const isBadMark = mark < totalMark * 0.4;
 
-  const handleCancel = () => {};
-
   return (
     <div className="flex flex-col border rounded-lg">
       <div className="flex flex-row items-center justify-between px-4">

@@ -26,7 +26,10 @@ const QuestionBankRow = ({
       <Checkbox checked={checked} onCheckedChange={handleCheckedChange} />
       <span>{questionIconMap[type]}</span>
       <span className="truncate w-[250px]">{questionName}</span>
-      <EditorDisplay htmlString={questionText} className="truncate w-[250px]" />
+      <EditorDisplay
+        htmlString={questionText}
+        className="truncate w-[250px] max-h-10"
+      />
       <SearchCheck
         className="ml-auto cursor-pointer text-cyan-600 hover:text-cyan-500"
         size={20}

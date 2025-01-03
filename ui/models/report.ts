@@ -7,6 +7,12 @@ export type StudentWithMark = {
   responseId: string | null;
 };
 
+export type StudentWithAverageMark = {
+  user: User;
+  averageMark: number;
+  submitted: boolean;
+};
+
 export type ChartDataObject = {
   "0": number;
   "2": number;
@@ -75,18 +81,34 @@ export type AssignmentReport = {
   fileTypeCount: Record<string, number>;
 };
 
+// export type AssignmentOverallReport = {
+//   assignmentCount: number;
+//   avgMark: number;
+//   avgCompletionRate: number;
+//   numberOfAssignmentEndsAtThisMonth: number;
+//   closestNextEndAssignment: string;
+//   markDistributionCount: ChartDataObject;
+//   studentWithMarkOver8: StudentWithAverageMark[];
+//   studentWithMarkOver5: StudentWithAverageMark[];
+//   studentWithMarkOver2: StudentWithAverageMark[];
+//   studentWithMarkOver0: StudentWithAverageMark[];
+//   studentWithNoResponse: StudentWithAverageMark[];
+//   fileTypeCount: Record<string, number>;
+//   singleAssignmentReports: AssignmentReport[];
+// };
 export type AssignmentOverallReport = {
+  assignmentsCountInProgress: number;
   assignmentCount: number;
   avgMark: number;
   avgCompletionRate: number;
   numberOfAssignmentEndsAtThisMonth: number;
-  closestNextEndAssignment: string;
+  closestNextEndAssignment: string | null;
   markDistributionCount: ChartDataObject;
-  studentWithMarkOver8: StudentWithMark[];
-  studentWithMarkOver5: StudentWithMark[];
-  studentWithMarkOver2: StudentWithMark[];
-  studentWithMarkOver0: StudentWithMark[];
-  studentWithNoResponse: StudentWithMark[];
+  studentWithMarkOver8: StudentWithAverageMark[];
+  studentWithMarkOver5: StudentWithAverageMark[];
+  studentWithMarkOver2: StudentWithAverageMark[];
+  studentWithMarkOver0: StudentWithAverageMark[];
+  studentWithNoResponse: StudentWithAverageMark[];
   fileTypeCount: Record<string, number>;
   singleAssignmentReports: AssignmentReport[];
 };

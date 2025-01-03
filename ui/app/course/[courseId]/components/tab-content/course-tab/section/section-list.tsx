@@ -25,6 +25,7 @@ import {
   initPage,
   initQuiz,
 } from "./static/init-topic";
+import { toast } from "react-toastify";
 
 interface Props {
   initShowContent?: string[];
@@ -70,12 +71,20 @@ const SectionList = ({
     if (onItemTrigger) onItemTrigger(value);
     handleItemTrigger(value);
   };
+  const checkTopicNameEmpty = (section: Section) => {
+    const topicNames = section.topics.map((topic) => topic.title);
+    return topicNames.some((name) => name === "");
+  };
   const handleEdit = (id: string) => {
     if (onEdit) onEdit(id);
     setSectionEditting([...sectionEditting, id]);
   };
 
   const handleSaveSection = (section: Section) => () => {
+    if (checkTopicNameEmpty(section)) {
+      toast.error("Topic name must be at lease 1 character");
+      return;
+    }
     if (onSave) onSave(section);
     // remove id from sectionEditting
     toggleEdit(section.id);

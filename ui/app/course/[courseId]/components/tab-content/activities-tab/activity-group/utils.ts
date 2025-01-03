@@ -1,4 +1,10 @@
-import { AssignmentTopic, QuizTopic, Topic, TopicType } from "@/models/topic";
+import {
+  AssignmentTopic,
+  MeetingTopic,
+  QuizTopic,
+  Topic,
+  TopicType,
+} from "@/models/topic";
 
 // overdue -> has due date -> not submitted and due date is passed
 const isOverDueQuiz = (quiz: QuizTopic) => {
@@ -22,6 +28,24 @@ const isWorkingInProgressQuiz = (quiz: QuizTopic) => {
   }
 
   return true;
+};
+
+// working -> has open -> open due date is not passed
+const isWillHappenQuiz = (quiz: QuizTopic) => {
+  const { open } = quiz.data;
+  if (!open) return false;
+  return new Date() < new Date(open);
+};
+
+// working -> has open -> open due date is passed
+const isWorkingInProgressMeeting = (meeting: MeetingTopic) => {
+  const { open } = meeting.data;
+  return new Date() > new Date(open);
+};
+
+const isWillHappenMeeting = (meeting: MeetingTopic) => {
+  const { open } = meeting.data;
+  return new Date() < new Date(open);
 };
 
 // overdue -> has due date -> not submitted and due date is passed
@@ -48,10 +72,17 @@ const isWorkingInProgressAssignment = (assignment: AssignmentTopic) => {
   return true;
 };
 
+// working -> has open -> open due date is not passed
+const isWillHappenAssignment = (assignment: AssignmentTopic) => {
+  const { open } = assignment.data;
+  if (!open) return false;
+  return new Date() < new Date(open);
+};
+
 export const isOverDueTopic = (topic: Topic) => {
   const { type } = topic;
   if (type === TopicType.QUIZ) return isOverDueQuiz(topic);
-  else if (type === TopicType.ASSIGNMENT) isOverDueAssignment(topic);
+  else if (type === TopicType.ASSIGNMENT) return isOverDueAssignment(topic);
   return false;
 };
 
@@ -60,5 +91,14 @@ export const isWorkingInProgressTopic = (topic: Topic) => {
   if (type === TopicType.QUIZ) return isWorkingInProgressQuiz(topic);
   else if (type === TopicType.ASSIGNMENT)
     return isWorkingInProgressAssignment(topic);
+  else if (type === TopicType.MEETING) return isWorkingInProgressMeeting(topic);
+  return false;
+};
+
+export const isWillHappenTopic = (topic: Topic) => {
+  const { type } = topic;
+  if (type === TopicType.QUIZ) return isWillHappenQuiz(topic);
+  else if (type === TopicType.ASSIGNMENT) return isWillHappenAssignment(topic);
+  else if (type === TopicType.MEETING) return isWillHappenMeeting(topic);
   return false;
 };

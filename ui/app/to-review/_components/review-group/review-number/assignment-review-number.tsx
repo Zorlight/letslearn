@@ -6,11 +6,11 @@ import {
 } from "@/models/student-response";
 
 interface Props {
-  assigned: number;
+  student: number;
   studentResponse: StudentResponse[];
 }
 export default function AssignmentReviewNumber({
-  assigned,
+  student,
   studentResponse,
 }: Props) {
   const submitted = studentResponse.length;
@@ -22,7 +22,7 @@ export default function AssignmentReviewNumber({
     <div className="flex flex-row items-center gap-4">
       <ReviewNumber title="Graded" number={graded} />
       <ReviewNumber title="Submitted" number={submitted} />
-      <ReviewNumber title="Assigned" number={assigned} />
+      <ReviewNumber title="Student" number={student} />
     </div>
   );
 }

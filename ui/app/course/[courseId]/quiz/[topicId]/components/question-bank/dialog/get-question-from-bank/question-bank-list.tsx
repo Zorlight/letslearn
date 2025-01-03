@@ -7,11 +7,13 @@ interface Props {
   questions: Question[];
   selectedQuestions: Question[];
   onQuestionCheck?: (question: Question) => void;
+  onReviewQuestion?: (question: Question) => void;
 }
 const QuestionBankList = ({
   questions,
   selectedQuestions,
   onQuestionCheck,
+  onReviewQuestion,
 }: Props) => {
   return (
     <div className="w-full">
@@ -21,6 +23,9 @@ const QuestionBankList = ({
           checked={selectedQuestions.some((q) => q.id === question.id)}
           question={question}
           onQuestionCheck={() => onQuestionCheck && onQuestionCheck(question)}
+          onReviewQuestion={() =>
+            onReviewQuestion && onReviewQuestion(question)
+          }
         />
       ))}
     </div>

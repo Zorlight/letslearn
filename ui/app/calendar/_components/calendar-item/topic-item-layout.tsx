@@ -3,7 +3,8 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { TopicItem } from "../calendar/static-data";
-import { isBothStartAndFinish } from "./utils";
+import { isBothStartAndFinish, isFlagStart } from "./utils";
+import { TopicType } from "@/models/topic";
 
 interface Props {
   data: TopicItem;
@@ -14,16 +15,23 @@ export default function TopicItemLayout({ data, date, className }: Props) {
   const router = useRouter();
   const { topic, startTime, endTime } = data;
 
-  const time = startTime || endTime;
-  let timeStr = time ? format(time, "hh:mm a") : "No time";
-
+  let timeStr = "";
+  const isFladStart = isFlagStart(data, date);
   const showStartAndFinish = isBothStartAndFinish(data, date);
 
-  if (showStartAndFinish)
+  if (!startTime || !endTime) {
+    const time = startTime || endTime;
+    timeStr = time ? format(time, "hh:mm a") : "No time";
+  } else if (showStartAndFinish) {
     timeStr = `${format(startTime!, "hh:mm a")} - ${format(
       endTime!,
       "hh:mm a"
     )}`;
+  } else if (isFladStart) {
+    timeStr = startTime ? format(startTime, "hh:mm a") : "No time";
+  } else {
+    timeStr = endTime ? format(endTime, "hh:mm a") : "No time";
+  }
 
   const handleClick = () => {
     const { course, topic } = data;

@@ -19,6 +19,7 @@ import ChoiceQuestionGeneralSetting, {
   ChoiceQuestionGeneralForm,
 } from "./general";
 import { defaultAnswerSetting, defaultGeneralSetting } from "./static-data";
+import { toast } from "react-toastify";
 
 // Child form schemas
 const generalSettingSchema: ZodType<ChoiceQuestionGeneralForm> = z.object({
@@ -145,11 +146,24 @@ const ChoiceQuestionUI = ({ question, onSubmitQuestion }: Props) => {
     return questionToEdit;
   };
 
+  const checkTotalPercentOfAnswer = (question: Question) => {
+    const { data } = question;
+    const { choices } = data as ChoiceQuestion;
+    const totalPercent = choices.reduce((acc, choice) => {
+      return acc + choice.gradePercent;
+    }, 0);
+    return totalPercent >= 100;
+  };
+
   const onSubmit = (data: ChoiceQuestionForm) => {
     let questionToSubmit;
     if (question) questionToSubmit = handleEditQuestion(question, data);
     else questionToSubmit = handleCreateQuestion(data);
 
+    if (!checkTotalPercentOfAnswer(questionToSubmit)) {
+      toast.info("Total percent of answers must be greater than or equal 100");
+      return;
+    }
     if (onSubmitQuestion) onSubmitQuestion(questionToSubmit);
   };
 

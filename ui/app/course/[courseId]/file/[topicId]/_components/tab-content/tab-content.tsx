@@ -10,11 +10,10 @@ import TabSetting from "./tab-setting";
 interface Props {
   courseId: string;
   topic: FileTopic;
-  user: User;
   onTopicChange?: (topic: FileTopic) => void;
 }
 
-const TabContent = ({ courseId, user, topic, onTopicChange }: Props) => {
+const TabContent = ({ courseId, topic, onTopicChange }: Props) => {
   const tabContext = useTab<string>();
   const { selectedTab } = tabContext;
 

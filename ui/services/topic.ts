@@ -135,3 +135,23 @@ export const getAllMeetingOfCourse = (
   };
   getCourseWork(courseId, "meeting", handleSuccess, onFail);
 };
+
+export const getAllWorkOfCourse = (
+  courseId: string,
+  onSuccess: (data: Topic[]) => void,
+  onFail: (err?: any) => void
+) => {
+  const handleSuccess = (data: any[]) => {
+    const converted = data.map((item) => {
+      if (item.type === TopicType.ASSIGNMENT)
+        return convertAssignmentFromResponseData(item);
+      if (item.type === TopicType.QUIZ)
+        return convertQuizFromResponseData(item);
+      if (item.type === TopicType.MEETING)
+        return convertMeetingFromResponseData(item);
+      return item;
+    });
+    onSuccess(converted);
+  };
+  getCourseWork(courseId, null, handleSuccess, onFail);
+};

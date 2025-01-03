@@ -16,6 +16,7 @@ import Loading from "./loading";
 import { getLinkBreadcrumb } from "./_components/utils";
 import { getCourse } from "@/services/course";
 import { getTopic } from "@/services/topic";
+import { Role } from "@/models/user";
 
 interface Props {
   params: {
@@ -73,10 +74,10 @@ export default function LinkPage({ params }: Props) {
 
   const Icon = iconMap.link;
 
-  const tabs = Object.values(Tab);
+  const studentTabs = [Tab.LINK];
+  const teacherTabs = Object.values(Tab);
 
   if (!topic || !user) return <Loading />;
-  if (!user) return <Loading />;
 
   return (
     <PageLayout className="relative bg-teal-50 !overflow-y-hidden">
@@ -88,7 +89,7 @@ export default function LinkPage({ params }: Props) {
               <h3>{topic.title}</h3>
             </div>
             <TabList
-              tabs={tabs}
+              tabs={user?.role === Role.TEACHER ? teacherTabs : studentTabs}
               variant="white-text"
               onTabSelected={handleTabSelected}
             />
@@ -97,7 +98,7 @@ export default function LinkPage({ params }: Props) {
         <div className="z-10 mt-[150px] flex w-full default-scrollbar p-5">
           <div className="w-full min-h-full h-fit bg-white rounded-md p-5 shadow-md">
             <TabContent
-              user={user}
+              courseId={courseId}
               topic={topic}
               onTopicChange={handleTopicChange}
             />

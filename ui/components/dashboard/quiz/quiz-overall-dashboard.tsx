@@ -6,6 +6,7 @@ import CardDashboard from "../card-dashboard/card-dashboard";
 import CompareCardValue from "../card-dashboard/compare-card-value";
 import { ChartDataObject, QuizOverallReport } from "@/models/report";
 import { sampleQuestionTypeData, sampleStudentMarkData } from "./static-data";
+import { getStudentWithMark } from "./utils";
 
 interface Props {
   quizOverallReport: QuizOverallReport;
@@ -94,7 +95,9 @@ export default function QuizOverallDashboard({ quizOverallReport }: Props) {
       <CompareCardValue
         className="col-span-1"
         title="Score range"
-        value={`${minStudentScoreBase10} - ${maxStudentScoreBase10}`}
+        value={`${minStudentScoreBase10.toFixed(
+          2
+        )} - ${maxStudentScoreBase10.toFixed(2)}`}
       />
       <CardDashboard className="col-span-2 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Question type</h6>
@@ -131,10 +134,22 @@ export default function QuizOverallDashboard({ quizOverallReport }: Props) {
       <CardDashboard className="col-span-4 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Student mark</h6>
         <div className="flex flex-col gap-2">
-          <RankItem rank="S" studentWithMarks={studentWithMarkOver8} />
-          <RankItem rank="A" studentWithMarks={studentWithMarkOver5} />
-          <RankItem rank="B" studentWithMarks={studentWithMarkOver2} />
-          <RankItem rank="C" studentWithMarks={studentWithMarkOver0} />
+          <RankItem
+            rank="S"
+            students={getStudentWithMark(studentWithMarkOver8)}
+          />
+          <RankItem
+            rank="A"
+            students={getStudentWithMark(studentWithMarkOver5)}
+          />
+          <RankItem
+            rank="B"
+            students={getStudentWithMark(studentWithMarkOver2)}
+          />
+          <RankItem
+            rank="C"
+            students={getStudentWithMark(studentWithMarkOver0)}
+          />
         </div>
       </CardDashboard>
     </div>

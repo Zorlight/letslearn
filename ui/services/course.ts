@@ -95,9 +95,12 @@ export const joinCourse = (
 
 export const getCourseWork = (
   courseId: string,
-  type: "quiz" | "assignment" | "meeting",
+  type: "quiz" | "assignment" | "meeting" | null,
   onSuccess: (data: any) => void,
   onFail: (err?: any) => void
 ) => {
-  GET(`/course/${courseId}/work?type=${type}`, onSuccess, onFail);
+  const url = type
+    ? `/course/${courseId}/work?type=${type}`
+    : `/course/${courseId}/work`;
+  GET(url, onSuccess, onFail);
 };

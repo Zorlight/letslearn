@@ -16,6 +16,7 @@ export default function StudentList({
   const handleClick = (id: string) => () => {
     if (onClick) onClick(id);
   };
+  console.log("students", students);
 
   const rest = students.length > maxToShow ? students.length - maxToShow : 0;
   return (
@@ -23,7 +24,7 @@ export default function StudentList({
       {students.slice(0, maxToShow).map((student) => (
         <Avatar
           key={student.id}
-          src={student.image}
+          src={student.avatar}
           className="w-8 hover:scale-105"
           onClick={handleClick(student.id)}
         />

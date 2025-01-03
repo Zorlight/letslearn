@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import Calendar from "./_components/calendar/calendar";
 import { CalendarRange } from "./_components/calendar/static-data";
-import { getDateAfterNDays } from "@/lib/utils";
+import { getDateAfterNDays, getEndTimeOfDate } from "@/lib/utils";
 import { useAppDispatch } from "@/redux/hooks";
 import { setBreadcrumb } from "@/redux/slices/breadcrumb";
 import { calendarBreadcrumb } from "./_components/static-data";
@@ -66,14 +66,16 @@ export default function CalendarPage() {
   };
 
   const handlePreviosRange = () => {
-    const newEnd = getDateAfterNDays(-1, calendarRange.start);
+    const newEnd = getEndTimeOfDate(getDateAfterNDays(-1, calendarRange.start));
     const newStart = getDateAfterNDays(-6, newEnd);
+    console.log("newStart", newStart);
+    console.log("newEnd", newEnd);
     setCalendarRange({ start: newStart, end: newEnd });
   };
 
   const handleNextRange = () => {
     const newStart = getDateAfterNDays(1, calendarRange.end);
-    const newEnd = getDateAfterNDays(6, newStart);
+    const newEnd = getEndTimeOfDate(getDateAfterNDays(6, newStart));
     setCalendarRange({ start: newStart, end: newEnd });
   };
 

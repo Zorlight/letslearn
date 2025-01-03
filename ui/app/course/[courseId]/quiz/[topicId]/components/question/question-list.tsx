@@ -9,6 +9,7 @@ import QuestionAddButton from "./question-add-button";
 import QuestionRow from "./question-row";
 
 interface Props {
+  courseId: string;
   questions: Question[];
   questionsBank: Question[];
   canEdit?: boolean;
@@ -19,6 +20,7 @@ interface Props {
   onCancel?: () => void;
 }
 const QuestionList = ({
+  courseId,
   questions,
   questionsBank,
   canEdit = true,
@@ -143,6 +145,7 @@ const QuestionList = ({
             onAddQuestion={handleAddNewQuestion}
           />
           <GetQuestionFromBankDialog
+            courseId={courseId}
             questionsBank={questionsBank}
             open={openAddQuestionFromBankDialog}
             onOpenChange={setOpenAddQuestionFromBankDialog}

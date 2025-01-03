@@ -1,18 +1,12 @@
 import { Combobox } from "@/components/ui/combobox";
 import { Button } from "@/lib/shadcn/button";
-import {
-  activityTopics,
-  AssignmentTopic,
-  QuizTopic,
-  Topic,
-  TopicType,
-} from "@/models/topic";
+import { Course } from "@/models/course";
+import { activityTopics, Topic } from "@/models/topic";
+import { getAllWorkOfCourse } from "@/services/topic";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import ActivityList from "./activities-tab/activity-group/activity-list";
-import { Course } from "@/models/course";
-import { getAllAssignmentOfCourse, getAllQuizOfCourse } from "@/services/topic";
 import { toast } from "react-toastify";
+import ActivityList from "./activities-tab/activity-group/activity-list";
 
 interface Props {
   course: Course;
@@ -25,25 +19,16 @@ export default function ActivitiesTab({ course }: Props) {
     setSelectedChoice(choice);
   };
 
-  const handleGetAllQuizSuccess = (data: QuizTopic[]) => {
-    console.log("quiz", data);
-    setTopics((prev) => [...prev, ...data]);
-  };
-  const handleGetAllAssignmentSuccess = (data: AssignmentTopic[]) => {
-    console.log("assignment", data);
-    setTopics((prev) => [...prev, ...data]);
+  const handleGetAllTopicSuccess = (data: Topic[]) => {
+    console.log("topic", data);
+    setTopics(data);
   };
   const handleFail = (error: any) => {
     toast.error(error);
   };
   useEffect(() => {
-    getAllQuizOfCourse(course.id, handleGetAllQuizSuccess, handleFail);
-    getAllAssignmentOfCourse(
-      course.id,
-      handleGetAllAssignmentSuccess,
-      handleFail
-    );
-  }, []);
+    getAllWorkOfCourse(course.id, handleGetAllTopicSuccess, handleFail);
+  }, [course]);
 
   return (
     <div className="max-w-4xl mx-auto flex flex-col items-center gap-5">

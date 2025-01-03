@@ -55,6 +55,7 @@ const MultipleChoiceAnswer = ({
     if (showCorrectAnswer) return;
     if (onSelect) onSelect(answerIndex);
   };
+  console.log("selectedIndexes", selectedIndexes);
   const isSelected = selectedIndexes.includes(answerIndex);
   const isCorrect = correctAnswerIndexed.includes(answerIndex);
   const isMissing = correctAnswerIndexed.includes(answerIndex) && !isSelected;

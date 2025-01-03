@@ -73,6 +73,7 @@ export default function CourseTab({ course, onCourseChange }: Props) {
   const handleSaveSectionFail = (error: any) => {
     toast.error(error);
   };
+
   const handleSaveSection = (section: Section) => {
     updateSection(section, handleSaveSectionSuccess, handleSaveSectionFail);
   };

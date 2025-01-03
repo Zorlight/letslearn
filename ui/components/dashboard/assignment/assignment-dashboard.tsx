@@ -3,6 +3,7 @@ import { AssignmentReport, ChartDataObject } from "@/models/report";
 import RankItem from "../ranking/rank-item";
 import AssignmentDashboardSummary from "./assignment-summary";
 import { fileTypeColor, sampleGradedSubmissionData } from "./static-data";
+import { getStudentWithMark } from "./utils";
 
 interface Props {
   report: AssignmentReport;
@@ -70,10 +71,22 @@ export default function AssignmentDashboard({ report }: Props) {
       <div className="w-full flex flex-col gap-4 p-4">
         <h6 className="text-orange-500">Student mark</h6>
         <div className="flex flex-col gap-2">
-          <RankItem rank="S" studentWithMarks={studentWithMarkOver8} />
-          <RankItem rank="A" studentWithMarks={studentWithMarkOver5} />
-          <RankItem rank="B" studentWithMarks={studentWithMarkOver2} />
-          <RankItem rank="C" studentWithMarks={studentWithMarkOver0} />
+          <RankItem
+            rank="S"
+            students={getStudentWithMark(studentWithMarkOver8)}
+          />
+          <RankItem
+            rank="A"
+            students={getStudentWithMark(studentWithMarkOver5)}
+          />
+          <RankItem
+            rank="B"
+            students={getStudentWithMark(studentWithMarkOver2)}
+          />
+          <RankItem
+            rank="C"
+            students={getStudentWithMark(studentWithMarkOver0)}
+          />
         </div>
       </div>
     </div>

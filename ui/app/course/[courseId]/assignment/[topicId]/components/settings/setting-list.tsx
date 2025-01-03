@@ -232,10 +232,10 @@ const SettingList = ({ assignment, onSubmitAssignmentSetting }: Props) => {
             formData={watch("availabilitySettingForm")}
             onChange={handleAvailabilitySettingChange}
           />
-          <SubmissionSetting
+          {/* <SubmissionSetting
             formData={watch("submissionSettingForm")}
             onChange={handleSubmissionSettingChange}
-          />
+          /> */}
         </CollapsibleList>
         <div className="w-full flex flex-row justify-center">
           <Button

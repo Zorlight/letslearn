@@ -1,11 +1,16 @@
 import HorizontalBarChart from "@/components/chart/bar-chart";
 import CustomPieChart from "@/components/chart/pie-chart";
-import { AssignmentOverallReport, ChartDataObject } from "@/models/report";
+import {
+  AssignmentOverallReport,
+  ChartDataObject,
+  StudentWithAverageMark,
+} from "@/models/report";
 import { format } from "date-fns";
 import CardDashboard from "../card-dashboard/card-dashboard";
 import CompareCardValue from "../card-dashboard/compare-card-value";
 import { fileTypeColor, sampleGradedSubmissionData } from "./static-data";
 import RankItem from "../ranking/rank-item";
+import { getStudentWithAvgMark } from "./utils";
 
 interface Props {
   report: AssignmentOverallReport;
@@ -13,6 +18,7 @@ interface Props {
 
 export default function AssignmentOverallDashboard({ report }: Props) {
   const {
+    assignmentsCountInProgress,
     assignmentCount,
     avgCompletionRate,
     closestNextEndAssignment,
@@ -88,8 +94,8 @@ export default function AssignmentOverallDashboard({ report }: Props) {
       />
       <CompareCardValue
         className="col-span-1"
-        title="Assignments to do"
-        value="2 assignments"
+        title="Assignments in progress"
+        value={assignmentsCountInProgress.toString()}
       />
       <CompareCardValue
         className="col-span-1"
@@ -140,10 +146,22 @@ export default function AssignmentOverallDashboard({ report }: Props) {
       <CardDashboard className="col-span-4 w-full flex flex-col gap-4">
         <h6 className="text-orange-500">Student mark</h6>
         <div className="flex flex-col gap-2">
-          <RankItem rank="S" studentWithMarks={studentWithMarkOver8} />
-          <RankItem rank="A" studentWithMarks={studentWithMarkOver5} />
-          <RankItem rank="B" studentWithMarks={studentWithMarkOver2} />
-          <RankItem rank="C" studentWithMarks={studentWithMarkOver0} />
+          <RankItem
+            rank="S"
+            students={getStudentWithAvgMark(studentWithMarkOver8)}
+          />
+          <RankItem
+            rank="A"
+            students={getStudentWithAvgMark(studentWithMarkOver5)}
+          />
+          <RankItem
+            rank="B"
+            students={getStudentWithAvgMark(studentWithMarkOver2)}
+          />
+          <RankItem
+            rank="C"
+            students={getStudentWithAvgMark(studentWithMarkOver0)}
+          />
         </div>
       </CardDashboard>
     </div>

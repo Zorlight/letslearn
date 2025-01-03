@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { FileTopic } from "@/models/topic";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 interface Props {
   topic: FileTopic;
@@ -8,13 +9,18 @@ interface Props {
 }
 const TabFile = ({ className, topic }: Props) => {
   const { file } = topic.data;
+  const handleDownloadFile = () => {
+    if (!file) return;
+    if (!file.downloadUrl) toast.error("Please go to settings to set the file");
+  };
   return (
     <div className={cn("", className)}>
       <p>
         <span>Click </span>
         <Link
           className="text-file font-bold hover:underline underline-offset-2 cursor-pointer"
-          href={file ? file.downloadUrl : ""}
+          href={file && file.downloadUrl ? file.downloadUrl : ""}
+          onClick={handleDownloadFile}
         >
           Download
         </Link>{" "}

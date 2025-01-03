@@ -17,18 +17,27 @@ const ChoicesDisplay = ({
   studentAnswer,
   onQuizAnswerChange,
 }: Props) => {
-  //e.g: answer = "1010" -> muliple choice and A and C are selected
-  //e.g: answer = "1" -> single choice and B is selected (0 -> A, 1 -> B, 2 -> C, 3 -> D)
-  const handleGetAnswer = (answer: string) => {
+  //e.g: answer = "1010" -> muliple choice and A and C are selected -> [0, 2]
+  //e.g: answer = "1" -> single choice and B is selected (0 -> A, 1 -> B, 2 -> C, 3 -> D) -> [1]
+  const handleGetMultipleChoiceAnswer = (answer: string | undefined) => {
+    if (!answer) return [];
     const answerArray = answer.split("");
-    const selectedIndexes = answerArray.map((answer) => parseInt(answer));
-    return selectedIndexes;
+    return answerArray.reduce((acc, value, index) => {
+      if (value === "1") acc.push(index);
+      return acc;
+    }, [] as number[]);
+  };
+
+  const handleGetSingleChoiceAnswer = (answer: string | undefined) => {
+    return answer ? [parseInt(answer)] : [];
   };
 
   const { defaultMark, data } = question;
   const { choices, multiple } = data as ChoiceQuestion;
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>(
-    studentAnswer ? handleGetAnswer(studentAnswer) : []
+    multiple
+      ? handleGetMultipleChoiceAnswer(studentAnswer)
+      : handleGetSingleChoiceAnswer(studentAnswer)
   );
   const correctAnswerIndexes = useMemo(() => {
     return choices
@@ -36,7 +45,7 @@ const ChoicesDisplay = ({
       .map((choice) => choices.indexOf(choice));
   }, [choices]);
 
-  const calcullateMultipleChoiceMark = (selectedIndexes: number[]) => {
+  const calculateMultipleChoiceMark = (selectedIndexes: number[]) => {
     let mark = 0;
     //if all the correct answers are selected -> full mark
 
@@ -45,7 +54,8 @@ const ChoicesDisplay = ({
       0
     );
     const isAllCorrectAnswersSelected = totalCorrectPercentage === 100;
-    if (isAllCorrectAnswersSelected) mark = defaultMark;
+    if (isAllCorrectAnswersSelected || totalCorrectPercentage >= 100)
+      mark = defaultMark;
     else {
       //calculate total percentage of correct answers
       console.log("total percent", totalCorrectPercentage);
@@ -90,7 +100,7 @@ const ChoicesDisplay = ({
 
     setSelectedIndexes(newSelectedIndexes);
 
-    let mark = calcullateMultipleChoiceMark(newSelectedIndexes);
+    let mark = calculateMultipleChoiceMark(newSelectedIndexes);
 
     //Let the navigation know that the user has answered the question or not
     //the answer is A , B and C -> "1110"

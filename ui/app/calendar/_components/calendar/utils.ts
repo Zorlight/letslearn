@@ -12,6 +12,7 @@ const handleGetDateItems = (dateRange: Date[], topics: Topic[]): DateItem[] => {
   const dateList: DateItem[] = [];
   dateRange.forEach((date) => {
     const items = handleGetDateItem(date, topics);
+    console.log("items", items);
     dateList.push(items);
   });
   return dateList;
@@ -72,8 +73,12 @@ const canGetThisAssignmentTopic = (date: Date, topic: AssignmentTopic) => {
   const closeStr = topic.data.close;
   const openDate = openStr ? new Date(openStr) : null;
   const closeDate = closeStr ? new Date(closeStr) : null;
+  console.log("openDate", openDate);
+  console.log("closeDate", closeDate);
+  console.log("date", date);
   if (openDate && isInDate(date, openDate)) return true;
   if (closeDate && isInDate(date, closeDate)) return true;
+  console.log("return false");
   return false;
 };
 

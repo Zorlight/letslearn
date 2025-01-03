@@ -63,9 +63,10 @@ const TabStudentQuiz = ({
     router.push(`/quiz-attempting/${quiz.id}?courseId=${courseId}`);
   };
 
-  const handleReviewQuiz = (index: number) => {
-    const quizToReview = quizResponses[index];
-    router.push(`/quiz-attempting/${quiz.id}/review/${quizToReview.id}`);
+  const handleReviewQuiz = (responseId: string) => {
+    router.push(
+      `/quiz-attempting/${quiz.id}/review/${responseId}?courseId=${courseId}`
+    );
   };
 
   const fullMarkOfQuiz = useMemo(() => {
@@ -194,7 +195,7 @@ const TabStudentQuiz = ({
                   key={index}
                   responseIndex={quizResponsesToShow.length - index - 1}
                   quizResponse={quizResponse}
-                  onReview={() => handleReviewQuiz(index)}
+                  onReview={() => handleReviewQuiz(quizResponse.id)}
                 />
               ))}
             </div>

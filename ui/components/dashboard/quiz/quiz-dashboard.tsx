@@ -4,6 +4,7 @@ import { QuizTopic } from "@/models/topic";
 import { useMemo } from "react";
 import RankItem from "../ranking/rank-item";
 import QuizDashboardSummary from "./quiz-summary";
+import { getStudentWithMark } from "./utils";
 
 const sampleQuestionTypeData = [
   { name: "Multiple choice", value: 25, color: "#EC4899" },
@@ -88,10 +89,22 @@ export default function QuizDashboard({ quiz, report }: Props) {
       <div className="w-full flex flex-col gap-4 p-4">
         <h6 className="text-orange-500">Student mark</h6>
         <div className="flex flex-col gap-2">
-          <RankItem rank="S" studentWithMarks={studentWithMarkOver8} />
-          <RankItem rank="A" studentWithMarks={studentWithMarkOver5} />
-          <RankItem rank="B" studentWithMarks={studentWithMarkOver2} />
-          <RankItem rank="C" studentWithMarks={studentWithMarkOver0} />
+          <RankItem
+            rank="S"
+            students={getStudentWithMark(studentWithMarkOver8)}
+          />
+          <RankItem
+            rank="A"
+            students={getStudentWithMark(studentWithMarkOver5)}
+          />
+          <RankItem
+            rank="B"
+            students={getStudentWithMark(studentWithMarkOver2)}
+          />
+          <RankItem
+            rank="C"
+            students={getStudentWithMark(studentWithMarkOver0)}
+          />
         </div>
       </div>
     </div>

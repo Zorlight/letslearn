@@ -10,7 +10,7 @@ const EditorDisplay = ({ htmlString, className }: Props) => {
   return (
     <div
       className={cn(
-        "h-fit [&>div.tox-tinymce]:border-0 [&>html]:scrollbar [&_*]:!bg-transparent",
+        "h-fit [&>div.tox-tinymce]:border-0 [&>html]:scrollbar [&_*]:!bg-transparent [&_iframe]:!h-fit",
         className
       )}
     >
@@ -25,7 +25,7 @@ const EditorDisplay = ({ htmlString, className }: Props) => {
           highlight_on_focus: false,
           editable_root: false,
           content_style:
-            "iframe {background-color: transparent;} .mce-content-body {box-shadow: none !important; cursor: default; margin: 0;} ",
+            "iframe {background-color: transparent;} .mce-content-body {box-shadow: none !important; cursor: default; margin: 0 !important; height: fit-content !important;} p {margin: 0 !important;}",
         }}
         disabled={true}
         initialValue={htmlString}

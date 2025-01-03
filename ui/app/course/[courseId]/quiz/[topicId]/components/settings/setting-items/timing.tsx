@@ -104,6 +104,11 @@ const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
         handleEnableChange={handleEnableChange}
         handleInputChange={handleInputChange}
         handleComboboxChange={handleComboboxChange}
+        error={
+          errors?.timeLimit && errors.timeLimit.value
+            ? errors.timeLimit.value.message
+            : ""
+        }
       />
     </div>
   );
@@ -179,12 +184,14 @@ interface RowSettingWithComboboxProps {
   handleEnableChange: (key: keyof TimingSettingForm, value: boolean) => void;
   handleInputChange: (key: keyof TimingSettingForm, value: number) => void;
   handleComboboxChange: (key: keyof TimingSettingForm, value: string) => void;
+  error?: string;
 }
 const RowSettingWithCombobox = ({
   title,
   keyProp,
   form,
   options,
+  error,
   handleEnableChange,
   handleInputChange,
   handleComboboxChange,
@@ -194,11 +201,12 @@ const RowSettingWithCombobox = ({
   if ("unit" in form[keyProp] && typeof form[keyProp].unit === "string")
     unit = form[keyProp].unit;
   else unit = options.length > 0 ? options[0] : "No unit";
+  console.log("error", error);
 
   return (
     <div className="flex flex-row items-center gap-2">
       <label className="w-[180px] font-semibold">{title}</label>
-      <div className="w-full flex flex-row items-center gap-2">
+      <div className="w-full h-max flex flex-row items-stretch gap-2">
         <div className="flex flex-row items-center gap-2">
           <Checkbox
             id={htmlFor}
@@ -212,15 +220,22 @@ const RowSettingWithCombobox = ({
           </label>
         </div>
 
-        <Input
-          className="w-[150px] focus:outline-none"
-          placeholder="Enter time limit"
-          disabled={!form[keyProp].enabled}
-          min={1}
-          type="number"
-          defaultValue={form[keyProp].value}
-          onChange={(e) => handleInputChange(keyProp, parseInt(e.target.value))}
-        />
+        <div className="flex flex-col items-start">
+          <Input
+            className="w-[150px] focus:outline-none"
+            placeholder="Enter time limit"
+            disabled={!form[keyProp].enabled}
+            min={1}
+            type="number"
+            defaultValue={form[keyProp].value}
+            onChange={(e) =>
+              handleInputChange(keyProp, parseInt(e.target.value))
+            }
+          />
+          {error && (
+            <p className="text-red-500 text-xs font-semibold">{error}</p>
+          )}
+        </div>
         <Combobox
           name="Unit"
           options={options}

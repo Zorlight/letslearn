@@ -18,7 +18,7 @@ export default function SubmissionDefaultView({
   const { data } = assignment;
   const { open, close, description } = data;
 
-  const assigned = 40;
+  const student = 40;
   const submitted = studentResponses.length;
   const openTime = open
     ? format(new Date(open), "EEEE, dd MMMM yyyy, h:mm a")
@@ -50,8 +50,8 @@ export default function SubmissionDefaultView({
             <span className="text-gray-500">Submitted</span>
           </div>
           <div className="flex flex-col px-3">
-            <span className="font-bold text-xl">{assigned}</span>
-            <span className="text-gray-500">Assigned</span>
+            <span className="font-bold text-xl">{student}</span>
+            <span className="text-gray-500">Student</span>
           </div>
         </div>
       </Part>

@@ -24,6 +24,7 @@ const QuizReview = ({ className, quizResponse, quiz }: Props) => {
   const quizResponseData = quizResponse.data as QuizResponseData;
   const { answers: studentAnswers } = quizResponseData;
   const totalQuestions = studentAnswers.length;
+  console.log("studentAnswers", studentAnswers);
 
   const [questionResults, setQuestionResults] = useState<QuestionResult[]>(
     studentAnswers.map(() => QuestionResult.NOT_SHOW)

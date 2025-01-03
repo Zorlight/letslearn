@@ -3,17 +3,13 @@ import { format } from "date-fns";
 import React from "react";
 
 interface Props {
-  due: string;
-  submittedAt?: string;
+  due: string | null;
+  open: string | null;
 }
-enum AssignmentStatus {
+enum TopicStatus {
+  NOT_OPEN,
   OPEN,
   CLOSE,
-}
-
-enum SubmissionStatus {
-  SUBMITTED,
-  NOT_SUBMITTED,
 }
 
 enum Color {
@@ -21,37 +17,51 @@ enum Color {
   RED = "text-red-500",
   ORANGE = "text-orange-500",
 }
-export default function ActivityStatus({ due, submittedAt }: Props) {
+export default function ActivityStatus({ due, open }: Props) {
   const current = new Date();
-  const dueDate = new Date(due);
-  let assignmentStatus = AssignmentStatus.OPEN;
-  let submissionStatus = SubmissionStatus.NOT_SUBMITTED;
+  const dueDate = due ? new Date(due) : null;
+  const openDate = open ? new Date(open) : null;
+
+  let topicStatus = TopicStatus.OPEN;
   let color = Color.ORANGE;
 
-  if (current > dueDate) assignmentStatus = AssignmentStatus.CLOSE;
-  if (submittedAt) submissionStatus = SubmissionStatus.SUBMITTED;
+  if (dueDate && current > dueDate) topicStatus = TopicStatus.CLOSE;
+  else if (openDate && current < openDate) topicStatus = TopicStatus.NOT_OPEN;
 
   //Eg: Sep 1
-  const formattedDueDate = format(dueDate, "MMM d");
-  let statusText = "";
-  if (submissionStatus === SubmissionStatus.SUBMITTED) {
-    statusText = "Done";
-    color = Color.GREEN;
-  } else if (
-    submissionStatus === SubmissionStatus.NOT_SUBMITTED &&
-    assignmentStatus === AssignmentStatus.CLOSE
-  ) {
-    statusText = "Closed";
+  const formattedDueDate = dueDate ? format(dueDate, "MMM d") : null;
+  const formattedOpenDate = openDate ? format(openDate, "MMM d") : null;
+
+  let dueStatusText = "";
+  if (topicStatus === TopicStatus.CLOSE) {
+    dueStatusText = "Closed";
     color = Color.RED;
   } else {
     const dayLeft = getDurationText(due, current, 1);
-    statusText = `${dayLeft} left`;
+    dueStatusText = `${dayLeft} left`;
+    color = Color.ORANGE;
+  }
+
+  let openStatusText = "";
+  if (topicStatus === TopicStatus.NOT_OPEN) {
+    const dayLeft = getDurationText(openDate, current, 1);
+    openStatusText = `${dayLeft} left`;
     color = Color.ORANGE;
   }
   return (
     <div className="text-gray-500 space-x-1">
-      <span className="font-semibold">{`Due ${formattedDueDate}`}</span>
-      <span className={cn("italic", color)}>{`(${statusText})`}</span>
+      {formattedDueDate && (
+        <>
+          <span className="font-semibold">{`Due ${formattedDueDate}`}</span>
+          <span className={cn("italic", color)}>{`(${dueStatusText})`}</span>
+        </>
+      )}
+      {formattedOpenDate && (
+        <>
+          <span className="font-semibold">{`Start at ${formattedOpenDate}`}</span>
+          <span className={cn("italic", color)}>{`(${openStatusText})`}</span>
+        </>
+      )}
     </div>
   );
 }

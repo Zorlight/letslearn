@@ -111,9 +111,6 @@ export default function Navbar({
           </div>
         )}
 
-        <IconButton>
-          <Bell size={20} />
-        </IconButton>
         <Chat user={user} />
 
         <DropdownMenu>

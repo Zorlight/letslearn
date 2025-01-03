@@ -2,7 +2,11 @@ import { Topic, TopicType } from "@/models/topic";
 import { useEffect, useState } from "react";
 import CollapsibleList from "../collapsible/collapsible-list";
 import ActivityItem from "./activity-item";
-import { isOverDueTopic, isWorkingInProgressTopic } from "./utils";
+import {
+  isOverDueTopic,
+  isWillHappenTopic,
+  isWorkingInProgressTopic,
+} from "./utils";
 import { Course } from "@/models/course";
 
 interface Props {
@@ -15,7 +19,8 @@ export default function ActivityList({ topics, course, selectedType }: Props) {
     Topic[]
   >([]);
   const [overdueTopics, setOverdueTopics] = useState<Topic[]>([]);
-  const [itemsPerGroup, setItemsPerGroup] = useState<number[]>([0, 0]);
+  const [willHappenTopics, setWillHappenTopics] = useState<Topic[]>([]);
+  const [itemsPerGroup, setItemsPerGroup] = useState<number[]>([0, 0, 0]);
 
   const filterTopicType = (type: string) => (topic: Topic) => {
     if (type === "All activities") return topic;
@@ -29,12 +34,20 @@ export default function ActivityList({ topics, course, selectedType }: Props) {
     const overdueTopics = topics
       .filter(filterTopicType(selectedType))
       .filter(isOverDueTopic);
+    const willHappenTopics = topics
+      .filter(filterTopicType(selectedType))
+      .filter(isWillHappenTopic);
     setWorkingInProgressTopics(workingInProgressTopics);
     setOverdueTopics(overdueTopics);
-    setItemsPerGroup([workingInProgressTopics.length, overdueTopics.length]);
+    setWillHappenTopics(willHappenTopics);
+    setItemsPerGroup([
+      workingInProgressTopics.length,
+      overdueTopics.length,
+      willHappenTopics.length,
+    ]);
   }, [topics, selectedType]);
 
-  const titles = ["Work in progress", "Closed"];
+  const titles = ["Work in progress", "Closed", "Will happen"];
   return (
     <div className="w-full">
       <CollapsibleList titles={titles} itemsPerGroup={itemsPerGroup}>
@@ -45,6 +58,11 @@ export default function ActivityList({ topics, course, selectedType }: Props) {
         </div>
         <div>
           {overdueTopics.map((topic) => (
+            <ActivityItem key={topic.id} topic={topic} course={course} />
+          ))}
+        </div>
+        <div>
+          {willHappenTopics.map((topic) => (
             <ActivityItem key={topic.id} topic={topic} course={course} />
           ))}
         </div>

@@ -4,21 +4,23 @@ import {
   AssignmentResponseData,
   StudentResponse,
 } from "@/models/student-response";
+import { AssignmentTopic } from "@/models/topic";
 
 interface Props {
+  assignment: AssignmentTopic;
   assignmentResponses: StudentResponse[];
 }
-const GradingSummaryTable = ({ assignmentResponses }: Props) => {
+const GradingSummaryTable = ({ assignmentResponses, assignment }: Props) => {
   const isNotGraded = (response: StudentResponse) => {
     const { mark } = response.data as AssignmentResponseData;
     return mark === null;
   };
-  const assigned = 40;
+  const student = assignment.studentCount ?? 0;
   const submitted = assignmentResponses.length;
   const needGrading = assignmentResponses.filter(isNotGraded).length;
   return (
     <div className="flex flex-col border rounded-lg">
-      <MiniTableRow title="Assigned">{assigned}</MiniTableRow>
+      <MiniTableRow title="Student">{student}</MiniTableRow>
       <MiniTableRow title="Submitted">{submitted}</MiniTableRow>
       <MiniTableRow title="Need grading">{needGrading}</MiniTableRow>
     </div>

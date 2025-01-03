@@ -40,6 +40,7 @@ export interface QuizTopic extends BaseTopic {
 export interface AssignmentTopic extends BaseTopic {
   type: TopicType.ASSIGNMENT;
   data: AssignmentData;
+  studentCount?: number;
   response?: StudentResponse;
 }
 export interface MeetingTopic extends BaseTopic {

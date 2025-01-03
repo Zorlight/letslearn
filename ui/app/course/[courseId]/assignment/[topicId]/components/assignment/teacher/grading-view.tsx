@@ -29,7 +29,10 @@ export default function GradingView({
       </Button>
 
       <div className="font-bold text-orange-500">Grading summary</div>
-      <GradingSummaryTable assignmentResponses={assignmentResponses} />
+      <GradingSummaryTable
+        assignment={assignment}
+        assignmentResponses={assignmentResponses}
+      />
     </div>
   );
 }

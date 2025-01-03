@@ -47,7 +47,7 @@ export default function ReviewItem({ topic }: Props) {
 
   const Icon = iconMap[type];
   const color = colorMap[type];
-  const assigned = course ? course.students.length : 0;
+  const student = course ? course.students.length : 0;
   return (
     <div
       className="flex flex-row items-center justify-between px-4 border-t-[0.5px] border-gray-300 py-2 hover:bg-gray-50 transition-all duration-200 cursor-pointer group"
@@ -61,13 +61,13 @@ export default function ReviewItem({ topic }: Props) {
       </div>
       {type === TopicType.QUIZ && (
         <QuizReviewNumber
-          assigned={assigned}
+          student={student}
           studentResponse={studentResponses}
         />
       )}
       {type === TopicType.ASSIGNMENT && (
         <AssignmentReviewNumber
-          assigned={assigned}
+          student={student}
           studentResponse={studentResponses}
         />
       )}

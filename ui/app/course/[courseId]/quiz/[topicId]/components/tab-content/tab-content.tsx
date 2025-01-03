@@ -142,6 +142,7 @@ const TabContent = ({ className, quiz, courseId, onQuizChange }: Props) => {
       if (user?.role !== Role.TEACHER) return notFound();
       return (
         <TabQuestion
+          courseId={courseId}
           quiz={quiz}
           questionsBank={questionsBank}
           quizResponses={quizResponses}

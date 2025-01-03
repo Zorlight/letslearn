@@ -20,8 +20,17 @@ export default function ActivityItem({ topic, course }: Props) {
   const Icon = iconMap[type];
   const color = colorMap[type];
   let due = null;
-  if (type === TopicType.QUIZ) due = topic.data.close;
-  else if (type === TopicType.ASSIGNMENT) due = topic.data.close;
+  let open = null;
+  if (type === TopicType.QUIZ) {
+    due = topic.data.close;
+    open = due ? null : topic.data.open;
+  } else if (type === TopicType.ASSIGNMENT) {
+    due = topic.data.close;
+    open = due ? null : topic.data.open;
+  } else if (type === TopicType.MEETING) {
+    open = topic.data.open;
+  }
+
   return (
     <div
       className="flex flex-row items-center justify-between px-4 border-t-[0.5px] border-gray-300 py-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer group"
@@ -33,7 +42,7 @@ export default function ActivityItem({ topic, course }: Props) {
           {title}
         </span>
       </div>
-      {due && <ActivityStatus due={due} />}
+      {(due || open) && <ActivityStatus due={due} open={open} />}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import { StudentResponse } from "@/models/student-response";
 import { getQuizResponse } from "@/services/quiz-response";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { defaultQuizResponse } from "../../components/static-data";
 import QuizReview from "./components/quiz-review";
@@ -62,8 +62,13 @@ export default function QuizReviewPage({ params }: Props) {
       );
     }
   }, [topicId, responseId, user]);
+  useEffect(() => {
+    if (user) return;
+    getMyInfo(handleGetUserSuccess, handleFail);
+  }, [user]);
 
   if (!quiz) return null;
+
   return (
     <div className="p-5">
       <QuizReview quiz={quiz} quizResponse={selectedQuizResponse} />

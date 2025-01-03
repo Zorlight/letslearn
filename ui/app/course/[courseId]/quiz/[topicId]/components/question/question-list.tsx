@@ -41,19 +41,20 @@ const QuestionList = ({
   const handleEdit = (question: Question) => {
     const { type, id } = question;
     if (type === QuestionType.CHOICE)
-      router.push(`/question/choice/edit/${id}`);
+      router.push(`/course/${courseId}/question/choice/edit/${id}`);
     else if (type === QuestionType.SHORT_ANSWER)
-      router.push(`/question/short-answer/edit/${id}`);
+      router.push(`/course/${courseId}/question/short-answer/edit/${id}`);
     else if (type === QuestionType.TRUE_FALSE)
-      router.push(`/question/true-false/edit/${id}`);
+      router.push(`/course/${courseId}/question/true-false/edit/${id}`);
   };
   const toggleEdit = () => setIsEditing(!isEditing);
   const handleAddNewQuestion = (type: QuestionType) => {
-    if (type === QuestionType.CHOICE) router.push("/question/choice/create");
+    if (type === QuestionType.CHOICE)
+      router.push(`/course/${courseId}/question/choice/create`);
     else if (type === QuestionType.SHORT_ANSWER)
-      router.push("/question/short-answer/create");
+      router.push(`/course/${courseId}/question/short-answer/create`);
     else if (type === QuestionType.TRUE_FALSE)
-      router.push("/question/true-false/create");
+      router.push(`/course/${courseId}/question/true-false/create`);
   };
 
   const handleSave = () => {

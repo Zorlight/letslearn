@@ -41,6 +41,7 @@ const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
     errors: { timingSettingForm: errors },
   } = form.formState;
   const { open, close, timeLimit } = formData;
+  console.log("timing setting form", formData);
   const handleSettingChange = (data: TimingSettingForm) => {
     if (onChange) onChange(data);
   };
@@ -58,7 +59,7 @@ const TimingSetting = ({ formData, onChange }: TimingSettingProps) => {
   ) => {
     if (!zoneDatetime) return;
     const date = zonedDateTimeToDate(zoneDatetime);
-    console.log("goddam the date", date)
+    console.log("goddam the date", date);
     handleSettingChange({
       ...formData,
       [key]: { ...formData[key], value: date.toISOString() },

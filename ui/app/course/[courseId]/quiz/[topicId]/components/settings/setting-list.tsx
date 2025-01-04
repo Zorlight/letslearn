@@ -78,15 +78,17 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
   };
 
   const handleGetTimingSetting = (quiz: QuizTopic) => {
+    console.log("getting quiz", quiz);
+    const currentDate = new Date().toISOString();
     const { timeLimit, timeLimitUnit, close, open } = quiz.data;
     const timingSetting: TimingSettingForm = {
       open: {
         enabled: open !== null,
-        value: open || "",
+        value: open || currentDate,
       },
       close: {
         enabled: close !== null,
-        value: close || "",
+        value: close || currentDate,
       },
       timeLimit: {
         enabled: timeLimit !== null,

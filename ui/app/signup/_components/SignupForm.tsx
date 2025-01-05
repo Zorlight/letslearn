@@ -43,7 +43,7 @@ export default function SignUpForm() {
     if (!email) {
       newErrors = { ...errors, email: "Email is required" };
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors = { ...newErrors, email: "Email is invalid" };
+      newErrors = { ...newErrors, email: "Invalid email" };
     } else {
       newErrors = { ...newErrors, email: undefined };
     }
@@ -52,11 +52,6 @@ export default function SignUpForm() {
       newErrors = {
         ...newErrors,
         username: "Username must be at least 6 characters",
-      };
-    } else if (username.length > 20) {
-      newErrors = {
-        ...newErrors,
-        username: "Username must be less than 20 characters",
       };
     } else {
       newErrors = { ...newErrors, username: undefined };

@@ -24,7 +24,7 @@ export const sampleGradedSubmissionData = [
   { name: "50 - 79%", value: 10, color: "#06B6D4" },
   { name: "20 - 49%", value: 5, color: "#3B82F6" },
   { name: "0 - 19%", value: 5, color: "#EAB308" },
-  { name: "Not graded", value: 5, color: "#6B7280" },
+  { name: "Not submitted", value: 5, color: "#6B7280" },
 ];
 export const sampleAvgMarkData = [
   { name: "First assignment", value: 9 },

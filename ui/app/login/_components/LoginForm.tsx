@@ -29,7 +29,7 @@ export default function LogInForm() {
     if (!email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = "Invalid email";
     }
 
     if (!password) {

@@ -19,7 +19,7 @@ import { useDebounceFunction } from "@/hooks/useDebounce";
 import { QuizTopic } from "@/models/topic";
 
 const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
-  title: z.string().min(1, "Title must be at least 1 character"),
+  title: z.string().min(1, "Quiz name must be at least 1 character"),
   description: z.string(),
 });
 
@@ -78,7 +78,6 @@ const SettingList = ({ quiz, onSubmitQuizSetting }: Props) => {
   };
 
   const handleGetTimingSetting = (quiz: QuizTopic) => {
-    console.log("getting quiz", quiz);
     const currentDate = new Date().toISOString();
     const { timeLimit, timeLimitUnit, close, open } = quiz.data;
     const timingSetting: TimingSettingForm = {

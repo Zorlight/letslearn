@@ -82,7 +82,7 @@ const SectionList = ({
 
   const handleSaveSection = (section: Section) => () => {
     if (checkTopicNameEmpty(section)) {
-      toast.error("Topic name must be at lease 1 character");
+      toast.error("Topic name must be at least 1 character");
       return;
     }
     if (onSave) onSave(section);

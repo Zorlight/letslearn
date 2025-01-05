@@ -23,7 +23,7 @@ import {
 } from "./static-data";
 
 const generalSettingSchema: ZodType<GeneralSettingForm> = z.object({
-  title: z.string().min(1, "Name is required"),
+  title: z.string().min(1, "Assignment name must be at least 1 character."),
   description: z.string(),
 });
 

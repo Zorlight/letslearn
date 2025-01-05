@@ -11,7 +11,7 @@ interface Props {
 const TabSetting = ({ courseId, quiz, onQuizChange }: Props) => {
   const handleUpdateTopicSuccess = (data: QuizTopic) => {
     if (onQuizChange) onQuizChange(data);
-    toast.success("Update topic successfully");
+    toast.success("Update quiz successfully");
   };
   const handleUpdateTopicFail = (error: any) => {
     toast.error(error);

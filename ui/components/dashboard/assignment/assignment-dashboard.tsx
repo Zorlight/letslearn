@@ -58,7 +58,7 @@ export default function AssignmentDashboard({ report }: Props) {
           />
         </div>
         <div className="w-full flex flex-col gap-4 p-4">
-          <h6 className="text-orange-500">Graded submission</h6>
+          <h6 className="text-orange-500">Submission</h6>
           <CustomPieChart
             data={gradedSubmissionChartData}
             title="Total submission"

@@ -103,7 +103,7 @@ export function TabSubmission({ className, assignment }: Props) {
     );
     setAssignmentResponses(updatedResponses);
     setSelectedStudentResponse(data);
-    toast.success("Response updated");
+    toast.success("Graded successfully");
   };
   const handleUpdateResponseFail = (err: any) => {
     toast.error(err);

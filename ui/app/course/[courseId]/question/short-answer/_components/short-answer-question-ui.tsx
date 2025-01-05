@@ -153,7 +153,7 @@ const ShortAnswerQuestionUI = ({ question, onSubmitQuestion }: Props) => {
     else questionToSubmit = handleCreateQuestion(data);
 
     if (checkAnswerPercent(questionToSubmit)) {
-      toast.error("At least one answer must have 100% grade percent");
+      toast.error("Please set an answer with 100% grade percent.");
       return;
     }
 
